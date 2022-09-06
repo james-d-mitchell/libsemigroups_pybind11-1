@@ -22,7 +22,46 @@ Contents
      - Returns the index of the left hand side of a redundant rule.
 
    * - :py:func:`add_rule`
-     - Add a rule to the presentation
+     - Add a rule to the presentation.
+
+   * - :py:func:`add_rule_and_check`
+     - Add a rule to the presentation by reference and check.
+
+   * - :py:func:`add_rules`
+     - Add a rule to the presentation from another presentation.
+
+   * - :py:func:`add_identity_rules`
+     - Add rules for an identity element.
+
+   * - :py:func:`add_inverse_rules`
+     - Add rules for inverses.
+
+   * - :py:func:`remove_duplicate_rules`
+     - Remove duplicate rules.
+
+   * - :py:func:`remove_trivial_rules`
+     - Remove rules consisting of identical words.
+
+   * - :py:func:`reduce_complements`
+     - If there are rules :math:`u = v` and :math:`v = w` where :math:`\lvert w \rvert < \lvert v \rvert`, then replace :math:`u = v` with :math:`u = w`.
+
+   * - :py:func:`sort_each_rule`
+     - Sort each rule :math:`u = v` so that the left hand side is shortlex greater than the right hand side.
+
+   * - :py:func:`sort_rules`
+     - Sort the rules :math:`u_1 = v_1, \ldots, u_n = v_n` so that :math:`u_1 v_1 < \cdots < u_n v_n`, where :math:`<` is the shortlex order.
+
+   * - :py:func:`longest_common_subword`
+     - Return the longest common subword of the rules.
+
+   * - :py:func:`length`
+     - Return the sum of the lengths of the rules.
+
+   * - :py:func:`reverse`
+     - Reverse every rule.
+
+   * - :py:func:`normalize_alphabet`
+     - Modify the presentation so that the alphabet is :math:`\{0, \ldots, n - 1\}` (or equivalent), and rewrites the rules to use this alphabet.
 
 Full API
 --------
@@ -78,3 +117,170 @@ Full API
    :warning:
      No checks that the arguments describe words over the alphabet of the
      presentation are performed.
+
+.. py:function:: add_rule_and_check(p: Presentation, lhop: Union[str, List[int]], rhop: Union[str, List[int]]) -> None
+
+   Add a rule to the presentation by reference and check.
+
+   Adds the rule with left hand side ``lhop`` and right hand side ``rhop`` to the rules,
+   after checking that ``lhop`` and ``rhop`` consist entirely of letters in the
+   alphabet of ``p``.
+
+   :param p: the presentation
+   :type p: Presentation
+   :param lhop: the left hand side of the rule
+   :type lhop: str or List[int]
+   :param rhop: the right hand side of the rule
+   :type rhop: str or List[int]
+
+   :returns: None
+
+.. py:function:: add_rules(p: Presentation, q: Presentation) -> None
+
+   Add a rule to the presentation from another presentation.
+
+   Adds all the rules of the second argument to the first argument, which is modofied in-place.
+
+   :param p: the presentation to add rules to
+   :type p: Presentation
+   :param q: the presentation with the rules to add
+   :type q: Presentation
+
+   :returns: None
+
+.. py:function:: add_identity_rules(p: Presentation, e: Union[str, int]) -> None
+
+   Add rules for an identity element.
+
+   Adds rules of the form :math:`a e = e a = a` for every letter :math:`a` in the alphabet of
+   ``p``, where :math:`e` is the second parameter.
+
+   :param p: the presentation to add rules to
+   :type p: Presentation
+   :param e: the identity element
+   :type e: str or int
+
+   :returns: None
+
+.. py:function:: add_inverse_rules(p: Presentation, vals: Union[str, List[int], e: Union[str, int]) -> None
+   
+   Add rules for inverses.
+
+   The letter ``a`` with index ``i`` in ``vals`` is the inverse of the letter in the alphabet
+   of ``p`` with index ``i``. The rules added are :math:`a_i b_i = e`, where the alphabet is
+   :math:`\{a_i, \ldots, a_n\}`; the parameter ``vals`` is :math:`\{b_1, \ldots, b_n\}`; and
+   :math:`e` is the 3rd parameter.
+
+   :param p: the presentation to add rules to
+   :type p: Presentation
+   :param vals: the inverses
+   :type vals: str or List[int]
+   :param e: the identity element
+   :type e: str or int
+
+   :returns: None
+
+.. py:function:: remove_duplicate_rules(p: Presentation) -> None
+
+   Remove duplicate rules.
+
+   Removes all but one instance of any duplicate rules (if any). Note that rules of the form
+   :math:`u = v` and :math:`v = u` (if any) are considered duplicates. Also note that the
+   rules may be reordered by this function even if there are no duplicate rules.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: remove_trivial_rules(p: Presentation) -> None
+
+   Remove rules consisting of identical words.
+
+   Removes all instance of rules (if any) where the left hand side and the right hand side are
+   identical.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: reduce_complements(p: Presentation) -> None
+
+   If there are rules :math:`u = v` and :math:`v = w` where :math:`\lvert w \rvert < \lvert v \rvert`, then replace :math:`u = v` with :math:`u = w`.
+
+   Attempts to reduce the length of the words by finding the equivalence relation on the
+   relation words generated by the pairs of identical relation words. If
+   :math:`\{u_1, u_2, \ldots, u_n\}` are distinct words in an equivalence class and
+   :math:`u_1` is the shortlex minimum word in the class, then the relation words are
+   replaced by :math:`u_1 = u_2, u_1 = u_3, \ldots, u_1 = u_n`.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: sort_each_rule(p: Presentation) -> None
+
+   Sort each rule :math:`u = v` so that the left hand side is shortlex greater than the right
+   hand side.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: sort_rules(p: Presentation) -> None
+
+   Sort the rules :math:`u_1 = v_1, \ldots, u_n = v_n` so that
+   :math:`u_1 v_1 < \cdots < u_n v_n`, where :math:`<` is the shortlex order.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: longest_common_subword(p: Presentation) -> None
+
+   Return the longest common subword of the rules.
+
+   If it is possible to find a subword :math:`w` of the rules
+   :math:`u_1 = v_1, \ldots, u_n = v_n` such that the introduction of a new generator
+   :math:`z` and the relation :math:`z = w` reduces the length (TODO: Cross reference function)
+   of the presentation, then this function returns the word :math:`w`. If no such word can be
+   found, a word of length :math:`0` is returned.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: length(p: Presentation) -> None
+
+   Return the sum of the lengths of the rules.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: reverse(p: Presentation) -> None
+
+   Reverse every rule.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None
+
+.. py:function:: normalize_alphabet(p: Presentation) -> None
+
+   Modify the presentation so that the alphabet is :math:`\{0, \ldots, n - 1\}` (or equivalent),
+   and rewrites the rules to use this alphabet.
+
+   If the alphabet is already normalized, then no changes are made to the presentation.
+
+   :param p: the presentation
+   :type p: Presentation
+
+   :returns: None   
