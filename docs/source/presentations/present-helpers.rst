@@ -140,11 +140,11 @@ Full API
 
 .. py:function:: add_rule_and_check(p: Presentation, lhop: Union[str, List[int]], rhop: Union[str, List[int]]) -> None
 
-   Add a rule to the presentation by reference and check. TODO: Is "reference and check" C++ terminology?
+   Add a rule to the presentation, and check that it is valid.
 
    Adds the rule with left hand side ``lhop`` and right hand side ``rhop`` to the rules,
    after checking that ``lhop`` and ``rhop`` consist entirely of letters in the
-   alphabet of ``p``.
+   alphabet of ``p`` (see :py:meth:`Presentation.validate_rules`).
 
    :param p: the presentation
    :type p: Presentation
@@ -303,7 +303,7 @@ Full API
 
    If it is possible to find a subword :math:`w` of the rules
    :math:`u_1 = v_1, \ldots, u_n = v_n` such that the introduction of a new generator
-   :math:`z` and the relation :math:`z = w` reduces the length (TODO: Cross reference function)
+   :math:`z` and the relation :math:`z = w` reduces the length (see :py:func:`length`)
    of the presentation, then this function returns the word :math:`w`. If no such word can be
    found, a word of length :math:`0` is returned.
 

@@ -153,7 +153,7 @@ Full API
 
    :return: None
 
-   :raises: RuntimeError (TODO - How to make this a hyperlink?)
+   :raises RuntimeError:
 
 .. py:method:: Presentation.validate_alphabet(self: Presentation) -> None
 
@@ -163,7 +163,7 @@ Full API
 
    :return: None
 
-   :raises: RuntimeError
+   :raises RuntimeError:
 
 .. py:method:: Presentation.validate_letter(self: Presentation, c: Union[int, str]) -> None
 
@@ -174,7 +174,7 @@ Full API
 
    :return: None
 
-   :raises: RuntimeError
+   :raises RuntimeError:
 
 .. py:method:: Presentation.validate_rules(self: Presentation) -> None
 
@@ -185,4 +185,4 @@ Full API
 
    :returns: None
 
-   :raises: RuntimeError
+   :raises RuntimeError:
