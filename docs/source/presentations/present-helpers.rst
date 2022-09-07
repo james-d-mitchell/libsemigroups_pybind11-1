@@ -157,9 +157,9 @@ Full API
 
 .. py:function:: add_rules(p: Presentation, q: Presentation) -> None
 
-   Add a rule to the presentation from another presentation.
+   Add all the rules from one presentation to another presentation.
 
-   Adds all the rules of the second argument to the first argument, which is modofied in-place.
+   Adds all the rules of the second argument to the first argument, which is modified in-place.
 
    :param p: the presentation to add rules to
    :type p: Presentation

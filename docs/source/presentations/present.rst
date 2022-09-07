@@ -64,10 +64,10 @@ Contents
 
 
 
-.. py:class:: Presentation(alphabet : Union[str, List[int]])
+.. py:class:: Presentation(alph: Union[str, List[int]])
 
-   Construct a presentation instance with alphabet ``alphabet``. Note that
-   ``alphabet`` can be the empty string or empty list.
+   Construct a presentation instance with alphabet ``alph``. Note that
+   ``alph`` can be the empty string or empty list.
 
 
 .. py:method:: alphabet(``*args``) -> None
@@ -82,9 +82,9 @@ Contents
 
    :return: The alphabet of the presentation ``self``.
 
-   2. alphabet(self: Presentation, alphabet: Union[str, List[int]]) -> Presentation
+   2. alphabet(self: Presentation, alph: Union[str, List[int]]) -> Presentation
 
-   Set the alphabet of the presentation to ``alphabet``.
+   Set the alphabet of the presentation to ``alph``.
 
    :parameters: str or List[int]
 
