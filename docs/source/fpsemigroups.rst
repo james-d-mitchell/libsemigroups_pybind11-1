@@ -37,4 +37,3 @@ monoids are:
    api/fpsemi
    api/knuth-bendix
    presentations/index
-   api/present
