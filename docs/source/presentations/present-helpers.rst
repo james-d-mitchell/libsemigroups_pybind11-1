@@ -267,6 +267,16 @@ Full API
 
    :returns: None
 
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("a")
+      presentation.add_rule(p, "aaaaa", "aaa")
+      presentation.add_rule(p, "aaa", "a")
+      p.rules  # ['aaaaa', 'aaa', 'aaa', 'a']
+      presentation.reduce_complements(p)
+      p.rules  # ['a', 'aaa', 'a', 'aaaaa']
+
 .. py:function:: sort_each_rule(p: Presentation) -> None
 
    Sort each rule :math:`u = v` so that the left hand side is shortlex greater than the right
