@@ -39,9 +39,6 @@ Contents
    * - :py:func:`remove_duplicate_rules`
      - Remove duplicate rules.
 
-   * - :py:func:`remove_trivial_rules`
-     - Remove rules consisting of identical words.
-
    * - :py:func:`reduce_complements`
      - If there are rules :math:`u = v` and :math:`v = w` where :math:`\lvert w \rvert < \lvert v \rvert`, then replace :math:`u = v` with :math:`u = w`.
 
@@ -254,18 +251,6 @@ Full API
       p.rules  # ['ab', 'baa', 'baa', 'ab']
       presentation.remove_duplicate_rules(p)
       p.rules  # ['ab', 'baa']
-
-.. py:function:: remove_trivial_rules(p: Presentation) -> None
-
-   Remove rules consisting of identical words.
-
-   Removes all instance of rules (if any) where the left hand side and the right hand side are
-   identical.
-
-   :param p: the presentation
-   :type p: Presentation
-
-   :returns: None
 
 .. py:function:: reduce_complements(p: Presentation) -> None
 
