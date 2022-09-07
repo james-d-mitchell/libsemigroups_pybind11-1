@@ -290,7 +290,7 @@ Full API
 .. py:function:: sort_rules(p: Presentation) -> None
 
    Sort the rules :math:`u_1 = v_1, \ldots, u_n = v_n` so that
-   :math:`u_1 v_1 < \cdots < u_n v_n`, where :math:`<` is the shortlex order.
+   :math:`u_1 < \cdots < u_n`, where :math:`<` is the shortlex order.
 
    :param p: the presentation
    :type p: Presentation
