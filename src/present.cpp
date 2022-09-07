@@ -65,144 +65,39 @@ namespace libsemigroups {
           .def(py::init<>())
           .def(py::init<Presentation<T> const &>())
           .def("alphabet",
-               py::overload_cast<>(&Presentation<T>::alphabet, py::const_),
-               R"pbdoc(
-               Returns the alphabet of the presentation.
-
-               :Parameters: **None**
-
-               :Returns: The alphabet of the presentation.
-               )pbdoc")
+               py::overload_cast<>(&Presentation<T>::alphabet, py::const_))
           .def("alphabet",
                py::overload_cast<size_type>(&Presentation<T>::alphabet),
-               py::arg("n"),
-               R"pbdoc(
-               Set the alphabet by size.
-
-               :Parameters: **n** (int) - the size of the alphabet
-
-               :Returns: The `Presentation` instance `self`.
-               )pbdoc")
+               py::arg("n"))
           .def("alphabet",
                py::overload_cast<T const &>(&Presentation<T>::alphabet),
-               py::arg("lphbt"),
-               R"pbdoc(
-               Set the alphabet const reference.
-
-               :Parameters: **lphbt** (list or str) - the alphabet
-
-               :Returns: The `Presentation` instance `self`.
-               )pbdoc")
+               py::arg("lphbt"))
           .def("alphabet_from_rules",
-               &Presentation<T>::alphabet_from_rules,
-               R"pbdoc(
-               Set the alphabet to be the letters in the rules.
-
-               :param: None
-
-               :return: The `Presentation` instance `self`.
-               )pbdoc")
+               &Presentation<T>::alphabet_from_rules)
           .def("letter",
                &Presentation<T>::letter,
-               py::arg("i"),
-               R"pbdoc(
-               Get a letter in the alphabet by index.
-
-               :param i: the index
-               :type i: int
-
-               :return: An int or char.
-               )pbdoc")
+               py::arg("i"))
           .def("index",
                &Presentation<T>::index,
-               py::arg("val"),
-               R"pbdoc(
-               Get the index of a letter in the alphabet.
-
-               :param val: the letter
-               :type val: int or char
-
-               :return: An int.
-               )pbdoc")
+               py::arg("val"))
           .def("contains_empty_word",
                py::overload_cast<>(&Presentation<T>::contains_empty_word,
-                                   py::const_),
-               R"pbdoc(
-               Check if the presentation should contain the empty word.
-
-               :Parameters: **None**
-
-               :Returns: A `bool`.
-               )pbdoc")
+                                   py::const_))
           .def("contains_empty_word",
                py::overload_cast<bool>(&Presentation<T>::contains_empty_word),
-               py::arg("val"),
-               R"pbdoc(
-               Specify that the presentation should (not) contain the empty word.
-
-               :Parameters: **val** (bool) - whether the presentation
-               should contain the empty word
-
-               :Returns: The `Presentation` instance `self`.
-               )pbdoc")
+               py::arg("val"))
           .def_readwrite("rules",
-                         &Presentation<T>::rules,
-                         R"pbdoc(
-               Data member holding the rules of the presentation.
-               )pbdoc")
+                         &Presentation<T>::rules)
           .def("validate_alphabet",
                py::overload_cast<>(&Presentation<T>::validate_alphabet,
-                                   py::const_),
-               R"pbdoc(
-               Check if the alphabet is valid and raise an exception if not.
-
-               :Parameters: **None**
-
-               :Returns: None
-
-               :raises RuntimeError:
-                 if there are duplicate letters in the alphabet.
-               )pbdoc")
+                                   py::const_))
           .def("validate_letter",
                &Presentation<T>::validate_letter,
-               py::arg("c"),
-               R"pbdoc(
-               Check if a letter belongs to the alphabet or not.
-
-               :param c: the letter to check
-               :type c: int or char
-
-               :return: (None)
-
-               :raises RuntimeError:
-                 TODO
-               )pbdoc")
+               py::arg("c"))
           .def("validate_rules",
-               &Presentation<T>::validate_rules,
-               R"pbdoc(
-               Check if every rule consists of letters belonging to the alphabet.
-
-               :param: None
-               :type: None
-
-               :return: None
-
-               :raises RuntimeError:
-                 TODO
-               )pbdoc")
+               &Presentation<T>::validate_rules)
           .def("validate",
-               &Presentation<T>::validate,
-               R"pbdoc(
-               Check if the alphabet and rules are valid.
-
-               :param: None
-               :type: None
-
-               :return: None
-
-               :raises RuntimeError:
-                 TODO
-               )pbdoc")
+               &Presentation<T>::validate)
           .def("__repr__", &presentation_repr<T>);
 
       m.def("add_rule",
