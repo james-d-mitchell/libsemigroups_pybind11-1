@@ -88,7 +88,8 @@ Full API
    Set the alphabet of the presentation to ``alph``. The argument ``alph`` must match the
    type of the argument with which the presentation ``self`` was initialised.
 
-   :parameters: str or List[int]
+   :param alph: the alphabet.
+   :type alph: str or List[int]
 
    :return: The presentation instance ``self``.
 
@@ -97,14 +98,14 @@ Full API
 
    Set the alphabet by specifying its size ``size``.
 
-   :param size: the size to which the alphabet is set
+   :param size: the size to which the alphabet is set.
    :type size: int
 
    :return: The presentation instance ``self``.
 
 .. py:method:: Presentation.alphabet_from_rules(self: Presentation) -> Presentation
 
-   Set the alphabet to be the letters in the rules.
+   Set the alphabet to be the letters in its rules (see :py:attr:`Presentation.rules`).
 
    :parameters: None
 
@@ -131,7 +132,7 @@ Full API
 
    Get the index of a letter in the alphabet.
 
-   :param val: the letter
+   :param val: the letter.
    :type val: int or str
 
    :returns: The index of ``val`` in the alphabet of the presentation ``self``.
@@ -140,7 +141,7 @@ Full API
 
    Get a letter in the alphabet by index.
 
-   :param i: the index
+   :param i: the index.
    :type i: int or str
 
    :return: The letter in the alphabet of the presentation ``self`` with index ``i``.
@@ -169,7 +170,7 @@ Full API
 
    Check if a letter belongs to the alphabet or not, and raise an exception if not.
 
-   :param c: the letter to check
+   :param c: the letter to check.
    :type c: int or str
 
    :return: None
