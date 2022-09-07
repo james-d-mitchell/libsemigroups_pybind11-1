@@ -62,7 +62,8 @@ Contents
    * - :py:meth:`Presentation.validate_rules()`
      - Check if every rule consists of letters belonging to the alphabet, and raise an exception if not.
 
-
+Full API
+--------
 
 .. py:class:: Presentation(alph: Union[str, List[int]])
 
