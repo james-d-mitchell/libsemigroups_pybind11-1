@@ -99,7 +99,17 @@ Full API
    :type t: datetime.timedelta
  
    :return: The index of a redundant rule (if any).
- 
+
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      from datetime import timedelta
+      p = Presentation("ab")
+      presentation.add_rule(p, "ab", "ba")
+      presentation.add_rule(p, "bab", "abb")
+      t = timedelta(seconds = 1)
+      p.rules  # ['ab', 'ba', 'bab', 'abb']
+      presentation.redundant_rule(p, t)  # 2
 
 .. py:function:: add_rule(p: Presentation, lhop: Union[str, List[int]], rhop: Union[str, List[int]]) -> None
 
@@ -120,6 +130,16 @@ Full API
    :warning:
      No checks that the arguments describe words over the alphabet of the
      presentation are performed.
+
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("ab")
+      p.rules  # []
+      presentation.add_rule(p, "ab", "baa")
+      p.rules  # ['ab', 'baa']
+      presentation.add_rule(p, "aaa", "a")
+      p.rules  # ['ab', 'baa', 'aaa', 'a']
 
 .. py:function:: add_rule_and_check(p: Presentation, lhop: Union[str, List[int]], rhop: Union[str, List[int]]) -> None
 
@@ -151,6 +171,21 @@ Full API
 
    :returns: None
 
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("ab")
+      presentation.add_rule(p, "ab", "baa")
+      presentation.add_rule(p, "aaa", "a")
+      p.rules  # ['ab', 'baa', 'aaa', 'a']
+      q = Presentation("ab")
+      q.add_rule("bbbb", "b")
+      q.rules  # ['bbbb', 'b']
+      presentation.add_rules(p, q)
+      p.rules  # ['ab', 'baa', 'aaa', 'a', 'bbbb', 'b']
+      q.rules  # ['bbbb', 'b']
+
+
 .. py:function:: add_identity_rules(p: Presentation, e: Union[str, int]) -> None
 
    Add rules for an identity element.
@@ -164,6 +199,13 @@ Full API
    :type e: str or int
 
    :returns: None
+
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("abc")
+      presentation.add_identity_rules(p, "c")
+      p.rules  # ['ac', 'a', 'ca', 'a', 'bc', 'b', 'cb', 'b', 'cc', 'c']
 
 .. py:function:: add_inverse_rules(p: Presentation, vals: Union[str, List[int], e: Union[str, int]) -> None
    
@@ -183,6 +225,13 @@ Full API
 
    :returns: None
 
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("abc")
+      presentation.add_inverse_rules(p, "bac", "c")
+      p.rules  # ['ab', 'c', 'ba', 'c']
+
 .. py:function:: remove_duplicate_rules(p: Presentation) -> None
 
    Remove duplicate rules.
@@ -195,6 +244,16 @@ Full API
    :type p: Presentation
 
    :returns: None
+
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation("ab")
+      presentation.add_rule(p, "ab", "baa")
+      presentation.add_rule(p, "baa", "ab")
+      p.rules  # ['ab', 'baa', 'baa', 'ab']
+      presentation.remove_duplicate_rules(p)
+      p.rules  # ['ab', 'baa']
 
 .. py:function:: remove_trivial_rules(p: Presentation) -> None
 
