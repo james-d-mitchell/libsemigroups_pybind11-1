@@ -29,37 +29,37 @@ Contents
    :widths: 50 50
    :header-rows: 0
 
-   * - :py:func:`Presentation()`
+   * - :py:class:`Presentation()`
      - Construct a presentation instance.
 
-   * - :py:func:`Presentation.alphabet()`
-     - Overloaded function.
-
-   * - :py:func:`Presentation.alphabet_from_rules()`
-     - Set the alphabet to be the letters in the rules.
-
-   * - :py:func:`Presentation.contains_empty_word()`
-     - Overloaded function.
-
-   * - :py:func:`Presentation.index()`
-     - Get the index of a letter in the alphabet.
-
-   * - :py:func:`Presentation.letter()`
-     - Get a letter in the alphabet by index.
-
-   * - :py:property:`Presentation.rules`
+   * - :py:attr:`Presentation.rules`
      - The rules of the presentation.
 
-   * - :py:func:`Presentation.validate()`
+   * - :py:meth:`Presentation.alphabet()`
+     - Overloaded function.
+
+   * - :py:meth:`Presentation.alphabet_from_rules()`
+     - Set the alphabet to be the letters in the rules.
+
+   * - :py:meth:`Presentation.contains_empty_word()`
+     - Overloaded function.
+
+   * - :py:meth:`Presentation.index()`
+     - Get the index of a letter in the alphabet.
+
+   * - :py:meth:`Presentation.letter()`
+     - Get a letter in the alphabet by index.
+
+   * - :py:meth:`Presentation.validate()`
      - Check if the alphabet and rules are valid, and raise an exception if not.
 
-   * - :py:func:`Presentation.validate_alphabet()`
+   * - :py:meth:`Presentation.validate_alphabet()`
      - Check if the alphabet is valid, and raise an exception if not.
 
-   * - :py:func:`Presentation.validate_letter()`
+   * - :py:meth:`Presentation.validate_letter()`
      - Check if a letter belongs to the alphabet or not, and raise an exception if not.
 
-   * - :py:func:`Presentation.validate_rules()`
+   * - :py:meth:`Presentation.validate_rules()`
      - Check if every rule consists of letters belonging to the alphabet, and raise an exception if not.
 
 
@@ -69,12 +69,11 @@ Contents
    Construct a presentation instance with alphabet ``alph``. Note that
    ``alph`` can be the empty string or empty list.
 
+.. py:attribute:: Presentation.rules
 
-.. py:method:: alphabet(``*args``) -> None
+   Data member containing the rules of the presentation.
 
-   Overloaded function. TODO: Fix formatting of the above.
-
-   1. alphabet(self: Presentation) -> Union[str, List[int]]
+.. py:method:: Presentation.alphabet(self: Presentation) -> Union[str, List[int]]
 
    Return the alphabet of the presentation.
 
@@ -82,15 +81,18 @@ Contents
 
    :return: The alphabet of the presentation ``self``.
 
-   2. alphabet(self: Presentation, alph: Union[str, List[int]]) -> Presentation
+.. py:method:: Presentation.alphabet(self: Presentation, alph: Union[str, List[int]]) -> Presentation
+   :noindex:
 
-   Set the alphabet of the presentation to ``alph``.
+   Set the alphabet of the presentation to ``alph``. The argument ``alph`` must match the
+   type of the argument with which the presentation ``self`` was initialised.
 
    :parameters: str or List[int]
 
    :return: The presentation instance ``self``.
 
-   3. alphabet(self: Presentation, size: int) -> Presentation
+.. py:method:: Presentation.alphabet(self: Presentation, size: int) -> Presentation
+   :noindex:
 
    Set the alphabet by specifying its size ``size``.
 
@@ -99,7 +101,7 @@ Contents
 
    :return: The presentation instance ``self``.
 
-.. py:method:: alphabet_from_rules(self: Presentation) -> Presentation
+.. py:method:: Presentation.alphabet_from_rules(self: Presentation) -> Presentation
 
    Set the alphabet to be the letters in the rules.
 
@@ -107,18 +109,15 @@ Contents
 
    :return: The presentation instance ``self``.
 
-.. py:method:: contains_empty_word(``*args``)
-
-   Overloaded function.
-
-   1. contains_empty_word(self: Presentation) -> bool
+.. py:method:: Presentation.contains_empty_word(self: Presentation) -> bool
 
    Check if the presentation should contain the empty word.
 
    :parameters: None
    :return: A bool.
 
-   2. contains_empty_word(self: Presentation, val: bool) -> Presentation
+.. py:method:: Presentation.contains_empty_word(self: Presentation, val: bool) -> Presentation
+   :noindex:
 
    Specify whether the presentation should (not) contain the empty word.
 
@@ -127,7 +126,7 @@ Contents
 
    :return: The presentation instance ``self``.
 
-.. py:method:: index(self: Presentation, val: int) -> int
+.. py:method:: Presentation.index(self: Presentation, val: int) -> int
 
    Get the index of a letter in the alphabet.
 
@@ -136,7 +135,7 @@ Contents
 
    :returns: The index of ``val`` in the alphabet of the presentation ``self``.
 
-.. py:method:: letter(self: Presentation, i: int) -> Union[int, str]
+.. py:method:: Presentation.letter(self: Presentation, i: int) -> Union[int, str]
 
    Get a letter in the alphabet by index.
 
@@ -145,11 +144,7 @@ Contents
 
    :return: The letter in the alphabet of the presentation ``self`` with index ``i``.
 
-.. py:property:: rules
-
-   The rules of the presentation.
-
-.. py:method:: validate(self: Presentation) -> None
+.. py:method:: Presentation.validate(self: Presentation) -> None
 
    Check if the alphabet and rules are valid, and raise an exception if not.
 
@@ -159,7 +154,7 @@ Contents
 
    :raises: RuntimeError (TODO - How to make this a hyperlink?)
 
-.. py:method:: validate_alphabet(self: Presentation) -> None
+.. py:method:: Presentation.validate_alphabet(self: Presentation) -> None
 
    Check if the alphabet is valid, and raise an exception if not.
 
@@ -169,7 +164,7 @@ Contents
 
    :raises: RuntimeError
 
-.. py:method:: validate_letter(self: Presentation, c: Union[int, str]) -> None
+.. py:method:: Presentation.validate_letter(self: Presentation, c: Union[int, str]) -> None
 
    Check if a letter belongs to the alphabet or not, and raise an exception if not.
 
@@ -180,7 +175,7 @@ Contents
 
    :raises: RuntimeError
 
-.. py:method:: validate_rules(self: Presentation) -> None
+.. py:method:: Presentation.validate_rules(self: Presentation) -> None
 
    Check if every rule consists of letters belonging to the alphabet,
    and raise an exception if not.
