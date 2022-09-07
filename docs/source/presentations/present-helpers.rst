@@ -54,6 +54,9 @@ Contents
    * - :py:func:`longest_common_subword`
      - Return the longest common subword of the rules.
 
+   * - :py:func:`replace_subword`
+     - Replace non-overlapping instances of a subword.
+
    * - :py:func:`length`
      - Return the sum of the lengths of the rules.
 
@@ -120,7 +123,7 @@ Full API
 
 .. py:function:: add_rule_and_check(p: Presentation, lhop: Union[str, List[int]], rhop: Union[str, List[int]]) -> None
 
-   Add a rule to the presentation by reference and check.
+   Add a rule to the presentation by reference and check. TODO: Is "reference and check" C++ terminology?
 
    Adds the rule with left hand side ``lhop`` and right hand side ``rhop`` to the rules,
    after checking that ``lhop`` and ``rhop`` consist entirely of letters in the
@@ -254,6 +257,28 @@ Full API
    :type p: Presentation
 
    :returns: None
+
+.. py:function:: replace_subword(p: Presentation, w: Union[str, List[int]])
+
+   Replace non-overlapping instances of a subword.
+
+   A new generator :math:`z` is added to the presentation, along with the rule :math:`w = z`.
+   Each (if any) non-overlapping instance (from left to right) of the word :math:`w` in every
+   rule of the presentation is replaced with :math:`z`.
+
+   :param p: the presentation
+   :type p: Presentation
+   :param w: the word to be replaced by a new generator
+   :type w: str or List[int]
+
+   **Example**::
+
+      from libsemigroups_pybind11 import presentation, Presentation
+      p = Presentation([0, 1])
+      presentation.add_rule(p, [1, 0, 0, 1, 0], [0, 1, 0, 0, 1])
+      p.rules  # [[1, 0, 0, 1, 0], [0, 1, 0, 0, 1]]
+      presentation.replace_subword(p, [0, 0, 1])
+      p.rules  # [[1, 2, 0], [0, 1, 2], [2], [0, 0, 1]]
 
 .. py:function:: length(p: Presentation) -> None
 
