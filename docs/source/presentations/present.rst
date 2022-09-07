@@ -7,8 +7,6 @@
 Presentation
 ============
 
-.. py:class:: Presentation
-
    This page describes the functionality in ``Presentation``.
 
    The objects returned by ``Presentation`` can be used to construction
@@ -24,14 +22,171 @@ Presentation
    :py:class:`Presentation` have identical methods, and so we document
    :py:class:`Presentation` as if it was a class.
 
+Contents
+--------
 
-.. py:method:: Presentation.__init__(self: FroidurePin, that: FroidurePin) -> None
+.. list-table::
+   :widths: 50 50
+   :header-rows: 0
 
-     Copy constructor.
+   * - :py:func:`Presentation()`
+     - Construct a presentation instance.
 
-     Constructs a new :py:class:`FroidurePin` which is an exact copy of
-     ``that``. No enumeration is triggered for either ``that`` or of the newly
-     constructed :py:class:`FroidurePin`.
+   * - :py:func:`Presentation.alphabet()`
+     - Overloaded function.
 
-     :Parameters:
-       **that** (FroidurePin) the ``FroidurePin`` to copy.
+   * - :py:func:`Presentation.alphabet_from_rules()`
+     - Set the alphabet to be the letters in the rules.
+
+   * - :py:func:`Presentation.contains_empty_word()`
+     - Overloaded function.
+
+   * - :py:func:`Presentation.index()`
+     - Get the index of a letter in the alphabet.
+
+   * - :py:func:`Presentation.letter()`
+     - Get a letter in the alphabet by index.
+
+   * - :py:property:`Presentation.rules`
+     - The rules of the presentation.
+
+   * - :py:func:`Presentation.validate()`
+     - Check if the alphabet and rules are valid, and raise an exception if not.
+
+   * - :py:func:`Presentation.validate_alphabet()`
+     - Check if the alphabet is valid, and raise an exception if not.
+
+   * - :py:func:`Presentation.validate_letter()`
+     - Check if a letter belongs to the alphabet or not, and raise an exception if not.
+
+   * - :py:func:`Presentation.validate_rules()`
+     - Check if every rule consists of letters belonging to the alphabet, and raise an exception if not.
+
+
+
+.. py:class:: Presentation(alphabet : Union[str, List[int]])
+
+   Construct a presentation instance with alphabet ``alphabet``. Note that
+   ``alphabet`` can be the empty string or empty list.
+
+
+.. py:method:: alphabet(``*args``) -> None
+
+   Overloaded function. TODO: Fix formatting of the above.
+
+   1. alphabet(self: Presentation) -> Union[str, List[int]]
+
+   Return the alphabet of the presentation.
+
+   :parameters: None
+
+   :return: The alphabet of the presentation ``self``.
+
+   2. alphabet(self: Presentation, alphabet: Union[str, List[int]]) -> Presentation
+
+   Set the alphabet of the presentation to ``alphabet``.
+
+   :parameters: str or List[int]
+
+   :return: The presentation instance ``self``.
+
+   3. alphabet(self: Presentation, size: int) -> Presentation
+
+   Set the alphabet by specifying its size ``size``.
+
+   :param size: the size to which the alphabet is set
+   :type size: int
+
+   :return: The presentation instance ``self``.
+
+.. py:method:: alphabet_from_rules(self: Presentation) -> Presentation
+
+   Set the alphabet to be the letters in the rules.
+
+   :parameters: None
+
+   :return: The presentation instance ``self``.
+
+.. py:method:: contains_empty_word(``*args``)
+
+   Overloaded function.
+
+   1. contains_empty_word(self: Presentation) -> bool
+
+   Check if the presentation should contain the empty word.
+
+   :parameters: None
+   :return: A bool.
+
+   2. contains_empty_word(self: Presentation, val: bool) -> Presentation
+
+   Specify whether the presentation should (not) contain the empty word.
+
+   :param val: whether or not the presentation should contain the empty word.
+   :type val: bool
+
+   :return: The presentation instance ``self``.
+
+.. py:method:: index(self: Presentation, val: int) -> int
+
+   Get the index of a letter in the alphabet.
+
+   :param val: the letter
+   :type val: int or str
+
+   :returns: The index of ``val`` in the alphabet of the presentation ``self``.
+
+.. py:method:: letter(self: Presentation, i: int) -> Union[int, str]
+
+   Get a letter in the alphabet by index.
+
+   :param i: the index
+   :type i: int or str
+
+   :return: The letter in the alphabet of the presentation ``self`` with index ``i``.
+
+.. py:property:: rules
+
+   The rules of the presentation.
+
+.. py:method:: validate(self: Presentation) -> None
+
+   Check if the alphabet and rules are valid, and raise an exception if not.
+
+   :parameters: None
+
+   :return: None
+
+   :raises: RuntimeError (TODO - How to make this a hyperlink?)
+
+.. py:method:: validate_alphabet(self: Presentation) -> None
+
+   Check if the alphabet is valid, and raise an exception if not.
+
+   :parameters: None
+
+   :return: None
+
+   :raises: RuntimeError
+
+.. py:method:: validate_letter(self: Presentation, c: Union[int, str]) -> None
+
+   Check if a letter belongs to the alphabet or not, and raise an exception if not.
+
+   :param c: the letter to check
+   :type c: int or str
+
+   :return: None
+
+   :raises: RuntimeError
+
+.. py:method:: validate_rules(self: Presentation) -> None
+
+   Check if every rule consists of letters belonging to the alphabet,
+   and raise an exception if not.
+
+   :parameters: None
+
+   :returns: None
+
+   :raises: RuntimeError
