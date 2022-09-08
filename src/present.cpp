@@ -87,7 +87,7 @@ namespace libsemigroups {
                py::overload_cast<>(&Presentation<T>::validate_alphabet,
                                    py::const_))
           .def("validate_letter",
-               &Presentation<T>::validate_letter,
+               &Presentation<T>::validate_letter)
           .def("validate_rules",
                &Presentation<T>::validate_rules)
           .def("validate",
