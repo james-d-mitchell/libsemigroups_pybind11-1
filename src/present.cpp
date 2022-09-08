@@ -67,25 +67,20 @@ namespace libsemigroups {
           .def("alphabet",
                py::overload_cast<>(&Presentation<T>::alphabet, py::const_))
           .def("alphabet",
-               py::overload_cast<size_type>(&Presentation<T>::alphabet),
-               py::arg("n"))
+               py::overload_cast<size_type>(&Presentation<T>::alphabet))
           .def("alphabet",
-               py::overload_cast<T const &>(&Presentation<T>::alphabet),
-               py::arg("lphbt"))
+               py::overload_cast<T const &>(&Presentation<T>::alphabet))
           .def("alphabet_from_rules",
                &Presentation<T>::alphabet_from_rules)
           .def("letter",
-               &Presentation<T>::letter,
-               py::arg("i"))
+               &Presentation<T>::letter)
           .def("index",
-               &Presentation<T>::index,
-               py::arg("val"))
+               &Presentation<T>::index)
           .def("contains_empty_word",
                py::overload_cast<>(&Presentation<T>::contains_empty_word,
                                    py::const_))
           .def("contains_empty_word",
-               py::overload_cast<bool>(&Presentation<T>::contains_empty_word),
-               py::arg("val"))
+               py::overload_cast<bool>(&Presentation<T>::contains_empty_word))
           .def_readwrite("rules",
                          &Presentation<T>::rules)
           .def("validate_alphabet",
@@ -93,7 +88,6 @@ namespace libsemigroups {
                                    py::const_))
           .def("validate_letter",
                &Presentation<T>::validate_letter,
-               py::arg("c"))
           .def("validate_rules",
                &Presentation<T>::validate_rules)
           .def("validate",
