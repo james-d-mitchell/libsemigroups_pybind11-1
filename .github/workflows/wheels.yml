@@ -47,6 +47,7 @@ jobs:
             make -j4 && make install
           CIBW_ENVIRONMENT_LINUX: LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/lib/pkgconfig
           CIBW_ARCHS_MACOS: x86_64
+          CIBW_SKIP: cp36*
 
         run: python -m cibuildwheel --output-dir wheelhouse
 
