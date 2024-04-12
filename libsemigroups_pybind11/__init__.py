@@ -51,6 +51,7 @@ try:
         to_word,
         LibsemigroupsError,
         is_obviously_infinite,
+        BMat8,
     )
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError(
@@ -61,10 +62,11 @@ except ModuleNotFoundError as e:
     ) from e
 
 
+from .action import RightAction
+from .adapters import ImageRightAction
 from .knuth_bendix import KnuthBendix
 from .presentation import Presentation
 from .transf import PPerm, Transf
-
 
 # from .froidure_pin import FroidurePin
 # from .konieczny import Konieczny

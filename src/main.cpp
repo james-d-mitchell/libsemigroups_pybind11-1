@@ -117,17 +117,21 @@ namespace libsemigroups {
     m.attr("UNDEFINED") = UNDEFINED;
 
     ////////////////////////////////////////////////////////////////////////
-    // Abstract classes that are required by other classes
-    ////////////////////////////////////////////////////////////////////////
-    py::class_<libsemigroups::Reporter>(m, "Reporter");
-    py::class_<libsemigroups::Runner, Reporter>(m, "Runner");
-    py::class_<libsemigroups::CongruenceInterface, Runner>(
-        m, "CongruenceInterface");
-
-    ////////////////////////////////////////////////////////////////////////
     // Classes
     ////////////////////////////////////////////////////////////////////////
 
+    py::class_<libsemigroups::Reporter>(m, "Reporter");
+    init_runner(m);
+
+    ////////////////////////////////////////////////////////////////////////
+    // Abstract classes that are required by other classes
+    ////////////////////////////////////////////////////////////////////////
+    py::class_<libsemigroups::CongruenceInterface, Runner>(
+        m, "CongruenceInterface");
+
+    init_action(m);
+    init_imagerightaction(m);
+    init_bmat8(m);
     init_forest(m);
     init_gabow(m);
     init_knuth_bendix(m);

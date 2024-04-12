@@ -66,6 +66,8 @@ autoclass_content = "both"
 type_replacements = {
     r"_libsemigroups_pybind11.KnuthBendixRewriteTrie": r"KnuthBendix",
     r"libsemigroups::Presentation<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >": r"Presentation",
+    r"RowActionBMat8": r"RightAction",
+    r"libsemigroups::BMat8": r"BMat8",
 }
 # to_replace = {"method", "function", "class"}
 
