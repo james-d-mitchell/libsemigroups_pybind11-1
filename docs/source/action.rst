@@ -14,9 +14,9 @@ This page contains details of the `RowActionBMat8` and `LeftAction` classes in
 notion of an "action" in the context of ``libsemigroups_pybind11`` is analogous to the
 notion of an orbit of a group.
 
-The function :any:`RowActionBMat8.run` finds points that can be obtained by acting
+The function :any:`run <Runner.run>` finds points that can be obtained by acting
 on the seeds of ``self`` by the generators of ``self`` until no further points
-can be found, or :any:`RowActionBMat8.stopped` returns ``True``.  This is achieved
+can be found, or :any:`stopped <Runner.stopped>` returns ``True``.  This is achieved
 by performing a breadth first search.
 
 In this documentation we refer to:
@@ -91,11 +91,13 @@ Contents
 RightAction Methods
 -------------------
 .. autoclass:: RowActionBMat8
-    :no-undoc-members:
     :members:
+    :show-inheritance:
+    :class-doc-from: class
+
+    .. autofunction:: libsemigroups_pybind11.action.RightAction
 
 Runner Methods
 --------------
-.. autoclass:: RowActionBMat8
-   :noindex:
-   :inherited-members:
+.. autoclass:: Runner
+    :members:
