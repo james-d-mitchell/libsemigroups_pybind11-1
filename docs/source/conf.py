@@ -67,7 +67,6 @@ autoclass_content = "both"
 # replacements will be performed globally
 type_replacements = {
     r"libsemigroups::Presentation<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >": r"Presentation",
-    r"RowActionBMat8": r"RightAction",
     r"libsemigroups::BMat8": r"BMat8",
 }
 
