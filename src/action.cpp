@@ -26,12 +26,10 @@
 // libsemigroups headers
 #include <libsemigroups/action.hpp>
 #include <libsemigroups/bmat8.hpp>
-// action complete or delete
 
 // pybind11....
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-// action complete or delete
 
 // libsemigroups_pybind11....
 #include "main.hpp"  // for init_action
@@ -157,7 +155,7 @@ Checks if the RowActionBMat8 contains any points.
                &Action_::at,
                py::arg("pos"),
                R"pbdoc(
-Returns a const reference to the point in a given position.
+Returns the point in a given position.
 
 :param pos: the index of an element.
 :type pos: int
@@ -300,10 +298,10 @@ of the strongly connected component containing ``at(pos)``.
               },
               py::arg("x"),
               R"pbdoc(
-Returns a const reference to the root point of a strongly connected component.
+Returns the root point of a strongly connected component.
 
 :param x: the point whose root we want to find.
-:type x: const_reference_point_type
+:type x: point
 
 :complexity:
   At most :math:`O(mn)` where :math:`m` is the complexity of multiplying elements
@@ -356,7 +354,7 @@ Returns the word graph of the completely enumerated action.
           .def("scc",
                &Action_::scc,
                R"pbdoc(
-Returns a reference to a Gabow object for strongly connected components.
+Returns a Gabow object for strongly connected components.
 
 :complexity:
    At most :math:`O(mn)` where :math:`m` is the complexity of

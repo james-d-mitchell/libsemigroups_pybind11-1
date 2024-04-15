@@ -92,10 +92,6 @@ RightAction Methods
 -------------------
 .. autoclass:: RowActionBMat8
     :no-undoc-members:
+    :exclude-members: __init__
     :members:
-
-Runner Methods
---------------
-.. autoclass:: RowActionBMat8
-   :noindex:
-   :inherited-members:
+    :inherited-members:
