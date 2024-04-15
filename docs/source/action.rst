@@ -30,37 +30,41 @@ In this documentation we refer to:
 .. doctest::
 
   >>> from libsemigroups_pybind11 import RightAction, BMat8
-  ... o = RightAction(element=BMat8, point=BMat8)
-  ... o.add_seed(BMat8([[1, 1, 1, 0], 
-  ...                   [1, 1, 0, 0], 
-  ...                   [0, 1, 0, 1], 
-  ...                   [0, 1, 0, 0]]).row_space_basis())
-  ... o.add_generator(
-  ...     BMat8([[1, 0, 0, 0], 
-  ...            [0, 1, 0, 0], 
-  ...            [0, 0, 1, 0], 
-  ...            [0, 0, 0, 1]]))
-  ... o.add_generator(
-  ...     BMat8([[0, 1, 0, 0], 
-  ...            [1, 0, 0, 0], 
-  ...            [0, 0, 1, 0], 
-  ...            [0, 0, 0, 1]]))
-  ... o.add_generator(
-  ...     BMat8([[0, 1, 0, 0], 
-  ...            [0, 0, 1, 0], 
-  ...            [0, 0, 0, 1], 
-  ...            [1, 0, 0, 0]]))
-  ... o.add_generator(
-  ...     BMat8([[1, 0, 0, 0], 
-  ...            [0, 1, 0, 0], 
-  ...            [0, 0, 1, 0], 
-  ...            [1, 0, 0, 1]]))
-  ... o.add_generator(
-  ...     BMat8([[1, 0, 0, 0], 
-  ...            [0, 1, 0, 0], 
-  ...            [0, 0, 1, 0], 
-  ...            [0, 0, 0, 0]]))
-  ... o.size()
+  >>> o = RightAction(element=BMat8, point=BMat8)
+  >>> o.add_seed(
+  ...     BMat8(
+  ...         [[1, 1, 1, 0],
+  ...          [1, 1, 0, 0],
+  ...          [0, 1, 0, 1],
+  ...          [0, 1, 0, 0]]).row_space_basis()
+  ... ).add_generator(
+  ...     BMat8([[1, 0, 0, 0],
+  ...            [0, 1, 0, 0],
+  ...            [0, 0, 1, 0],
+  ...            [0, 0, 0, 1]])
+  ... ).add_generator(
+  ...     BMat8([[0, 1, 0, 0],
+  ...            [1, 0, 0, 0],
+  ...            [0, 0, 1, 0],
+  ...            [0, 0, 0, 1]])
+  ... ).add_generator(
+  ...     BMat8([[0, 1, 0, 0],
+  ...            [0, 0, 1, 0],
+  ...            [0, 0, 0, 1],
+  ...            [1, 0, 0, 0]])
+  ... ).add_generator(
+  ...     BMat8([[1, 0, 0, 0],
+  ...            [0, 1, 0, 0],
+  ...            [0, 0, 1, 0],
+  ...            [1, 0, 0, 1]])
+  ... ).add_generator(
+  ...     BMat8([[1, 0, 0, 0],
+  ...            [0, 1, 0, 0],
+  ...            [0, 0, 1, 0],
+  ...            [0, 0, 0, 0]])
+  ... )
+  <open right action with 5 generators, 1 points>
+  >>> o.size()
   553
 
 Contents
