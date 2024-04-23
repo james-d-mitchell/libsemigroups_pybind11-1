@@ -9,7 +9,8 @@
 Reporter
 ========
 
-.. classdoc:: Reporter
+.. classdocstring:: Reporter
+
 
 Contents
 --------
