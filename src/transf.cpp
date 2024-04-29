@@ -27,8 +27,10 @@
 #include <vector>            // for vector
 
 // libsemigroups....
-#include <libsemigroups/detail/string.hpp>  // for to_string
 #include <libsemigroups/transf.hpp>  // for PPerm, Transf, Perm, LeastPPerm
+
+#include <libsemigroups/detail/fmt.hpp>     // for format
+#include <libsemigroups/detail/string.hpp>  // for to_string
 
 // pybind11....
 #include <pybind11/operators.h>  // for self, self_t, operator!=, operator*
@@ -45,17 +47,9 @@ namespace libsemigroups {
   namespace {
 
     template <typename T>
-    std::string transf_repr(T const& a) {
-      auto out = std::string("Transf");
-      out += "([";
-      for (size_t i = 0; i < a.degree(); ++i) {
-        out += detail::to_string(size_t(a[i]));
-        if (i != a.degree() - 1) {
-          out += ", ";
-        }
-      }
-      out += "])";
-      return out;
+    std::string ptransf_repr(T const& f, std::string_view prefix) {
+      return fmt::format(
+          "{}([{}])", prefix, fmt::join(f.begin(), f.end(), ", "));
     }
 
     // This is the main function that installs common methods for derived
@@ -91,7 +85,7 @@ namespace libsemigroups {
     void bind_transf(py::module& m, char const* name) {
       py::class_<T> x(m, name);
       bind_ptransf<T>(x);
-      x.def("__repr__", [](T const& x) { return transf_repr(x); });
+      x.def("__repr__", [name](T const& x) { return ptransf_repr(x, name); });
     }
 
     template <typename T>
@@ -99,6 +93,7 @@ namespace libsemigroups {
       using value_type = typename T::value_type;
       py::class_<T> x(m, name);
       bind_ptransf<T>(x);
+      x.def("__repr__", [name](T const& x) { return ptransf_repr(x, name); });
 
       x.def_static("make",
                    [](std::vector<value_type> const& dom,
@@ -115,6 +110,7 @@ namespace libsemigroups {
     void bind_perm(py::module& m, char const* name) {
       py::class_<T, S> x(m, name);
       bind_ptransf<T>(x);
+      x.def("__repr__", [name](T const& x) { return ptransf_repr(x, name); });
       x.def("inverse", &T::inverse);
     }
   }  // namespace

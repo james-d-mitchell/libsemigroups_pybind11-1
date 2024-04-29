@@ -23,6 +23,7 @@
 // libsemigroups headers
 #include <libsemigroups/action.hpp>
 #include <libsemigroups/bmat8.hpp>
+#include <libsemigroups/transf.hpp>
 #include <libsemigroups/word-graph.hpp>
 
 #include <fmt/core.h>  // for format, print
@@ -419,6 +420,16 @@ be a right action.
                 ImageLeftAction<BMat8, BMat8>,
                 ActionTraits<BMat8, BMat8>,
                 side::left>(m, "ColActionBMat8");
+    bind_action<LeastPPerm<16>,
+                LeastPPerm<16>,
+                ImageRightAction<LeastPPerm<16>, LeastPPerm<16>>,
+                ActionTraits<LeastPPerm<16>, LeastPPerm<16>>,
+                side::right>(m, "RightActionPPerm16PPerm16");
+    bind_action<LeastPPerm<16>,
+                LeastPPerm<16>,
+                ImageLeftAction<LeastPPerm<16>, LeastPPerm<16>>,
+                ActionTraits<LeastPPerm<16>, LeastPPerm<16>>,
+                side::left>(m, "LeftActionPPerm16PPerm16");
   }
 
 }  // namespace libsemigroups

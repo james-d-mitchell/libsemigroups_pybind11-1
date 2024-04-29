@@ -15,7 +15,11 @@ the Action class from libsemigroups.
 
 from _libsemigroups_pybind11 import RowActionBMat8 as _RowActionBMat8
 from _libsemigroups_pybind11 import ColActionBMat8 as _ColActionBMat8
-from _libsemigroups_pybind11 import BMat8, side
+from _libsemigroups_pybind11 import (
+    RightActionPPerm16PPerm16 as _RightActionPPerm16PPerm16,
+    LeftActionPPerm16PPerm16 as _LeftActionPPerm16PPerm16,
+)
+from _libsemigroups_pybind11 import BMat8, side, PPerm16
 from .adapters import ImageRightAction, ImageLeftAction
 
 
@@ -38,21 +42,29 @@ def Action(**kwargs):  # pylint: disable=invalid-name
                 + '"Element", "Point", "Func", and "Side"'
             )
 
-    if (
-        kwargs["Element"] == BMat8
-        and kwargs["Point"] == BMat8
-        and kwargs["Func"] == ImageRightAction
-        and kwargs["Side"] == side.right
-    ):
-        return _RowActionBMat8()
-    if (
-        kwargs["Element"] == BMat8
-        and kwargs["Point"] == BMat8
-        and kwargs["Func"] == ImageLeftAction
-        and kwargs["Side"] == side.left
-    ):
-        return _ColActionBMat8()
-    raise ValueError("unexpected keyword argument combination")
+    args = (kwargs["Element"], kwargs["Point"], kwargs["Func"], kwargs["Side"])
+
+    d = {
+        (BMat8, BMat8, ImageRightAction, side.right): _RowActionBMat8,
+        (BMat8, BMat8, ImageLeftAction, side.left): _ColActionBMat8,
+        (
+            PPerm16,
+            PPerm16,
+            ImageRightAction,
+            side.right,
+        ): _RightActionPPerm16PPerm16,
+        (
+            PPerm16,
+            PPerm16,
+            ImageLeftAction,
+            side.left,
+        ): _LeftActionPPerm16PPerm16,
+    }
+
+    try:
+        return d[args]()
+    except KeyError as e:
+        raise ValueError("unexpected keyword argument combination") from e
 
 
 def RightAction(
