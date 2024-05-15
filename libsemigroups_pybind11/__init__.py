@@ -63,6 +63,8 @@ try:
         Joiner,
         Dot,
         PBR,
+        Sims1,
+        Sims2,
     )
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError(
