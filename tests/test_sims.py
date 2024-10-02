@@ -13,7 +13,6 @@ arising from sims.*pp in libsemigroups.
 
 # pylint: disable=no-name-in-module, missing-function-docstring, invalid-name
 
-
 from libsemigroups_pybind11 import (
     Sims1,
     Sims2,
@@ -21,6 +20,7 @@ from libsemigroups_pybind11 import (
     presentation,
     SimsRefinerIdeals,
     SimsRefinerFaithful,
+    ReportGuard,
 )
 
 
@@ -103,6 +103,7 @@ def test_sims2_002():
 
 
 def test_sims_refiner_ideals_001():
+    ReportGuard(False)
     p = Presentation([0, 1, 2])
     p.contains_empty_word(True)
     presentation.add_rule(p, [0, 0], [])
@@ -118,11 +119,13 @@ def test_sims_refiner_ideals_001():
     ip = SimsRefinerIdeals(p)
 
     s = Sims1(p)
+    assert len(s.pruners()) == 0
     s.add_pruner(ip)
+    assert len(s.pruners()) == 1
     assert s.number_of_congruences(15) == 15
     assert s.number_of_threads(2).number_of_congruences(15) == 15
-    # assert s.number_of_threads(4).number_of_congruences(15) == 15
-    # assert s.number_of_threads(8).number_of_congruences(15) == 15
+    assert s.number_of_threads(4).number_of_congruences(15) == 15
+    assert s.number_of_threads(8).number_of_congruences(15) == 15
 
 
 test_sims_refiner_ideals_001()

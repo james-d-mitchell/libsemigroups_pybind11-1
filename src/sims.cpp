@@ -79,7 +79,7 @@ Default constructor.Constructs a :any:`SimsSettings` object. Defaults to a singl
 
 
 
-:parameters (none): 
+:parameters (none):
 
 :exceptions: This function guarantees not to throw a :any:`LibsemigroupsError`.)pbdoc");
     ss.def(py::init<SimsSettings_ const&>(), R"pbdoc(
@@ -96,7 +96,7 @@ Copy constructor.Returns a :any:`SimsSettings` object that is a copy of ``that``
 Reinitialize an existing SimsSettings object.
 This function puts a :any:`SimsSettings` object back into the same state as if it had been newly default constructed.
 
-:parameters (none): 
+:parameters (none):
 
 :raises This:  function guarantees not to throw a :any:`LibsemigroupsError`.
 
@@ -123,7 +123,7 @@ The return value of this function can be used to initialise another :any:`Sims1`
 )pbdoc");
     ss.def(
         "number_of_threads",
-        [](SimsSettings_& self, size_t val) {
+        [](SimsSettings_& self, size_t val) -> Subclass& {
           return self.number_of_threads(val);
         },
         py::arg("val"),
@@ -335,7 +335,7 @@ Returns a const reference to the (one-sided) defining pairs.The congruences comp
         R"pbdoc(
 Add a pair that should be included in every congruence.
 
-:param lhs: the left hand side of the rule being added. 
+:param lhs: the left hand side of the rule being added.
 :type lhs: word_type
 
 :param rhs: the right hand side of the rule being added.
@@ -407,7 +407,7 @@ Returns a const reference to the excluded pairs.The congruences computed by a :a
         R"pbdoc(
 Add a pair that must be excluded from every congruence.
 
-:param lhs: the left hand side of the rule being added. 
+:param lhs: the left hand side of the rule being added.
 :type lhs: word_type
 
 :param rhs: the right hand side of the rule being added.
@@ -597,7 +597,7 @@ The total number of pending definitions.A *pending definition* is just an edge t
     st.def(py::init<>(), R"pbdoc(
 Default constructor.Constructs a :any:`SimsStats` object with all statistics set to zero.
 
-:parameters (none): 
+:parameters (none):
 
 :exceptions: This function guarantees not to throw a :any:`LibsemigroupsError`.)pbdoc");
     st.def(py::init<SimsStats const&>(), R"pbdoc(
@@ -614,7 +614,7 @@ Copy constructor.Returns a :any:`SimsStats` object that is a copy of ``that`` . 
 Reinitialize an existing SimsStats object.
 This function puts a :any:`SimsStats` object back into the same state as if it had been newly default constructed.
 
-:parameters (none): 
+:parameters (none):
 
 :raises This:  function guarantees not to throw a :any:`LibsemigroupsError`.
 
@@ -635,7 +635,7 @@ Initialize from SimsStats.
 Store the current statistic values.
 Overwrites the values of :any:`count_last` and :any:`total_pending_last` with :any:`count_now` and :any:`total_pending_now` respectively. Triggers an atomic load on :any:`count_now` and :any:`total_pending_now`.
 
-:parameters (none): 
+:parameters (none):
 
 :exceptions: This function guarantees not to throw a :any:`LibsemigroupsError`.)pbdoc");
     st.def("stats_zero",
@@ -644,7 +644,7 @@ Overwrites the values of :any:`count_last` and :any:`total_pending_last` with :a
 Set all statistics to zero.
 Set all statistics to zero.
 
-:parameters (none): 
+:parameters (none):
 
 :exceptions: This function guarantees not to throw a :any:`LibsemigroupsError`.)pbdoc");
 
@@ -664,6 +664,7 @@ Defined in ``sims.hpp``.On this page we describe the functionality relating to t
 
     s1.def("__repr__",
            [](Sims1 const& s1) { return to_human_readable_repr(s1); });
+
     s1.def(py::init<>(), R"pbdoc(
 Default constructor.
 )pbdoc");
@@ -759,7 +760,7 @@ This function is similar to ``std::distance(begin(n), end(n))`` and exists to:
            R"pbdoc(
 Apply a unary predicate to every one-sided congruence with at most a given number of classes.
 
-:param n: the maximum number of congruence classes. 
+:param n: the maximum number of congruence classes.
 :type n: int
 
 :param pred: the predicate applied to every congruence found.
@@ -789,7 +790,7 @@ Apply the function ``pred`` to every one-sided congruence with at most ``n`` cla
            R"pbdoc(
 Apply a unary predicate to one-sided congruences with at most a given number of classes, until it returns true.
 
-:param n: the maximum number of congruence classes. 
+:param n: the maximum number of congruence classes.
 :type n: int
 
 :param pred: the predicate applied to every congruence found.
@@ -934,7 +935,7 @@ This function is similar to ``std::distance(begin(n), end(n))`` and exists to:
            R"pbdoc(
 Apply a unary predicate to every one-sided congruence with at most a given number of classes.
 
-:param n: the maximum number of congruence classes. 
+:param n: the maximum number of congruence classes.
 :type n: int
 
 :param pred: the predicate applied to every congruence found.
@@ -964,7 +965,7 @@ Apply the function ``pred`` to every one-sided congruence with at most ``n`` cla
            R"pbdoc(
 Apply a unary predicate to one-sided congruences with at most a given number of classes, until it returns true.
 
-:param n: the maximum number of congruence classes. 
+:param n: the maximum number of congruence classes.
 :type n: int
 
 :param pred: the predicate applied to every congruence found.
@@ -1138,7 +1139,7 @@ Get the word_graph.
 
 If no such :any:`WordGraph` can be found, then an empty :any:`WordGraph` is returned (with ``0`` nodes and ``0`` edges).
 
-:exceptions this function guarantees not to throw a libsemigroupsexception. : 
+:exceptions this function guarantees not to throw a libsemigroupsexception. :
 
 
 :returns: A value of type ``WordGraph``.
@@ -1208,7 +1209,7 @@ RepOrc(* this )
     .target_size( :any:`target_size` ())
     .word_graph(); where ``best`` is initially :any:`target_size` , until the returned :any:`WordGraph` is empty, and then the penultimate :any:`WordGraph` is returned (if any).
 
-:exceptions this function guarantees not to throw a libsemigroupsexception. : 
+:exceptions this function guarantees not to throw a libsemigroupsexception. :
 
 
 :returns: A value of type ``WordGraph``.
