@@ -23,12 +23,12 @@
 
 // pybind11....
 #include <pybind11/chrono.h>
-// #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 // libsemigroups_pybind11....
-#include "main.hpp"  // for init_todd_coxeter
+#include "cong-intf.hpp"  // for contains
+#include "main.hpp"       // for init_todd_coxeter
 
 namespace py = pybind11;
 
@@ -1214,46 +1214,8 @@ This function adds a generating pair to the congruence represented by a :any:`To
         R"pbdoc(
 :sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:)pbdoc");
 
-    thing.def(
-        "contains",
-        [](ToddCoxeter& self, word_type const& u, word_type const& v) {
-          return todd_coxeter::contains(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check containment of a pair of words.
-
-This function checks whether or not the words *u* and *v* are contained in the
-congruence represented by a :any:`ToddCoxeter` instance. This function triggers
-a full enumeration, which may never terminate.
-
-:param u: the first item in the pair.
-:type u: List[int] | str
-
-:param v: the second item in the pair.
-:type v: List[int] | str
-
-:returns: Whether or not the pair belongs to the congruence.
-:rtype: bool
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-)pbdoc");
-
-    thing.def(
-        "contains",
-        [](ToddCoxeter& self, std::string const& u, std::string const& v) {
-          return todd_coxeter::contains(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> bool:)pbdoc");
+    contains<word_type>(thing, "ToddCoxeter");
+    contains<std::string>(thing, "ToddCoxeter");
 
     thing.def(
         "currently_contains",

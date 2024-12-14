@@ -21,12 +21,11 @@
 #include <libsemigroups/to-froidure-pin.hpp>
 
 // pybind11....
-// #include <pybind11/chrono.h>
-// #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 
 // libsemigroups_pybind11....
-#include "main.hpp"  // for init_kambites
+#include "cong-intf.hpp"  // for contains etc
+#include "main.hpp"       // for init_kambites
 
 namespace py = pybind11;
 
@@ -34,7 +33,7 @@ namespace libsemigroups {
 
   namespace {
     template <typename OtherWord, typename Word>
-    void constructor(py::class_<Kambites<Word>>& thing) {
+    void constructor(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(py::init<congruence_kind, Presentation<OtherWord> const&>(),
                 py::arg("knd"),
                 py::arg("p"),
@@ -64,7 +63,8 @@ The parameter *knd* is included for uniformity of interface between with
     }
 
     template <typename OtherWord, typename Word>
-    void add_generating_pair(py::class_<Kambites<Word>>& thing) {
+    void add_generating_pair(
+        py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "add_generating_pair",
           [](Kambites<Word>&  self,
@@ -101,44 +101,8 @@ This function adds a generating pair to the congruence represented by a :any:`Ka
     }
 
     template <typename OtherWord, typename Word>
-    void contains(py::class_<Kambites<Word>>& thing) {
-      thing.def(
-          "contains",
-          [](Kambites<Word>& self, OtherWord const& u, OtherWord const& v) {
-            return kambites::contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          R"pbdoc(
-:sig=(self: Kambites, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check containment of a pair of words.
-
-This function checks whether or not the words *u* and *v* are contained in the
-congruence represented by a :any:`Kambites` instance.
-
-:param u: the first word.
-:type u: List[int] | str
-
-:param v: the second word.
-:type v: List[int] | str
-
-:returns: Whether or not the pair belongs to the congruence.
-:rtype: bool
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-    }
-
-    template <typename OtherWord, typename Word>
-    void currently_contains(py::class_<Kambites<Word>>& thing) {
+    void
+    currently_contains(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "currently_contains",
           [](Kambites<Word>& self, OtherWord const& u, OtherWord const& v) {
@@ -180,7 +144,7 @@ contained in the congruence, but that this is not currently known.
     }
 
     template <typename OtherWord, typename Word>
-    void my_init(py::class_<Kambites<Word>>& thing) {
+    void my_init(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "init",
           [](Kambites<Word>&                self,
@@ -212,7 +176,7 @@ had been newly constructed from *knd* and *p*.
     }
 
     template <typename OtherWord, typename Word>
-    void reduce(py::class_<Kambites<Word>>& thing) {
+    void reduce(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "reduce",
           [](Kambites<Word>& self, OtherWord const& w) {
@@ -240,7 +204,7 @@ this lexicographically least word always exists.
     }
 
     template <typename OtherWord, typename Word>
-    void reduce_no_run(py::class_<Kambites<Word>>& thing) {
+    void reduce_no_run(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "reduce_no_run",
           [](Kambites<Word>& self, OtherWord const& w) {
@@ -271,9 +235,9 @@ least word equivalent to the input word *w*. If :any:`Runner.finished` returns
       using Kambites_        = Kambites<Word>;
       using native_word_type = typename Kambites_::native_word_type;
 
-      py::class_<Kambites_> thing(m,
-                                  name.c_str(),
-                                  R"pbdoc(
+      py::class_<Kambites_, CongruenceInterface> thing(m,
+                                                       name.c_str(),
+                                                       R"pbdoc(
 Class template implementing small overlap class, equality, and normal forms for
 small overlap monoids.
 
@@ -336,8 +300,18 @@ have been in if it had just been newly default constructed.
       add_generating_pair<word_type>(thing);
       add_generating_pair<std::string>(thing);
 
-      contains<word_type>(thing);
-      contains<std::string>(thing);
+      contains<word_type>(thing,
+                          "Kambites",
+                          R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc");
+      contains<std::string>(thing,
+                            "Kambites",
+                            R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc");
 
       currently_contains<word_type>(thing);
       currently_contains<std::string>(thing);

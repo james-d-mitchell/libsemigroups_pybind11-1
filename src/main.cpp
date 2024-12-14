@@ -230,6 +230,7 @@ The valid values are:
     init_todd_coxeter(m);
     init_kambites(m);
     init_knuth_bendix(m);
+    init_cong(m);
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

@@ -1,0 +1,302 @@
+//
+// libsemigroups_pybind11
+// Copyright (C) 2024 James D. Mitchell
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+// C std headers....
+// TODO complete or delete
+
+// C++ stl headers....
+// TODO complete or delete
+
+// libsemigroups headers
+#include <libsemigroups/cong.hpp>
+
+// pybind11....
+// #include <pybind11/chrono.h>
+// #include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+// TODO uncomment/delete
+
+// libsemigroups_pybind11....
+#include "cong-intf.hpp"  // for contains etc
+#include "main.hpp"       // for init_congruence
+
+namespace py = pybind11;
+
+namespace libsemigroups {
+  ////////////////////////////////////////////////////////////////////////
+  // Method templates
+  ////////////////////////////////////////////////////////////////////////
+  namespace {
+
+    template <typename Word>
+    void construct(py::class_<Congruence, CongruenceInterface>& thing) {
+      thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
+                py::arg("knd"),
+                py::arg("p"),
+                R"pbdoc(
+:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
+:only-document-once:
+
+Construct from congruence_kind and Presentation.
+
+This function constructs a :any:`Congruence` instance representing a congruence
+of kind *knd* over the semigroup or monoid defined by the presentation *p*.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param p: the presentation.
+:type p: Presentation
+
+:raises LibsemigroupsError:  if *p* is not valid.)pbdoc");
+    }
+  }  // namespace
+
+  ////////////////////////////////////////////////////////////////////////
+  // init_congruence
+  ////////////////////////////////////////////////////////////////////////
+
+  void init_cong(py::module& m) {
+    py::class_<Congruence, CongruenceInterface> thing(m,
+                                                      "Congruence",
+                                                      R"pbdoc(
+Class for running :any:`Kambites`, :any:`KnuthBendix`, and :any:`ToddCoxeter`
+in parallel.
+
+On this page we describe the functionality relating to
+the class :any:`Congruence` in ``libsemigroups``. This class can be used for
+computing a congruence over a semigroup or monoid by running every applicable
+algorithm from ``libsemigroups`` (and some variants of the same algorithm) in
+parallel. This class is provided for convenience, at present it is not very
+customisable, and lacks some of the fine grained control offered by the classes
+implementing individual algorithms, such as :any:`Kambites`,
+:any:`KnuthBendixRewriteTrie`, and :any:`ToddCoxeter`.
+
+.. seealso::  :any:`congruence_kind` and :any:`tril`.
+
+.. doctest::
+
+ )pbdoc");
+    thing.def("__repr__", [](Congruence const& thing) {
+      return to_human_readable_repr(thing);
+    });
+    thing.def(py::init<>(), R"pbdoc(
+Default constructor. This function default constructs an uninitialised
+:any:`Congruence` instance.
+)pbdoc");
+    // TODO(0) copy
+    //     thing.def(py::init<Congruence const&>(), R"pbdoc(
+    // Copy constructor.
+    // )pbdoc");
+    //
+    construct<word_type>(thing);
+    construct<std::string>(thing);
+
+    thing.def(py::init<congruence_kind,
+                       FroidurePinBase&,
+                       WordGraph<uint32_t> const&>(),
+              R"pbdoc(
+Construct from congruence_kind, FroidurePin, and WordGraph.
+
+Constructs a :any:`Congruence` over the :any:`FroidurePin` instance *S*
+representing a 1- or 2-sided congruence according to *knd*.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param S: a reference to the FroidurePin over which the congruence is being defined.
+:type S: FroidurePinBase
+
+:param wg: the left or right Cayley graph of S.
+:type wg: WordGraph
+)pbdoc");
+
+    contains<std::string>(thing, "Congruence");
+    contains<word_type>(thing, "Congruence");
+    /*
+          thing.def(
+              "contains",
+              [](Congruence& self,
+                 Iterator1   first1,
+                 Iterator2   last1,
+                 Iterator3   first2,
+                 Iterator4   last2) {
+                return self.contains(first1, last1, first2, last2);
+              },
+              py::arg("first1"),
+              py::arg("last1"),
+              py::arg("first2"),
+              py::arg("last2"),
+              R"pbdoc(
+    )pbdoc");
+          thing.def(
+              "contains",
+              [](Congruence& self, word_type const& u, word_type const& v) {
+                return self.contains(u, v);
+              },
+              py::arg("u"),
+              py::arg("v"),
+              R"pbdoc(
+    )pbdoc");
+          thing.def("currently_contains",
+                    &Congruence::currently_contains,
+                    py::arg("first1"),
+                    py::arg("last1"),
+                    py::arg("first2"),
+                    py::arg("last2"),
+                    R"pbdoc(
+    )pbdoc");
+          thing.def("get",
+                    &Congruence::get,
+                    R"pbdoc(
+    )pbdoc");
+          thing.def("has",
+                    &Congruence::has,
+                    R"pbdoc(
+    )pbdoc");
+          thing.def(
+              "init",
+              [](Congruence& self) { return self.init(); },
+              R"pbdoc(
+    Re-initialize a Congruence instance. This function puts a
+    :any:`Congruence` instance back into the state that it would have been
+    in if it had just been newly default constructed.
+
+    :exceptions:
+       This function guarantees not to throw a :any:`LibsemigroupsError`.
+
+    :returns:
+       A reference to ``self``.
+
+    :rtype:
+       Congruence
+    )pbdoc");
+          thing.def(
+              "init",
+              [](Congruence&            self,
+                 congruence_kind        knd,
+                 FroidurePinBase&       S,
+                 WordGraph<Node> const& wg) { return self.init(knd, S, wg); },
+              py::arg("knd"),
+              py::arg("S"),
+              py::arg("wg"),
+              R"pbdoc(
+    )pbdoc");
+          thing.def(
+              "init",
+              [](Congruence&               self,
+                 congruence_kind           knd,
+                 Presentation<Word> const& p) { return self.init(knd, p); },
+              py::arg("knd"),
+              py::arg("p"),
+              R"pbdoc(
+    )pbdoc");
+          thing.def(
+              "init",
+              [](Congruence&                    self,
+                 congruence_kind                knd,
+                 Presentation<word_type> const& p) { return self.init(knd, p);
+    }, py::arg("knd"), py::arg("p"), R"pbdoc( Re-initialize a Congruence
+    instance.
+
+    :param knd: the kind (onesided or twosided) of the congruence.
+    :type knd: congruence_kind
+
+    :param p: the presentation.
+    :type p: Presentation
+    This function puts a :any:`Congruence` instance back into the state that
+    it would have been in if it had just been newly constructed from ``knd``
+    and ``p``.
+
+    :raises LibsemigroupsError:  if ``p`` is not valid.
+
+
+    :returns: A reference to ``self``.
+
+    :rtype: Congruence
+    )pbdoc");
+          thing.def(
+              "max_threads",
+              [](Congruence const& self) { return self.max_threads(); },
+              R"pbdoc(
+    Returns the :any:`KnuthBendix` instance used to compute the congruence (if
+    any).
+
+    :exceptions: This function guarantees not to throw a
+    :any:`LibsemigroupsError`.
+
+    :complexity: Constant.
+
+    .. seealso::  has<KnuthBendix>. Checks if a :any:`KnuthBendix` instance is
+    being used to compute the congruence.
+
+    :exceptions: This function guarantees not to throw a
+    :any:`LibsemigroupsError`.
+
+    :complexity: Constant.
+
+    .. seealso::  get<KnuthBendix>. Get the current maximum number of threads.
+
+    :exceptions: This function is ``noexcept`` and is guaranteed never to
+    throw.
+
+    :complexity: Constant.
+
+    :returns: A :any:`std::shared_ptr` to a :any:`KnuthBendix` or ``nullptr``.
+
+    :rtype: int
+    )pbdoc");
+          thing.def(
+              "max_threads",
+              [](Congruence& self, size_t val) { return self.max_threads(val);
+    }, py::arg("val"), R"pbdoc(
+
+    :param val: the number of threads.
+    :type val: int
+    Set the maximum number of threads.
+
+    :exceptions: This function is ``noexcept`` and is guaranteed never to
+    throw.
+
+    :complexity: Constant.
+
+
+    :returns: A reference to ``self``.
+
+    :rtype: Congruence
+    )pbdoc");
+          thing.def("number_of_classes",
+                    &Congruence::number_of_classes,
+                    R"pbdoc(
+    )pbdoc");
+          thing.def("number_of_runners",
+                    &Congruence::number_of_runners,
+                    R"pbdoc(
+    )pbdoc");
+          thing.def("throw_if_letter_out_of_bounds",
+                    &Congruence::throw_if_letter_out_of_bounds,
+                    py::arg("first"),
+                    py::arg("last"),
+                    R"pbdoc(
+    )pbdoc");
+    */
+
+  }  // init_cong
+
+}  // namespace libsemigroups

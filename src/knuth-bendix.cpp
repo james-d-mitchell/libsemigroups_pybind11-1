@@ -37,7 +37,8 @@
 #include <pybind11/stl.h>
 
 // libsemigroups_pybind11....
-#include "main.hpp"  // for init_knuth_bendix
+#include "cong-intf.hpp"  // for contains etc
+#include "main.hpp"       // for init_knuth_bendix
 
 namespace py = pybind11;
 
@@ -95,41 +96,6 @@ instance.
 :raises LibsemigroupsError:
   if any of the values in *w* is out of range, i.e. they do not belong to
   ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-)pbdoc");
-    }
-
-    template <typename Word, typename Rewriter>
-    void
-    contains(py::class_<KnuthBendix<Rewriter>, CongruenceInterface>& thing) {
-      thing.def(
-          "contains",
-          [](KnuthBendix<Rewriter>& self, Word const& u, Word const& v) {
-            return knuth_bendix::contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          R"pbdoc(
-:sig=(self: KnuthBendix, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check containment of a pair of words.
-
-This function checks whether or not the words *u* and *v* are contained in the
-congruence represented by a :py:class:`KnuthBendixRewriteTrie` instance.
-
-:param u: the first word.
-:type u: List[int] | str
-
-:param v: the second word.
-:type v: List[int] | str
-
-:returns: Whether or not the pair belongs to the congruence.
-:rtype: bool
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
   raises.
 )pbdoc");
     }
@@ -670,8 +636,8 @@ entry.
       reduce<std::string>(kb);
       reduce<word_type>(kb);
 
-      contains<std::string>(kb);
-      contains<word_type>(kb);
+      contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
       currently_contains<std::string>(kb);
       currently_contains<word_type>(kb);
