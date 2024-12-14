@@ -1214,55 +1214,11 @@ This function adds a generating pair to the congruence represented by a :any:`To
         R"pbdoc(
 :sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:)pbdoc");
 
+    currently_contains<word_type>(thing, "ToddCoxeter");
+    currently_contains<std::string>(thing, "ToddCoxeter");
+
     contains<word_type>(thing, "ToddCoxeter");
     contains<std::string>(thing, "ToddCoxeter");
-
-    thing.def(
-        "currently_contains",
-        [](ToddCoxeter& self, word_type const& u, word_type const& v) {
-          return todd_coxeter::currently_contains(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check whether a pair of words is already known to belong to the congruence.
-
-This function checks whether or not the words *u* and *v* are already known to
-be contained in the congruence represented by a :any:`ToddCoxeter` instance.
-This function performs no enumeration, so it is possible for the words to be
-contained in the congruence, but that this is not currently known.
-
-:param u: the first item in the pair.
-:type u: List[int] | str
-
-:param v: the second item in the pair.
-:type v: List[int] | str
-
-:returns:
-    *  :any:`tril.true` if the words are known to belong to the congruence;
-    *  :any:`tril.false` if the words are known to not belong to the congruence;
-    *  :any:`tril.unknown` otherwise.
-:rtype: tril
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-)pbdoc");
-
-    thing.def(
-        "currently_contains",
-        [](ToddCoxeter& self, std::string const& u, std::string const& v) {
-          return todd_coxeter::currently_contains(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> bool:
-)pbdoc");
 
     thing.def("_number_of_classes",
               &ToddCoxeter::number_of_classes,

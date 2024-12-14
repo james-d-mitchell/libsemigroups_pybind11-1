@@ -127,41 +127,13 @@ representing a 1- or 2-sided congruence according to *knd*.
 :type wg: WordGraph
 )pbdoc");
 
+    currently_contains<std::string>(thing, "Congruence");
+    currently_contains<word_type>(thing, "Congruence");
+
     contains<std::string>(thing, "Congruence");
     contains<word_type>(thing, "Congruence");
+
     /*
-          thing.def(
-              "contains",
-              [](Congruence& self,
-                 Iterator1   first1,
-                 Iterator2   last1,
-                 Iterator3   first2,
-                 Iterator4   last2) {
-                return self.contains(first1, last1, first2, last2);
-              },
-              py::arg("first1"),
-              py::arg("last1"),
-              py::arg("first2"),
-              py::arg("last2"),
-              R"pbdoc(
-    )pbdoc");
-          thing.def(
-              "contains",
-              [](Congruence& self, word_type const& u, word_type const& v) {
-                return self.contains(u, v);
-              },
-              py::arg("u"),
-              py::arg("v"),
-              R"pbdoc(
-    )pbdoc");
-          thing.def("currently_contains",
-                    &Congruence::currently_contains,
-                    py::arg("first1"),
-                    py::arg("last1"),
-                    py::arg("first2"),
-                    py::arg("last2"),
-                    R"pbdoc(
-    )pbdoc");
           thing.def("get",
                     &Congruence::get,
                     R"pbdoc(

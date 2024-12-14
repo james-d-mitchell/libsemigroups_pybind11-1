@@ -28,6 +28,52 @@ namespace py = pybind11;
 namespace libsemigroups {
 
   template <typename Word, typename Thing>
+  void currently_contains(py::class_<Thing, CongruenceInterface>& thing,
+                          std::string_view                        name,
+                          std::string_view extra_doc = "") {
+    thing.def(
+        "currently_contains",
+        [](Thing const& self, Word const& u, Word const& v) {
+          return congruence_interface::currently_contains(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
+:only-document-once:
+
+Check whether a pair of words is already known to belong to the congruence.
+
+This function checks whether or not the words *u* and *v* are already known to
+be contained in the congruence represented by a :py:class:`{0}` instance.
+This function performs no enumeration, so it is possible for the words to be
+contained in the congruence, but that this is not currently known.
+
+:param u: the first word.
+:type u: List[int] | str
+
+:param v: the second word.
+:type v: List[int] | str
+
+:returns:
+    *  :any:`tril.true` if the words are known to belong to the congruence;
+    *  :any:`tril.false` if the words are known to not belong to the congruence;
+    *  :any:`tril.unknown` otherwise.
+:rtype: tril
+
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+{1}
+)pbdoc",
+                    name,
+                    extra_doc)
+            .c_str());
+  }
+
+  template <typename Word, typename Thing>
   void contains(py::class_<Thing, CongruenceInterface>& thing,
                 std::string_view                        name,
                 std::string_view                        extra_doc = "") {
@@ -67,5 +113,6 @@ congruence represented by a :py:class:`{0}` instance.
                     extra_doc)
             .c_str());
   }
+
 }  // namespace libsemigroups
 #endif  // SRC_CONG_INTF_HPP_

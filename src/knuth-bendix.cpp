@@ -101,55 +101,6 @@ instance.
     }
 
     template <typename Word, typename Rewriter>
-    void currently_contains(
-        py::class_<KnuthBendix<Rewriter>, CongruenceInterface>& thing) {
-      thing.def(
-          "currently_contains",
-          [](KnuthBendix<Rewriter> const& self, Word const& u, Word const& v) {
-            return knuth_bendix::currently_contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          R"pbdoc(
-:sig=(self: KnuthBendix, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check whether a pair of words is already known to belong to the congruence.
-
-This function checks whether or not the words *u* and *v* are already known to
-be contained in the congruence represented by a :py:class:`KnuthBendixRewriteTrie` instance.
-This function performs no enumeration, so it is possible for the words to be
-contained in the congruence, but that this is not currently known.
-
-:param u: the first word.
-:type u: List[int] | str
-
-:param v: the second word.
-:type v: List[int] | str
-
-:returns:
-    *  :any:`tril.true` if the words are known to belong to the congruence;
-    *  :any:`tril.false` if the words are known to not belong to the congruence;
-    *  :any:`tril.unknown` otherwise.
-:rtype: tril
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-    }
-
-#define CONCAT(first, second) first##second
-#define CONCAT3(first, second, third) first##second##third
-
-#define STRINGIFY(x) #x
-#define TO_STRING(x) STRINGIFY(x)
-
-    template <typename Word, typename Rewriter>
     void bind_normal_form_range(py::module& m, char const* name) {
       using NormalFormRange
           = detail::KnuthBendixNormalFormRange<Word, Rewriter, ShortLexCompare>;
@@ -639,8 +590,8 @@ entry.
       contains<std::string>(kb, "KnuthBendixRewriteTrie");
       contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
-      currently_contains<std::string>(kb);
-      currently_contains<word_type>(kb);
+      currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
       //////////////////////////////////////////////////////////////////////////
       // Main member

@@ -101,49 +101,6 @@ This function adds a generating pair to the congruence represented by a :any:`Ka
     }
 
     template <typename OtherWord, typename Word>
-    void
-    currently_contains(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(
-          "currently_contains",
-          [](Kambites<Word>& self, OtherWord const& u, OtherWord const& v) {
-            return kambites::currently_contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          R"pbdoc(
-:sig=(self: Kambites, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
-
-Check whether a pair of words is already known to belong to the congruence.
-
-This function checks whether or not the words *u* and *v* are already known to
-be contained in the congruence represented by a :any:`Kambites` instance.
-This function performs no enumeration, so it is possible for the words to be
-contained in the congruence, but that this is not currently known.
-
-:param u: the first word.
-:type u: List[int] | str
-
-:param v: the second word.
-:type v: List[int] | str
-
-:returns:
-    *  :any:`tril.true` if the words are known to belong to the congruence;
-    *  :any:`tril.false` if the words are known to not belong to the congruence;
-    *  :any:`tril.unknown` otherwise.
-:rtype: tril
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-    }
-
-    template <typename OtherWord, typename Word>
     void my_init(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "init",
@@ -300,6 +257,21 @@ have been in if it had just been newly default constructed.
       add_generating_pair<word_type>(thing);
       add_generating_pair<std::string>(thing);
 
+      currently_contains<word_type>(thing,
+                                    "Kambites",
+                                    R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc");
+      // TODO(0) should this be "is known and not at least 4"?
+      currently_contains<std::string>(thing,
+                                      "Kambites",
+                                      R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc");
+      // TODO(0) should this be "is known and not at least 4"?
+
       contains<word_type>(thing,
                           "Kambites",
                           R"pbdoc(
@@ -312,9 +284,6 @@ have been in if it had just been newly default constructed.
 :raises LibsemigroupsError:
     if :any:`small_overlap_class` is not at least :math:`4`.
 )pbdoc");
-
-      currently_contains<word_type>(thing);
-      currently_contains<std::string>(thing);
 
       my_init<word_type>(thing);
       my_init<std::string>(thing);
