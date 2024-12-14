@@ -1092,7 +1092,6 @@ specifies whether or not to do this.The default value of this setting is
     // Interface common functions
     ////////////////////////////////////////////////////////////////////////
 
-    // TODO remove
     thing.def(
         "add_generating_pair",
         [](ToddCoxeter&     self,

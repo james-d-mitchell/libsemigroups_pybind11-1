@@ -76,19 +76,22 @@ and :any:`ToddCoxeter`.
 
     def_copy(thing, "Congruence");
 
-    currently_contains<std::string>(thing, "Congruence");
+    def_add_generating_pair<word_type>(thing, "Congruence");
+    def_add_generating_pair<std::string>(thing, "Congruence");
+
     currently_contains<word_type>(thing, "Congruence");
+    currently_contains<std::string>(thing, "Congruence");
 
-    contains<std::string>(thing, "Congruence");
     contains<word_type>(thing, "Congruence");
+    contains<std::string>(thing, "Congruence");
 
     // TODO(0) uncomment (not yet impled in Congruence)
-    // reduce_no_run<std::string>(thing, "Congruence");
     // reduce_no_run<word_type>(thing, "Congruence");
+    // reduce_no_run<std::string>(thing, "Congruence");
 
     // TODO(0) uncomment (not yet impled in Congruence)
-    // reduce<std::string>(thing, "Congruence");
     // reduce<word_type>(thing, "Congruence");
+    // reduce<std::string>(thing, "Congruence");
 
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff
@@ -180,7 +183,7 @@ Get the current maximum number of threads.
     thing.def("number_of_classes",
               &Congruence::number_of_classes,
               R"pbdoc(
-:sig(self: Congruence) -> int | PositiveInfinity:
+:sig=(self: Congruence) -> int | PositiveInfinity:
 
 Compute the number of classes in the congruence. This function computes
 the number of classes in the congruence represented by a
@@ -227,7 +230,9 @@ This function returns the presentation used to construct a
    if no :any:`Presentation` was used to construct or initialise ``self``.
 )pbdoc");
 
+    // TODO(0) add_generating_pair (also for the other types too)
     /*
+     * TODO(0) add these
           thing.def("get",
                     &Congruence::get,
                     R"pbdoc(

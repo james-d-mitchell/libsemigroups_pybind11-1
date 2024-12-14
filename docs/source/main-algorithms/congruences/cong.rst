@@ -20,6 +20,15 @@ Contents
    :nosignatures:
 
    ~Congruence
+   Congruence.add_generating_pair
+   Congruence.contains
+   Congruence.copy
+   Congruence.currently_contains
+   Congruence.init
+   Congruence.max_threads
+   Congruence.number_of_classes
+   Congruence.number_of_runners
+   Congruence.presentation
 
 Full API
 --------

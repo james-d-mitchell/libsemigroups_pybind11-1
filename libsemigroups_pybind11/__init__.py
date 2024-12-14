@@ -66,6 +66,7 @@ try:
         Ukkonen,
         tril,
         Kambites,
+        Congruence,
     )
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError(

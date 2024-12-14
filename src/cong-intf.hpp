@@ -155,6 +155,53 @@ had been newly constructed from *knd* and *p*.
   }
 
   template <typename Word, typename Thing>
+  void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
+                               std::string_view                        name,
+                               doc extra_doc = {}) {
+    thing.def(
+        "add_generating_pair",
+        [](Thing& self, Word const& u, Word const& v) -> Thing& {
+          return congruence_interface::add_generating_pair(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(
+            R"pbdoc(
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> {0}:
+:only-document-once:
+
+Add a generating pair.
+
+This function adds a generating pair to the congruence represented by a
+:any:`{0}` instance.
+
+{1}
+
+:param u: the first item in the pair.
+:type u: List[int] | str
+
+:param v: the second item in the pair.
+:type v: List[int] | str
+
+:returns: ``self``.
+:rtype: {0}
+
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+:raises LibsemigroupsError:  if :any:`Runner.started` returns ``True``.
+
+{2}
+)pbdoc",
+            name,
+            extra_doc.detail,
+            extra_doc.raises)
+            .c_str());
+  }
+
+  template <typename Word, typename Thing>
   void currently_contains(py::class_<Thing, CongruenceInterface>& thing,
                           std::string_view                        name,
                           doc extra_doc = {}) {

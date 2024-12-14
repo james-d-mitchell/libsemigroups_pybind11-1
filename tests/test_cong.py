@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2021-2024 J. D. Mitchell
+#
+# Distributed under the terms of the GPL license version 3.
+#
+# The full license is in the file LICENSE, distributed with this software.
+
+"""
+This file contains tests for Congruence from libsemigroups_pybind11.
+"""
+
+# pylint: disable=no-name-in-module, missing-function-docstring, invalid-name
+from datetime import timedelta
+from libsemigroups_pybind11 import (
+    Congruence,
+    ReportGuard,
+    congruence_kind,
+    Presentation,
+    presentation,
+)
+
+
+def test_018():
+    ReportGuard(False)
+    p = Presentation([0, 1, 2])
+    presentation.add_rule(p, [0, 0], [0, 0])
+    presentation.add_rule(p, [0, 1], [1, 0])
+    presentation.add_rule(p, [0, 2], [2, 0])
+    presentation.add_rule(p, [0, 0], [0])
+    presentation.add_rule(p, [0, 2], [0])
+    presentation.add_rule(p, [2, 0], [0])
+    presentation.add_rule(p, [1, 0], [0, 1])
+    presentation.add_rule(p, [1, 1], [1, 1])
+    presentation.add_rule(p, [1, 2], [2, 1])
+    presentation.add_rule(p, [1, 1, 1], [1])
+    presentation.add_rule(p, [1, 2], [1])
+    presentation.add_rule(p, [2, 1], [1])
+
+    cong = Congruence(congruence_kind.twosided, p)
+    cong.add_generating_pair([0], [1])
+    assert not cong.finished()
+    assert cong.number_of_classes()
+    assert cong.finished()
+
+    # TODO(0) uncomment
+    # assert cong.number_of_non_trivial_classes() == 1
+    # assert cong.non_trivial_classes(0) == [[0], [1], [0, 1], [1, 1], [0, 1, 1]]
+    # The next line does nothing except check that it's possible to call
+    # `run_for` with a timedelta
+    cong.run_for(timedelta(seconds=1))
