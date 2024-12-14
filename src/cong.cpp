@@ -66,6 +66,8 @@ and :any:`ToddCoxeter`.
 
     def_construct_default(thing, "Congruence");
 
+    def_init_default(thing, "Congruence");
+
     constructor<word_type>(thing, "Congruence");
     constructor<std::string>(thing, "Congruence");
 
@@ -87,10 +89,6 @@ and :any:`ToddCoxeter`.
     // TODO(0) uncomment (not yet impled in Congruence)
     // reduce<std::string>(thing, "Congruence");
     // reduce<word_type>(thing, "Congruence");
-
-    ////////////////////////////////////////////////////////////////////////
-    // TODO
-    ////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff

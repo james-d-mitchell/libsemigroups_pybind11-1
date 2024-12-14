@@ -85,6 +85,30 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
                   .c_str());
   }
 
+  template <typename Thing>
+  void def_init_default(py::class_<Thing, CongruenceInterface>& thing,
+                        std::string_view                        name,
+                        doc extra_doc = {}) {
+    thing.def(
+        "init",
+        [](Thing& self) { return self.init(); },
+        fmt::format(R"pbdoc(
+Re-initialize a :any:`{0}` instance.
+
+This function puts a :any:`{0}` instance back into the state that it would
+have been in if it had just been newly default constructed.
+
+{1}
+
+:returns:
+  ``self``.
+:rtype:
+    {0})pbdoc",
+                    name,
+                    extra_doc.detail)
+            .c_str());
+  }
+
   template <typename Word, typename Thing>
   void
   init_from_kind_presentation(py::class_<Thing, CongruenceInterface>& thing,

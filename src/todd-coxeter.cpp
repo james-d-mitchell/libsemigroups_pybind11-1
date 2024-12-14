@@ -243,6 +243,8 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     def_construct_default(thing, "ToddCoxeter");
 
+    def_init_default(thing, "ToddCoxeter");
+
     constructor<word_type>(thing, "ToddCoxeter");
     constructor<std::string>(thing, "ToddCoxeter");
 
@@ -277,22 +279,6 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     thing.def("__repr__", [](ToddCoxeter const& self) {
       return to_human_readable_repr(self);
     });
-
-    thing.def(
-        "init",
-        [](ToddCoxeter& self) { return self.init(); },
-        R"pbdoc(
-:sig=(self: ToddCoxeter) -> ToddCoxeter:
-:only-document-once:
-Re-initialize a ToddCoxeter instance. This function puts a
-:any:`ToddCoxeter` instance back into the state that it would have been
-in if it had just been newly default constructed.
-
-:returns:
-    ``self``.
-:rtype:
-    ToddCoxeter
-    )pbdoc");
 
     thing.def(py::init<congruence_kind, ToddCoxeter&>(),
               py::arg("knd"),

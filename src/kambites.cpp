@@ -62,6 +62,8 @@ As such generating pairs or rules are interchangeable in the context of
 
       def_construct_default(thing, "Kambites");
 
+      def_init_default(thing, "Kambites");
+
       auto extra_detail
           = R"pbdoc(:any:`Kambites` instances can only be used to compute
 two-sided congruences, and so the first parameter *knd* must always
@@ -129,23 +131,6 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 
       thing.def("__repr__",
                 [](Kambites_& thing) { return to_human_readable_repr(thing); });
-
-      thing.def(
-          "init",
-          [](Kambites_& self) { return self.init(); },
-          R"pbdoc(
-:sig=(self: Kambites) -> Kambites:
-:only-document-once:
-Re-initialize a :any:`Kambites` instance.
-
-This function puts a :any:`Kambites` instance back into the state that it would
-have been in if it had just been newly default constructed.
-
-:returns:
-  ``self``.
-:rtype:
-  Kambites
-      )pbdoc");
 
       thing.def("number_of_classes", &Kambites_::number_of_classes, R"pbdoc(
 Compute the number of classes in the congruence.

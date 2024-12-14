@@ -177,6 +177,7 @@ two words :math:`AB` and :math:`BC`.
       //////////////////////////////////////////////////////////////////////////
 
       def_construct_default(kb, "KnuthBendixRewriteTrie");
+      def_init_default(kb, "KnuthBendixRewriteTrie");
 
       constructor<word_type>(kb, "KnuthBendixRewriteTrie");
       constructor<std::string>(kb, "KnuthBendixRewriteTrie");
@@ -203,25 +204,6 @@ current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
 
       reduce<std::string>(kb, "KnuthBendixRewriteTrie");
       reduce<word_type>(kb, "KnuthBendixRewriteTrie");
-
-      //////////////////////////////////////////////////////////////////////////
-      // KnuthBendix specific stuff . . .
-      //////////////////////////////////////////////////////////////////////////
-
-      kb.def(
-          "init",
-          [](KnuthBendix<Rewriter>& self) { return self.init(); },
-          R"pbdoc(
-Remove the presentation and rewriter data. This function clears the rewriter,
-presentation, settings and stats from the :any:`KnuthBendixRewriteTrie` object,
-putting it back into the state it would be in if it was newly default
-constructed.
-
-:returns: ``self``.
-
-:rtype:
-   KnuthBendix
-)pbdoc");
 
       //////////////////////////////////////////////////////////////////////////
       // Setters and getters for optional parameters
