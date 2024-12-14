@@ -231,36 +231,15 @@ rules, and the short-lex reduction ordering.
 
 This function default constructs an uninitialised :any:`KnuthBendixRewriteTrie`
 instance.
-)pbdoc")
-          .def(py::init<congruence_kind, Presentation<std::string> const&>(),
-               py::arg("knd"),
-               py::arg("p"),
-               R"pbdoc(
-:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
+)pbdoc");
 
-Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
+      constructor<word_type>(kb, "KnuthBendixRewriteTrie");
+      constructor<std::string>(kb, "KnuthBendixRewriteTrie");
 
-This function constructs a :any:`KnuthBendixRewriteTrie` instance representing
-a congruence of kind *knd* over the semigroup or monoid defined by the
-presentation *p*.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:raises LibsemigroupsError:  if *p* is not valid.)pbdoc")
-          .def(py::init<congruence_kind, Presentation<word_type> const&>(),
-               R"pbdoc(
-:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-)pbdoc")
-          .def(
-              "init",
-              [](KnuthBendix<Rewriter>& self) { return self.init(); },
-              R"pbdoc(
+      kb.def(
+            "init",
+            [](KnuthBendix<Rewriter>& self) { return self.init(); },
+            R"pbdoc(
 Remove the presentation and rewriter data. This function clears the rewriter,
 presentation, settings and stats from the :any:`KnuthBendixRewriteTrie` object,
 putting it back into the state it would be in if it was newly default

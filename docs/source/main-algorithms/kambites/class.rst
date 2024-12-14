@@ -20,7 +20,6 @@ Contents
     :nosignatures:
 
     ~Kambites
-    Kambites.add_generating_pair
     Kambites.contains
     Kambites.currently_contains
     Kambites.init
@@ -37,4 +36,3 @@ Full API
 .. autoclass:: Kambites
    :members:
    :class-doc-from: init
-

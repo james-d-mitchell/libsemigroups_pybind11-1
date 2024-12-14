@@ -25,5 +25,5 @@ Full API
 --------
 
 .. autoclass:: Congruence
-   :no-doc:
+   :class-doc-from: init
    :members:

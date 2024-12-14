@@ -27,10 +27,49 @@ namespace py = pybind11;
 
 namespace libsemigroups {
 
+  struct doc {
+    std::string_view detail = "";
+    std::string_view raises = "";
+  };
+
+  template <typename Word, typename Thing>
+  void constructor(py::class_<Thing, CongruenceInterface>& thing,
+                   std::string_view                        name,
+                   doc                                     extra_doc = {}) {
+    thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
+              py::arg("knd"),
+              py::arg("p"),
+              fmt::format(R"pbdoc(
+:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
+:only-document-once:
+
+Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
+
+This function constructs a :any:`{0}` instance representing a congruence
+of kind *knd* over the semigroup or monoid defined by the presentation *p*.
+
+{1}
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param p: the presentation.
+:type p: PresentationStrings
+
+:raises LibsemigroupsError: if *p* is not valid.
+
+{2}
+  )pbdoc",
+                          name,
+                          extra_doc.detail,
+                          extra_doc.raises)
+                  .c_str());
+  }
+
   template <typename Word, typename Thing>
   void currently_contains(py::class_<Thing, CongruenceInterface>& thing,
                           std::string_view                        name,
-                          std::string_view extra_doc = "") {
+                          std::string_view extra_raises = "") {
     thing.def(
         "currently_contains",
         [](Thing const& self, Word const& u, Word const& v) {
@@ -69,14 +108,14 @@ contained in the congruence, but that this is not currently known.
 {1}
 )pbdoc",
                     name,
-                    extra_doc)
+                    extra_raises)
             .c_str());
   }
 
   template <typename Word, typename Thing>
   void contains(py::class_<Thing, CongruenceInterface>& thing,
                 std::string_view                        name,
-                std::string_view                        extra_doc = "") {
+                std::string_view                        extra_raises = "") {
     thing.def(
         "contains",
         [](Thing& self, Word const& u, Word const& v) {
@@ -110,7 +149,7 @@ congruence represented by a :py:class:`{0}` instance.
 {1}
 )pbdoc",
                     name,
-                    extra_doc)
+                    extra_raises)
             .c_str());
   }
 

@@ -28,77 +28,11 @@
 #include "main.hpp"       // for init_kambites
 
 namespace py = pybind11;
+using namespace std::literals;
 
 namespace libsemigroups {
 
   namespace {
-    template <typename OtherWord, typename Word>
-    void constructor(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(py::init<congruence_kind, Presentation<OtherWord> const&>(),
-                py::arg("knd"),
-                py::arg("p"),
-                R"pbdoc(
-:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-
-Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
-
-This function constructs a :any:`Kambites` instance representing a congruence
-of kind *knd* over the semigroup or monoid defined by the presentation *p*.
-:any:`Kambites` instances can only be used to compute two-sided congruences,
-and so the first parameter *knd* must always be ``congruence_kind.twosided``.
-The parameter *knd* is included for uniformity of interface between with
-:any:`KnuthBendixRewriteTrie`, :any:`Kambites`, and :any:`Congruence`.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:raises LibsemigroupsError: if *p* is not valid.
-
-:raises LibsemigroupsError:
-  if *knd* is not ``congruence_kind.twosided``.)pbdoc");
-    }
-
-    template <typename OtherWord, typename Word>
-    void add_generating_pair(
-        py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(
-          "add_generating_pair",
-          [](Kambites<Word>&  self,
-             OtherWord const& u,
-             OtherWord const& v) -> Kambites<Word>& {
-            return kambites::add_generating_pair(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          R"pbdoc(
-:sig=(self: Kambites, u: List[int] | str, v: List[int] | str) -> Kambites:
-:only-document-once:
-
-Add a generating pair.
-
-This function adds a generating pair to the congruence represented by a :any:`Kambites` instance.
-
-:param u: the first word.
-:type u: List[int] | str
-
-:param v: the second word.
-:type v: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-
-:raises LibsemigroupsError:  if :any:`Runner.started` returns ``True``.
-
-:returns: ``self``.
-:rtype: Kambites
-)pbdoc");
-    }
 
     template <typename OtherWord, typename Word>
     void my_init(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
@@ -215,8 +149,26 @@ Default constructor.
 This function default constructs an uninitialised :any:`Kambites` instance.
 )pbdoc");
 
-      constructor<word_type>(thing);
-      constructor<native_word_type>(thing);
+      auto extra_detail
+          = R"pbdoc(:any:`Kambites` instances can only be used to compute
+two-sided congruences, and so the first parameter *knd* must always
+be ``congruence_kind.twosided``. The parameter *knd* is included for
+uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
+:any:`Kambites`, and :any:`Congruence`.)pbdoc"sv;
+
+      auto extra_raises = R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc"sv;
+
+      constructor<word_type>(
+          thing,
+          "Kambites",
+          doc{.detail = extra_detail, .raises = extra_raises});
+      constructor<native_word_type>(
+          thing,
+          "Kambites",
+          doc{.detail = extra_detail, .raises = extra_raises});
 
       thing.def(
           "copy",
@@ -253,9 +205,6 @@ have been in if it had just been newly default constructed.
 :rtype:
   Kambites
       )pbdoc");
-
-      add_generating_pair<word_type>(thing);
-      add_generating_pair<std::string>(thing);
 
       currently_contains<word_type>(thing,
                                     "Kambites",

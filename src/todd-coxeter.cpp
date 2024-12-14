@@ -285,38 +285,8 @@ Copy a :any:`ToddCoxeter` object.
 :rtype: ToddCoxeter
     )pbdoc");
 
-    thing.def(py::init<congruence_kind, Presentation<std::string> const&>(),
-              py::arg("knd"),
-              py::arg("p"),
-              R"pbdoc(
-:sig=(self: ToddCoxeter, knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-
-Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
-
-This function constructs a :any:`ToddCoxeter` instance representing a
-congruence of kind *knd* over the semigroup or monoid defined by the
-presentation *p*. The type of the words in *p* can be anything, but will be
-converted into ``List[int]``. This means that if the input presentation
-uses :any:`str`, for example, as the word type, then this presentation is
-converted into a :any:`PresentationStrings` using ``List[int]`` instead. This
-converted presentation can be recovered using :any:`ToddCoxeter.presentation`.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:raises LibsemigroupsError: if *p* is not valid.)pbdoc");
-
-    thing.def(py::init<congruence_kind, Presentation<word_type> const&>(),
-              py::arg("knd"),
-              py::arg("p"),
-              R"pbdoc(
-:sig=(self: ToddCoxeter, knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-)pbdoc");
+    constructor<word_type>(thing, "ToddCoxeter");
+    constructor<std::string>(thing, "ToddCoxeter");
 
     thing.def(py::init<congruence_kind, ToddCoxeter&>(),
               py::arg("knd"),

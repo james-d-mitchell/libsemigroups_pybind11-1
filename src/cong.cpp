@@ -39,34 +39,6 @@
 namespace py = pybind11;
 
 namespace libsemigroups {
-  ////////////////////////////////////////////////////////////////////////
-  // Method templates
-  ////////////////////////////////////////////////////////////////////////
-  namespace {
-
-    template <typename Word>
-    void construct(py::class_<Congruence, CongruenceInterface>& thing) {
-      thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
-                py::arg("knd"),
-                py::arg("p"),
-                R"pbdoc(
-:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-
-Construct from congruence_kind and Presentation.
-
-This function constructs a :any:`Congruence` instance representing a congruence
-of kind *knd* over the semigroup or monoid defined by the presentation *p*.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: Presentation
-
-:raises LibsemigroupsError:  if *p* is not valid.)pbdoc");
-    }
-  }  // namespace
 
   ////////////////////////////////////////////////////////////////////////
   // init_congruence
@@ -105,8 +77,8 @@ Default constructor. This function default constructs an uninitialised
     // Copy constructor.
     // )pbdoc");
     //
-    construct<word_type>(thing);
-    construct<std::string>(thing);
+    constructor<word_type>(thing, "Congruence");
+    constructor<std::string>(thing, "Congruence");
 
     thing.def(py::init<congruence_kind,
                        FroidurePinBase&,
