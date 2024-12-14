@@ -60,6 +60,8 @@ As such generating pairs or rules are interchangeable in the context of
       // Things from cong-intf.hpp . . .
       ////////////////////////////////////////////////////////////////////////
 
+      def_construct_default(thing, "Kambites");
+
       auto extra_detail
           = R"pbdoc(:any:`Kambites` instances can only be used to compute
 two-sided congruences, and so the first parameter *knd* must always
@@ -127,11 +129,6 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 
       thing.def("__repr__",
                 [](Kambites_& thing) { return to_human_readable_repr(thing); });
-      thing.def(py::init<>(), R"pbdoc(
-Default constructor.
-
-This function default constructs an uninitialised :any:`Kambites` instance.
-)pbdoc");
 
       thing.def(
           "init",

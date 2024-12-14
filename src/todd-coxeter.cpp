@@ -241,6 +241,8 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     // Things from cong-intf.hpp . . .
     //////////////////////////////////////////////////////////////////////////
 
+    def_construct_default(thing, "ToddCoxeter");
+
     constructor<word_type>(thing, "ToddCoxeter");
     constructor<std::string>(thing, "ToddCoxeter");
 
@@ -275,14 +277,6 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     thing.def("__repr__", [](ToddCoxeter const& self) {
       return to_human_readable_repr(self);
     });
-
-    thing.def(py::init<>(),
-              R"pbdoc(
-:sig=(self: ToddCoxeter) -> None:
-:only-document-once:
-Default constructor. This function default constructs an uninitialised
-:any:`ToddCoxeter` instance.
-)pbdoc");
 
     thing.def(
         "init",

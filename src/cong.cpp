@@ -64,6 +64,8 @@ and :any:`ToddCoxeter`.
     // Things from cong-intf.hpp . . .
     ////////////////////////////////////////////////////////////////////////
 
+    def_construct_default(thing, "Congruence");
+
     constructor<word_type>(thing, "Congruence");
     constructor<std::string>(thing, "Congruence");
 
@@ -89,16 +91,6 @@ and :any:`ToddCoxeter`.
     ////////////////////////////////////////////////////////////////////////
     // TODO
     ////////////////////////////////////////////////////////////////////////
-
-    thing.def(py::init<>(), R"pbdoc(
-Default constructor. This function default constructs an uninitialised
-:any:`Congruence` instance.
-)pbdoc");
-    // TODO(0) copy
-    //     thing.def(py::init<Congruence const&>(), R"pbdoc(
-    // Copy constructor.
-    // )pbdoc");
-    //
 
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff

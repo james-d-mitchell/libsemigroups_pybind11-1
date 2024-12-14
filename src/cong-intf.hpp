@@ -33,6 +33,23 @@ namespace libsemigroups {
   };
 
   // TODO(0) move the definitions in to cong-intf.cpp since the types are fixed.
+  // TODO(0) add prefix def_
+
+  template <typename Thing>
+  void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
+                             std::string_view                        name,
+                             doc extra_doc = {}) {
+    thing.def(py::init<>(),
+              fmt::format(R"pbdoc(
+Default constructor. This function default constructs an uninitialised
+:any:`{}` instance.
+
+{}
+)pbdoc",
+                          name,
+                          extra_doc.detail)
+                  .c_str());
+  }
 
   template <typename Word, typename Thing>
   void constructor(py::class_<Thing, CongruenceInterface>& thing,

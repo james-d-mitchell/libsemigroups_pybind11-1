@@ -176,6 +176,8 @@ two words :math:`AB` and :math:`BC`.
       // Things from cong-intf.hpp . . .
       //////////////////////////////////////////////////////////////////////////
 
+      def_construct_default(kb, "KnuthBendixRewriteTrie");
+
       constructor<word_type>(kb, "KnuthBendixRewriteTrie");
       constructor<std::string>(kb, "KnuthBendixRewriteTrie");
 
@@ -205,17 +207,6 @@ current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
       //////////////////////////////////////////////////////////////////////////
       // KnuthBendix specific stuff . . .
       //////////////////////////////////////////////////////////////////////////
-
-      kb.def(py::init<>(),
-             R"pbdoc(
-:sig=() -> None:
-:only-document-once:
-Constructs a :any:`KnuthBendixRewriteTrie` instance with no
-rules, and the short-lex reduction ordering.
-
-This function default constructs an uninitialised :any:`KnuthBendixRewriteTrie`
-instance.
-)pbdoc");
 
       kb.def(
           "init",
