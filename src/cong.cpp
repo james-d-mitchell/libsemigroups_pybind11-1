@@ -41,8 +41,8 @@ namespace libsemigroups {
     py::class_<Congruence, CongruenceInterface> thing(m,
                                                       "Congruence",
                                                       R"pbdoc(
-Class for running :any:`Kambites`, :any:`KnuthBendix`, and :any:`ToddCoxeter`
-in parallel.
+Class for running :any:`Kambites`, :any:`KnuthBendixRewriteTrie`, and
+:any:`ToddCoxeter` in parallel.
 
 On this page we describe the functionality relating to the class
 :any:`Congruence` in ``libsemigroups``. This class can be used for computing a
@@ -115,6 +115,41 @@ representing a 1- or 2-sided congruence according to *knd*.
 
 :param wg: the left or right Cayley graph of S.
 :type wg: WordGraph
+
+:returns:  ``self``.
+:rtype: Congruence
+)pbdoc");
+
+    thing.def(
+        "init",
+        [](Congruence&                self,
+           congruence_kind            knd,
+           FroidurePinBase&           S,
+           WordGraph<uint32_t> const& wg) { return self.init(knd, S, wg); },
+        py::arg("knd"),
+        py::arg("S"),
+        py::arg("wg"),
+        R"pbdoc(
+Re-initialize from :any:`congruence_kind`, :any:`FroidurePin`, and
+:any:`WordGraph`.
+
+This function re-initializes a :any:`Congruence` instance as if it had been
+newly constructed over the :any:`FroidurePin` instance *S* representing a 1-
+or 2-sided congruence according to *knd*.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param S:
+  a reference to the FroidurePin over which the congruence is being
+  defined.
+:type S: FroidurePinBase
+
+:param wg: the left or right Cayley graph of S.
+:type wg: WordGraph
+
+:returns:  ``self``.
+:rtype: Congruence
 )pbdoc");
 
     thing.def(
@@ -131,6 +166,67 @@ Set the maximum number of threads.
 :rtype: Congruence
 )pbdoc");
 
+    thing.def(
+        "max_threads",
+        [](Congruence const& self) { return self.max_threads(); },
+        R"pbdoc(
+Get the current maximum number of threads.
+
+:returns: The current maximum number of threads.
+:rtype: int
+    )pbdoc");
+
+    // TODO(0) move to cong-intf.hpp
+    thing.def("number_of_classes",
+              &Congruence::number_of_classes,
+              R"pbdoc(
+:sig(self: Congruence) -> int | PositiveInfinity:
+
+Compute the number of classes in the congruence. This function computes
+the number of classes in the congruence represented by a
+:any:`Congruence` instance.
+
+:returns:
+   The number of congruences classes of a :any:`Congruence` instance if
+   this number is finite, or :any:`POSITIVE_INFINITY` in some cases if
+   this number is not finite.
+:rtype:
+   int | PositiveInfinity
+)pbdoc");
+
+    thing.def("number_of_runners",
+              &Congruence::number_of_runners,
+              R"pbdoc(
+Get the number of runners. This function returns the number of distinct
+:any:`CongruenceInterface` instances that are contained in a
+:any:`Congruence` object.
+
+:returns:
+   The number of runners.
+:rtype:
+   int
+)pbdoc");
+
+    thing.def("presentation",
+              &Congruence::presentation,
+              R"pbdoc(
+Get the presentation defining the parent semigroup of the congruence.
+This function returns the presentation used to construct a
+:any:`Congruence` object. This is not always possible.
+
+:returns:
+   The presentation.
+:rtype:
+   Presentation
+
+:raises LibsemigroupsError:
+   if :any:`Runner.finished` returns ``True`` and ``has(KnuthBendix)`` returns
+   ``True``.
+
+:raises LibsemigroupsError:
+   if no :any:`Presentation` was used to construct or initialise ``self``.
+)pbdoc");
+
     /*
           thing.def("get",
                     &Congruence::get,
@@ -140,38 +236,6 @@ Set the maximum number of threads.
                     &Congruence::has,
                     R"pbdoc(
     )pbdoc");
-          thing.def(
-              "init",
-              [](Congruence& self) { return self.init(); },
-              R"pbdoc(
-    Re-initialize a Congruence instance. This function puts a
-    :any:`Congruence` instance back into the state that it would have been
-    in if it had just been newly default constructed.
-
-    :exceptions:
-       This function guarantees not to throw a :any:`LibsemigroupsError`.
-
-    :returns:
-       A reference to ``self``.
-
-    :rtype:
-       Congruence
-    )pbdoc");
-          thing.def(
-              "init",
-              [](Congruence&            self,
-                 congruence_kind        knd,
-                 FroidurePinBase&       S,
-                 WordGraph<Node> const& wg) { return self.init(knd, S, wg); },
-              py::arg("knd"),
-              py::arg("S"),
-              py::arg("wg"),
-              R"pbdoc(
-    )pbdoc");
-          thing.def(
-              "max_threads",
-              [](Congruence const& self) { return self.max_threads(); },
-              R"pbdoc(
     Returns the :any:`KnuthBendix` instance used to compute the congruence (if
     any).
 
@@ -199,22 +263,8 @@ Set the maximum number of threads.
 
     :rtype: int
     )pbdoc");
-          thing.def("number_of_classes",
-                    &Congruence::number_of_classes,
-                    R"pbdoc(
-    )pbdoc");
-          thing.def("number_of_runners",
-                    &Congruence::number_of_runners,
-                    R"pbdoc(
-    )pbdoc");
-          thing.def("throw_if_letter_out_of_bounds",
-                    &Congruence::throw_if_letter_out_of_bounds,
-                    py::arg("first"),
-                    py::arg("last"),
-                    R"pbdoc(
-    )pbdoc");
     */
-
+    // TODO(0) the helpers too
   }  // init_cong
 
 }  // namespace libsemigroups

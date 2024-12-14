@@ -28,7 +28,7 @@
 #include "main.hpp"       // for init_kambites
 
 namespace py = pybind11;
-using namespace std::literals;
+using std::literals::operator""sv;
 
 namespace libsemigroups {
   namespace {

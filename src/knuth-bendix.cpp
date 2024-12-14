@@ -41,7 +41,7 @@
 #include "main.hpp"       // for init_knuth_bendix
 
 namespace py = pybind11;
-using namespace std::literals;
+using std::literals::operator""sv;
 
 namespace libsemigroups {
 
@@ -558,16 +558,15 @@ This function computes the number of classes in the congruence represented by a
 Run the Knuth-Bendix algorithm by considering all overlaps of a given length.
 
 This function runs the Knuth-Bendix algorithm on the rewriting system
-represented by a :any:`KnuthBendixRewriteTrie` instance by considering all overlaps of a
-given length :math:`n` (according to the type of :any:`overlap`) before those overlaps
-of length :math:`n + 1`.
+represented by a :any:`KnuthBendixRewriteTrie` instance by considering all
+overlaps of a given length :math:`n` (according to the
+:any:`KnuthBendixRewriteTrie.options.overlap`) before those overlaps of length
+:math:`n + 1`.
 
 :param kb: the :any:`KnuthBendixRewriteTrie` instance.
 :type kb: KnuthBendixRewriteTrie
 
 .. seealso:: :any:`KnuthBendixRewriteTrie.overlap_policy`
-
-
 )pbdoc");
       m.def(
           "knuth_bendix_is_reduced",

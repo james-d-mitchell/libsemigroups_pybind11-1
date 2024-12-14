@@ -31,7 +31,7 @@
 #include "main.hpp"       // for init_todd_coxeter
 
 namespace py = pybind11;
-using namespace std::literals;
+using std::literals::operator""sv;
 
 namespace libsemigroups {
 
