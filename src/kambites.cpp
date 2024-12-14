@@ -62,7 +62,6 @@ had been newly constructed from *knd* and *p*.
 :rtype: Kambites
 
 :raises LibsemigroupsError: if *p* is not valid.
-:raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
 )pbdoc");
     }
 
@@ -189,6 +188,23 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
       contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
 
       ////////////////////////////////////////////////////////////////////////
+      // init_from_kind_presentation from cong-intf.hpp
+      ////////////////////////////////////////////////////////////////////////
+
+      auto extra_raises = R"pbdoc(
+:raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
+)pbdoc"sv;
+
+      init_from_kind_presentation<word_type>(thing, "Kambites" , doc{.raises = extra_raises}));
+      init_from_kind_presentation<std::string>(thing, "Kambites" , doc{.raises = extra_raises}));
+
+      reduce<word_type>(thing);
+      reduce<std::string>(thing);
+
+      reduce_no_run<word_type>(thing);
+      reduce_no_run<std::string>(thing);
+
+      ////////////////////////////////////////////////////////////////////////
       // Kambites specific stuff
       ////////////////////////////////////////////////////////////////////////
 
@@ -236,15 +252,6 @@ have been in if it had just been newly default constructed.
 :rtype:
   Kambites
       )pbdoc");
-
-      my_init<word_type>(thing);
-      my_init<std::string>(thing);
-
-      reduce<word_type>(thing);
-      reduce<std::string>(thing);
-
-      reduce_no_run<word_type>(thing);
-      reduce_no_run<std::string>(thing);
 
       thing.def("number_of_classes", &Kambites_::number_of_classes, R"pbdoc(
 Compute the number of classes in the congruence.

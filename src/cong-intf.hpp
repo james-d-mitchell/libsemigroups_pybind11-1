@@ -64,6 +64,50 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
                           extra_doc.detail,
                           extra_doc.raises)
                   .c_str());
+
+    template <typename Word, typename Thing>
+    void init_from_kind_presentation(py::class_<Thing, CongruenceInterface>
+                                         & thing,
+                                     std::string_view name,
+                                     doc              extra_doc = {}) {
+      thing.def(
+          "init",
+          [](Thing& self, congruence_kind knd, Presentation<Word> const& p) {
+        return self.init(knd, p);
+          },
+          py::arg("knd"),
+          py::arg("p"),
+          // TODO(0) adding only-document-once here means that the other
+          // overloads of init are suppressed also :(
+          // :only-document-once:
+         fmt::format(R"pbdoc(
+:sig=(self: {0}, knd: congruence_kind, p: Presentation) -> {0}:
+
+Re-initialize a :any:`{0}` instance.
+
+This function re-initializes a :any:`{0}` instance as if it
+had been newly constructed from *knd* and *p*.
+
+{1}
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: :any:`congruence_kind`
+
+:param p: the presentation.
+:type p: PresentationStrings
+
+:returns:  ``self``.
+:rtype: {0}
+
+:raises LibsemigroupsError: if *p* is not valid.
+
+{2}
+)pbdoc"),
+                          name,
+                          extra_doc.detail,
+                          extra_doc.raises)
+                  .c_str());
+    }
   }
 
   template <typename Word, typename Thing>
