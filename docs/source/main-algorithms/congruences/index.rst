@@ -9,8 +9,13 @@
 Congruences
 ===========
 
-This page contains links to the documentation for the classes
-:any:`CongruenceInterface` and :any:`Congruence`.
+``libsemigroups`` implements several algorithms for computing a congruence of a
+semigroup or monoid. This page contains links to the documentation for the
+classes :any:`CongruenceInterface` and :any:`Congruence`.
+
+The "handedness" of a congruence is determined by:
+
+.. autoclass:: congruence_kind
 
 .. toctree::
    :maxdepth: 1
