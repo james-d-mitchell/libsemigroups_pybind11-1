@@ -198,5 +198,44 @@ congruence represented by a :py:class:`{0}` instance.
             .c_str());
   }
 
+  template <typename Word, typename Thing>
+  void reduce_no_run(py::class_<Thing, CongruenceInterface>& thing,
+                     std::string_view                        name,
+                     doc                                     extra_doc = {}) {
+    thing.def(
+        "reduce_no_run",
+        [](Thing& self, Word const& w) {
+          return congruence_interface::reduce_no_run(self, w);
+        },
+        py::arg("w"),
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, w: List[int] | str) -> List[int] | str:
+:only-document-once:
+
+Reduce a word.
+
+If :any:`Runner.finished` returns ``True``, then this function returns a normal
+form for the input word *w*.
+
+{1}
+
+:param w: the input word.
+:type w: List[int] | str
+
+:returns: A word equivalent to the input word.
+:rtype: List[int] | str
+
+:raises LibsemigroupsError:
+  if any of the values in *w* is out of range, i.e. they do not belong to
+  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+{2})pbdoc",
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+
 }  // namespace libsemigroups
 #endif  // SRC_CONG_INTF_HPP_

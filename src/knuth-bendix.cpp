@@ -41,37 +41,11 @@
 #include "main.hpp"       // for init_knuth_bendix
 
 namespace py = pybind11;
+using namespace std::literals;
 
 namespace libsemigroups {
 
   namespace {
-    template <typename Word, typename Rewriter>
-    void reduce_no_run(
-        py::class_<KnuthBendix<Rewriter>, CongruenceInterface>& thing) {
-      thing.def(
-          "reduce_no_run",
-          [](KnuthBendix<Rewriter>& self, Word const& w) {
-            return knuth_bendix::reduce_no_run(self, w);
-          },
-          py::arg("w"),
-          R"pbdoc(
-:sig=(self: KnuthBendix, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-Rewrites the word *w* according to the current rules in the :py:class:`KnuthBendixRewriteTrie`
-instance.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.)pbdoc");
-    }
-
     template <typename Word, typename Rewriter>
     void reduce(py::class_<KnuthBendix<Rewriter>, CongruenceInterface>& thing) {
       thing.def(
@@ -242,8 +216,14 @@ two words :math:`AB` and :math:`BC`.
       currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
       currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
-      reduce_no_run<std::string>(kb);
-      reduce_no_run<word_type>(kb);
+      auto extra_detail = R"pbdoc(
+Otherwise, this function returns the word *w* rewritten according to the
+current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
+
+      reduce_no_run<std::string>(
+          kb, "KnuthBendixRewriteTrie", doc{.detail = extra_detail});
+      reduce_no_run<word_type>(
+          kb, "KnuthBendixRewriteTrie", doc{.detail = extra_detail});
 
       reduce<std::string>(kb);
       reduce<word_type>(kb);

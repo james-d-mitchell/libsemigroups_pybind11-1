@@ -76,9 +76,10 @@ this lexicographically least word always exists.
 
 Reduce a word.
 
-If :any:`Runner.finished` returns ``True``, then returns the lexicographically
-least word equivalent to the input word *w*. If :any:`Runner.finished` returns
-``False``, then the input word *w* is returned.
+If :any:`Runner.finished` returns ``True``, then this function returns the
+lexicographically least word equivalent to the input word *w*. If
+:any:`Runner.finished` returns ``False``, then the input word *w* is
+returned.
 
 :param w: the input word.
 :type w: List[int] | str
@@ -138,6 +139,19 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
 
+      extra_raises = R"pbdoc(
+:raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
+)pbdoc"sv;
+
+      init_from_kind_presentation<word_type>(
+          thing, "Kambites", doc{.raises = extra_raises});
+      init_from_kind_presentation<std::string>(
+          thing, "Kambites", doc{.raises = extra_raises});
+
+      extra_raises = R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc"sv;
       currently_contains<word_type>(
           thing, "Kambites", doc{.raises = extra_raises});
       // TODO(0) should this be "is known and not at least 4"?
@@ -148,21 +162,17 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
       contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
       contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
 
-      extra_raises = R"pbdoc(
-:raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
-)pbdoc"sv;
+      extra_detail
+          = R"pbdoc(If :any:`Runner.finished` returns ``False``, then the input
+word *w* is returned.)pbdoc"sv;
 
-      init_from_kind_presentation<word_type>(
-          thing, "Kambites", doc{.raises = extra_raises});
-      init_from_kind_presentation<std::string>(
-          thing, "Kambites", doc{.raises = extra_raises});
+      reduce_no_run<word_type>(thing, "Kambites", doc{.detail = extra_detail});
+      reduce_no_run<std::string>(
+          thing, "Kambites", doc{.detail = extra_detail});
 
       // TODO
       reduce<word_type>(thing);
       reduce<std::string>(thing);
-
-      reduce_no_run<word_type>(thing);
-      reduce_no_run<std::string>(thing);
 
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific stuff

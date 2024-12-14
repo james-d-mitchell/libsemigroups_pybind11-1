@@ -31,6 +31,7 @@
 #include "main.hpp"       // for init_todd_coxeter
 
 namespace py = pybind11;
+using namespace std::literals;
 
 namespace libsemigroups {
 
@@ -251,6 +252,16 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     contains<word_type>(thing, "ToddCoxeter");
     contains<std::string>(thing, "ToddCoxeter");
+
+    // TODO(0) uncomment, issue in libsemigroups itself
+    //     auto extra_detail = R"pbdoc(
+    // If the  :any:`ToddCoxeter` instance is not :any:`Runner.finished`, then
+    // it might be that equivalent input words produce different output words.
+    // This function triggers no congruence enumeration.)pbdoc"sv;
+    //
+    //     reduce_no_run<word_type>(thing, "ToddCoxeter", doc{.detail =
+    //     extra_detail}); reduce_no_run<std::string>(
+    //         thing, "ToddCoxeter", doc{.detail = extra_detail});
 
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
@@ -1216,6 +1227,7 @@ or equivalently a canconical representative of its congruence class.
 :sig=(self: ToddCoxeter, w: List[int] | str) -> List[int] | str:
   )pbdoc");
 
+    // TODO(0) remove, see note above
     thing.def(
         "reduce_no_run",
         [](ToddCoxeter& self, word_type const& w) {
@@ -1242,6 +1254,7 @@ produce different output words.
   if any of the values in *w* is out of range, i.e. they do not belong to
   ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word` raises.)pbdoc");
 
+    // TODO(0) remove, see note above
     thing.def(
         "reduce_no_run",
         [](ToddCoxeter& self, std::string const& w) {
