@@ -40,7 +40,7 @@ namespace libsemigroups {
               py::arg("knd"),
               py::arg("p"),
               fmt::format(R"pbdoc(
-:sig=(knd: congruence_kind, p: PresentationStrings) -> None:
+:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> None:
 :only-document-once:
 
 Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
@@ -64,24 +64,26 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
                           extra_doc.detail,
                           extra_doc.raises)
                   .c_str());
+  }
 
-    template <typename Word, typename Thing>
-    void init_from_kind_presentation(py::class_<Thing, CongruenceInterface>
-                                         & thing,
-                                     std::string_view name,
-                                     doc              extra_doc = {}) {
-      thing.def(
-          "init",
-          [](Thing& self, congruence_kind knd, Presentation<Word> const& p) {
-        return self.init(knd, p);
-          },
-          py::arg("knd"),
-          py::arg("p"),
-          // TODO(0) adding only-document-once here means that the other
-          // overloads of init are suppressed also :(
-          // :only-document-once:
-         fmt::format(R"pbdoc(
-:sig=(self: {0}, knd: congruence_kind, p: Presentation) -> {0}:
+  template <typename Word, typename Thing>
+  void
+  init_from_kind_presentation(py::class_<Thing, CongruenceInterface>& thing,
+                              std::string_view                        name,
+                              doc extra_doc = {}) {
+    thing.def(
+        "init",
+        [](Thing& self, congruence_kind knd, Presentation<Word> const& p) {
+          return self.init(knd, p);
+        },
+        py::arg("knd"),
+        py::arg("p"),
+        // TODO(0) adding only-document-once here means that the other
+        // overloads of init are suppressed also :(
+        // :only-document-once:
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> {0}:
+:only-document-once:
 
 Re-initialize a :any:`{0}` instance.
 
@@ -102,12 +104,11 @@ had been newly constructed from *knd* and *p*.
 :raises LibsemigroupsError: if *p* is not valid.
 
 {2}
-)pbdoc"),
-                          name,
-                          extra_doc.detail,
-                          extra_doc.raises)
-                  .c_str());
-    }
+)pbdoc",
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
   }
 
   template <typename Word, typename Thing>

@@ -35,37 +35,6 @@ namespace libsemigroups {
   namespace {
 
     template <typename OtherWord, typename Word>
-    void my_init(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(
-          "init",
-          [](Kambites<Word>&                self,
-             congruence_kind                knd,
-             Presentation<OtherWord> const& p) { return self.init(knd, p); },
-          py::arg("knd"),
-          py::arg("p"),
-          R"pbdoc(
-:sig=(self: Kambites, knd: congruence_kind, p: PresentationStrings) -> Kambites:
-:only-document-once:
-
-Re-initialize a :any:`Kambites` instance.
-
-This function re-initializes a :any:`Kambites` instance as if it
-had been newly constructed from *knd* and *p*.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: :any:`congruence_kind`
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:returns:  ``self``.
-:rtype: Kambites
-
-:raises LibsemigroupsError: if *p* is not valid.
-)pbdoc");
-    }
-
-    template <typename OtherWord, typename Word>
     void reduce(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
       thing.def(
           "reduce",
@@ -145,7 +114,7 @@ As such generating pairs or rules are interchangeable in the context of
 :any:`Kambites` objects.)pbdoc");
 
       ////////////////////////////////////////////////////////////////////////
-      // constructor from cong-intf.hpp
+      // Things from cong-intf.hpp . . .
       ////////////////////////////////////////////////////////////////////////
 
       auto extra_detail
@@ -169,10 +138,6 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
 
-      ////////////////////////////////////////////////////////////////////////
-      // currently_contains from cong-intf.hpp
-      ////////////////////////////////////////////////////////////////////////
-
       currently_contains<word_type>(
           thing, "Kambites", doc{.raises = extra_raises});
       // TODO(0) should this be "is known and not at least 4"?
@@ -180,24 +145,19 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           thing, "Kambites", doc{.raises = extra_raises});
       // TODO(0) should this be "is known and not at least 4"?
 
-      ////////////////////////////////////////////////////////////////////////
-      // contains from cong-intf.hpp
-      ////////////////////////////////////////////////////////////////////////
-
       contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
       contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
 
-      ////////////////////////////////////////////////////////////////////////
-      // init_from_kind_presentation from cong-intf.hpp
-      ////////////////////////////////////////////////////////////////////////
-
-      auto extra_raises = R"pbdoc(
+      extra_raises = R"pbdoc(
 :raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
 )pbdoc"sv;
 
-      init_from_kind_presentation<word_type>(thing, "Kambites" , doc{.raises = extra_raises}));
-      init_from_kind_presentation<std::string>(thing, "Kambites" , doc{.raises = extra_raises}));
+      init_from_kind_presentation<word_type>(
+          thing, "Kambites", doc{.raises = extra_raises});
+      init_from_kind_presentation<std::string>(
+          thing, "Kambites", doc{.raises = extra_raises});
 
+      // TODO
       reduce<word_type>(thing);
       reduce<std::string>(thing);
 

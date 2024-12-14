@@ -151,6 +151,10 @@ instance.
 
     template <typename Rewriter>
     void bind_knuth_bendix(py::module& m, std::string const& name) {
+      //////////////////////////////////////////////////////////////////////////
+      // KnuthBendix class definition . . .
+      //////////////////////////////////////////////////////////////////////////
+
       py::class_<KnuthBendix<Rewriter>, CongruenceInterface> kb(m,
                                                                 name.c_str(),
                                                                 R"pbdoc(
@@ -187,6 +191,10 @@ presented monoid or semigroup.
     True
 )pbdoc");
 
+      //////////////////////////////////////////////////////////////////////////
+      // KnuthBendix nested classes . . .
+      //////////////////////////////////////////////////////////////////////////
+
       py::class_<typename KnuthBendix<Rewriter>::options> options(kb,
                                                                   "options",
                                                                   R"pbdoc(
@@ -219,7 +227,29 @@ two words :math:`AB` and :math:`BC`.
       });
 
       //////////////////////////////////////////////////////////////////////////
-      // Initialisers
+      // Things from cong-intf.hpp . . .
+      //////////////////////////////////////////////////////////////////////////
+
+      constructor<word_type>(kb, "KnuthBendixRewriteTrie");
+      constructor<std::string>(kb, "KnuthBendixRewriteTrie");
+
+      init_from_kind_presentation<word_type>(kb, "KnuthBendixRewriteTrie");
+      init_from_kind_presentation<std::string>(kb, "KnuthBendixRewriteTrie");
+
+      contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      contains<word_type>(kb, "KnuthBendixRewriteTrie");
+
+      currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
+
+      reduce_no_run<std::string>(kb);
+      reduce_no_run<word_type>(kb);
+
+      reduce<std::string>(kb);
+      reduce<word_type>(kb);
+
+      //////////////////////////////////////////////////////////////////////////
+      // KnuthBendix specific stuff . . .
       //////////////////////////////////////////////////////////////////////////
 
       kb.def(py::init<>(),
@@ -232,9 +262,6 @@ rules, and the short-lex reduction ordering.
 This function default constructs an uninitialised :any:`KnuthBendixRewriteTrie`
 instance.
 )pbdoc");
-
-      constructor<word_type>(kb, "KnuthBendixRewriteTrie");
-      constructor<std::string>(kb, "KnuthBendixRewriteTrie");
 
       kb.def(
             "init",
@@ -249,49 +276,6 @@ constructed.
 
 :rtype:
    KnuthBendix
-)pbdoc")
-          .def(
-              "init",
-              [](KnuthBendix<Rewriter>&           self,
-                 congruence_kind                  knd,
-                 Presentation<std::string> const& p) {
-                return self.init(knd, p);
-              },
-              py::arg("knd"),
-              py::arg("p"),
-              R"pbdoc(
-:sig=(self: KnuthBendixRewriteTrie, knd: congruence_kind, p: PresentationStrings) -> KnuthBendixRewriteTrie:
-:only-document-once:
-
-Re-initialize a KnuthBendix instance.
-
-This function puts a :any:`KnuthBendixRewriteTrie` instance back into the state
-that it would have been in if it had just been newly constructed from *knd* and
-*p*.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:returns: ``self``.
-:rtype: KnuthBendix
-
-:raises LibsemigroupsError:  if *p* is not valid.
-)pbdoc")
-          .def(
-              "init",
-              [](KnuthBendix<Rewriter>&         self,
-                 congruence_kind                knd,
-                 Presentation<word_type> const& p) {
-                return self.init(knd, p);
-              },
-              py::arg("knd"),
-              py::arg("p"),
-              R"pbdoc(
-:sig=(self: KnuthBendixRewriteTrie, knd: congruence_kind, p: PresentationStrings) -> KnuthBendixRewriteTrie:
-:only-document-once:
 )pbdoc")
           .def(
               "copy",
@@ -559,18 +543,6 @@ entry.
 :return: An iterator yielding the currently active rules.
 :rtype: Iterator[(str, str)]
 )pbdoc");
-
-      reduce_no_run<std::string>(kb);
-      reduce_no_run<word_type>(kb);
-
-      reduce<std::string>(kb);
-      reduce<word_type>(kb);
-
-      contains<std::string>(kb, "KnuthBendixRewriteTrie");
-      contains<word_type>(kb, "KnuthBendixRewriteTrie");
-
-      currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
-      currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
       //////////////////////////////////////////////////////////////////////////
       // Main member

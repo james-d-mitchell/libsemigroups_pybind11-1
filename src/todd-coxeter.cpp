@@ -236,6 +236,22 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
                R"pbdoc(Version 2 definition processing.)pbdoc")
         .export_values();
 
+    //////////////////////////////////////////////////////////////////////////
+    // Things from cong-intf.hpp . . .
+    //////////////////////////////////////////////////////////////////////////
+
+    constructor<word_type>(thing, "ToddCoxeter");
+    constructor<std::string>(thing, "ToddCoxeter");
+
+    init_from_kind_presentation<word_type>(thing, "ToddCoxeter");
+    init_from_kind_presentation<std::string>(thing, "ToddCoxeter");
+
+    currently_contains<word_type>(thing, "ToddCoxeter");
+    currently_contains<std::string>(thing, "ToddCoxeter");
+
+    contains<word_type>(thing, "ToddCoxeter");
+    contains<std::string>(thing, "ToddCoxeter");
+
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
     ////////////////////////////////////////////////////////////////////////
@@ -284,9 +300,6 @@ Copy a :any:`ToddCoxeter` object.
 :returns: A copy.
 :rtype: ToddCoxeter
     )pbdoc");
-
-    constructor<word_type>(thing, "ToddCoxeter");
-    constructor<std::string>(thing, "ToddCoxeter");
 
     thing.def(py::init<congruence_kind, ToddCoxeter&>(),
               py::arg("knd"),
@@ -338,44 +351,6 @@ semigroup.
 :type wg: WordGraph
 )pbdoc");
 
-    thing.def(
-        "init",
-        [](ToddCoxeter&                   self,
-           congruence_kind                knd,
-           Presentation<word_type> const& p) { return self.init(knd, p); },
-        py::arg("knd"),
-        py::arg("p"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, knd: congruence_kind, p: PresentationStrings) -> ToddCoxeter:
-:only-document-once:
-
-Re-initialize a ToddCoxeter instance.
-
-This function re-initializes a :any:`ToddCoxeter` instance as if it
-had been newly constructed from *knd* and *p*.
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: :any:`congruence_kind`
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:returns:  ``self``.
-:rtype: ToddCoxeter
-
-:raises LibsemigroupsError: if *p* is not valid.
-    )pbdoc");
-    thing.def(
-        "init",
-        [](ToddCoxeter&                     self,
-           congruence_kind                  knd,
-           Presentation<std::string> const& p) { return self.init(knd, p); },
-        py::arg("knd"),
-        py::arg("p"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, knd: congruence_kind, p: PresentationStrings) -> ToddCoxeter:
-:only-document-once:
-)pbdoc");
     thing.def(
         "init",
         [](ToddCoxeter& self, congruence_kind knd, ToddCoxeter const& tc) {
@@ -1138,6 +1113,7 @@ specifies whether or not to do this.The default value of this setting is
     // Interface common functions
     ////////////////////////////////////////////////////////////////////////
 
+    // TODO remove
     thing.def(
         "add_generating_pair",
         [](ToddCoxeter&     self,
@@ -1172,6 +1148,7 @@ This function adds a generating pair to the congruence represented by a :any:`To
 :rtype: ToddCoxeter
 )pbdoc");
 
+    // TODO remove
     thing.def(
         "add_generating_pair",
         [](ToddCoxeter&       self,
@@ -1183,12 +1160,6 @@ This function adds a generating pair to the congruence represented by a :any:`To
         py::arg("v"),
         R"pbdoc(
 :sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:)pbdoc");
-
-    currently_contains<word_type>(thing, "ToddCoxeter");
-    currently_contains<std::string>(thing, "ToddCoxeter");
-
-    contains<word_type>(thing, "ToddCoxeter");
-    contains<std::string>(thing, "ToddCoxeter");
 
     thing.def("_number_of_classes",
               &ToddCoxeter::number_of_classes,

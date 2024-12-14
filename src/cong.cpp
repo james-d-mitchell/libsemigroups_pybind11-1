@@ -51,23 +51,41 @@ namespace libsemigroups {
 Class for running :any:`Kambites`, :any:`KnuthBendix`, and :any:`ToddCoxeter`
 in parallel.
 
-On this page we describe the functionality relating to
-the class :any:`Congruence` in ``libsemigroups``. This class can be used for
-computing a congruence over a semigroup or monoid by running every applicable
-algorithm from ``libsemigroups`` (and some variants of the same algorithm) in
-parallel. This class is provided for convenience, at present it is not very
-customisable, and lacks some of the fine grained control offered by the classes
-implementing individual algorithms, such as :any:`Kambites`,
-:any:`KnuthBendixRewriteTrie`, and :any:`ToddCoxeter`.
+On this page we describe the functionality relating to the class
+:any:`Congruence` in ``libsemigroups``. This class can be used for computing a
+congruence over a semigroup or monoid by running every applicable algorithm
+from ``libsemigroups`` (and some variants of the same algorithm) in parallel.
+This class is provided for convenience, at present it is not very customisable,
+and lacks some of the fine grained control offered by the classes implementing
+individual algorithms, such as :any:`Kambites`, :any:`KnuthBendixRewriteTrie`,
+and :any:`ToddCoxeter`.
 
 .. seealso::  :any:`congruence_kind` and :any:`tril`.
 
 .. doctest::
 
  )pbdoc");
-    thing.def("__repr__", [](Congruence const& thing) {
-      return to_human_readable_repr(thing);
-    });
+
+    ////////////////////////////////////////////////////////////////////////
+    // Things from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    constructor<word_type>(thing, "Congruence");
+    constructor<std::string>(thing, "Congruence");
+
+    init_from_kind_presentation<word_type>(thing, "Congruence");
+    init_from_kind_presentation<std::string>(thing, "Congruence");
+
+    currently_contains<std::string>(thing, "Congruence");
+    currently_contains<word_type>(thing, "Congruence");
+
+    contains<std::string>(thing, "Congruence");
+    contains<word_type>(thing, "Congruence");
+
+    ////////////////////////////////////////////////////////////////////////
+    // TODO
+    ////////////////////////////////////////////////////////////////////////
+
     thing.def(py::init<>(), R"pbdoc(
 Default constructor. This function default constructs an uninitialised
 :any:`Congruence` instance.
@@ -77,8 +95,14 @@ Default constructor. This function default constructs an uninitialised
     // Copy constructor.
     // )pbdoc");
     //
-    constructor<word_type>(thing, "Congruence");
-    constructor<std::string>(thing, "Congruence");
+
+    ////////////////////////////////////////////////////////////////////////
+    // Congruence specific stuff
+    ////////////////////////////////////////////////////////////////////////
+
+    thing.def("__repr__", [](Congruence const& thing) {
+      return to_human_readable_repr(thing);
+    });
 
     thing.def(py::init<congruence_kind,
                        FroidurePinBase&,
@@ -98,12 +122,6 @@ representing a 1- or 2-sided congruence according to *knd*.
 :param wg: the left or right Cayley graph of S.
 :type wg: WordGraph
 )pbdoc");
-
-    currently_contains<std::string>(thing, "Congruence");
-    currently_contains<word_type>(thing, "Congruence");
-
-    contains<std::string>(thing, "Congruence");
-    contains<word_type>(thing, "Congruence");
 
     /*
           thing.def("get",
