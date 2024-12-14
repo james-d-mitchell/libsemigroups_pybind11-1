@@ -69,7 +69,7 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
   template <typename Word, typename Thing>
   void currently_contains(py::class_<Thing, CongruenceInterface>& thing,
                           std::string_view                        name,
-                          std::string_view extra_raises = "") {
+                          doc extra_doc = {}) {
     thing.def(
         "currently_contains",
         [](Thing const& self, Word const& u, Word const& v) {
@@ -108,14 +108,14 @@ contained in the congruence, but that this is not currently known.
 {1}
 )pbdoc",
                     name,
-                    extra_raises)
+                    extra_doc.raises)
             .c_str());
   }
 
   template <typename Word, typename Thing>
   void contains(py::class_<Thing, CongruenceInterface>& thing,
                 std::string_view                        name,
-                std::string_view                        extra_raises = "") {
+                doc                                     extra_doc = {}) {
     thing.def(
         "contains",
         [](Thing& self, Word const& u, Word const& v) {
@@ -149,7 +149,7 @@ congruence represented by a :py:class:`{0}` instance.
 {1}
 )pbdoc",
                     name,
-                    extra_raises)
+                    extra_doc.raises)
             .c_str());
   }
 

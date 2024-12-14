@@ -121,6 +121,10 @@ least word equivalent to the input word *w*. If :any:`Runner.finished` returns
   raises.)pbdoc");
     }
 
+    ////////////////////////////////////////////////////////////////////////
+    // bind_kambites
+    ////////////////////////////////////////////////////////////////////////
+
     template <typename Word>
     void bind_kambites(py::module& m, std::string const& name) {
       using Kambites_        = Kambites<Word>;
@@ -141,13 +145,9 @@ presentation used to construct the instance, and the :any:`generating_pairs`.
 As such generating pairs or rules are interchangeable in the context of
 :any:`Kambites` objects.)pbdoc");
 
-      thing.def("__repr__",
-                [](Kambites_& thing) { return to_human_readable_repr(thing); });
-      thing.def(py::init<>(), R"pbdoc(
-Default constructor.
-
-This function default constructs an uninitialised :any:`Kambites` instance.
-)pbdoc");
+      ////////////////////////////////////////////////////////////////////////
+      // constructor from cong-intf.hpp
+      ////////////////////////////////////////////////////////////////////////
 
       auto extra_detail
           = R"pbdoc(:any:`Kambites` instances can only be used to compute
@@ -170,6 +170,36 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
 
+      ////////////////////////////////////////////////////////////////////////
+      // currently_contains from cong-intf.hpp
+      ////////////////////////////////////////////////////////////////////////
+
+      currently_contains<word_type>(
+          thing, "Kambites", doc{.raises = extra_raises});
+      // TODO(0) should this be "is known and not at least 4"?
+      currently_contains<std::string>(
+          thing, "Kambites", doc{.raises = extra_raises});
+      // TODO(0) should this be "is known and not at least 4"?
+
+      ////////////////////////////////////////////////////////////////////////
+      // contains from cong-intf.hpp
+      ////////////////////////////////////////////////////////////////////////
+
+      contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
+      contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
+
+      ////////////////////////////////////////////////////////////////////////
+      // Kambites specific stuff
+      ////////////////////////////////////////////////////////////////////////
+
+      thing.def("__repr__",
+                [](Kambites_& thing) { return to_human_readable_repr(thing); });
+      thing.def(py::init<>(), R"pbdoc(
+Default constructor.
+
+This function default constructs an uninitialised :any:`Kambites` instance.
+)pbdoc");
+
       thing.def(
           "copy",
           [](Kambites_ const& self) { return Kambites_(self); },
@@ -179,6 +209,7 @@ Copy a :any:`Kambites` object.
 :returns: A copy.
 :rtype: Kambites
     )pbdoc");
+
       thing.def(
           "__copy__",
           [](Kambites_ const& self) { return Kambites_(self); },
@@ -205,34 +236,6 @@ have been in if it had just been newly default constructed.
 :rtype:
   Kambites
       )pbdoc");
-
-      currently_contains<word_type>(thing,
-                                    "Kambites",
-                                    R"pbdoc(
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-      // TODO(0) should this be "is known and not at least 4"?
-      currently_contains<std::string>(thing,
-                                      "Kambites",
-                                      R"pbdoc(
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-      // TODO(0) should this be "is known and not at least 4"?
-
-      contains<word_type>(thing,
-                          "Kambites",
-                          R"pbdoc(
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
-      contains<std::string>(thing,
-                            "Kambites",
-                            R"pbdoc(
-:raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
-)pbdoc");
 
       my_init<word_type>(thing);
       my_init<std::string>(thing);
