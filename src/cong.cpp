@@ -86,6 +86,10 @@ and :any:`ToddCoxeter`.
     // reduce_no_run<std::string>(thing, "Congruence");
     // reduce_no_run<word_type>(thing, "Congruence");
 
+    // TODO(0) uncomment (not yet impled in Congruence)
+    // reduce<std::string>(thing, "Congruence");
+    // reduce<word_type>(thing, "Congruence");
+
     ////////////////////////////////////////////////////////////////////////
     // TODO
     ////////////////////////////////////////////////////////////////////////

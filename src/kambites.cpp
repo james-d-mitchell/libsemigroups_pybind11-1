@@ -31,65 +31,7 @@ namespace py = pybind11;
 using namespace std::literals;
 
 namespace libsemigroups {
-
   namespace {
-
-    template <typename OtherWord, typename Word>
-    void reduce(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(
-          "reduce",
-          [](Kambites<Word>& self, OtherWord const& w) {
-            return kambites::reduce(self, w);
-          },
-          py::arg("w"),
-          R"pbdoc(
-:sig=(self: Kambites, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-This function computes the small overlap class of the :any:`presentation` and
-then returns the lexicographically least word equivalent to the input word *w*.
-Note that in a small overlap monoid, every congruence class is finite, and so
-this lexicographically least word always exists.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word` raises.
-)pbdoc");
-    }
-
-    template <typename OtherWord, typename Word>
-    void reduce_no_run(py::class_<Kambites<Word>, CongruenceInterface>& thing) {
-      thing.def(
-          "reduce_no_run",
-          [](Kambites<Word>& self, OtherWord const& w) {
-            return kambites::reduce_no_run(self, w);
-          },
-          py::arg("w"),
-          R"pbdoc(
-:sig=(self: Kambites, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-If :any:`Runner.finished` returns ``True``, then this function returns the
-lexicographically least word equivalent to the input word *w*. If
-:any:`Runner.finished` returns ``False``, then the input word *w* is
-returned.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.)pbdoc");
-    }
-
     ////////////////////////////////////////////////////////////////////////
     // bind_kambites
     ////////////////////////////////////////////////////////////////////////
@@ -163,16 +105,19 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
       contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
 
       extra_detail
-          = R"pbdoc(If :any:`Runner.finished` returns ``False``, then the input
-word *w* is returned.)pbdoc"sv;
+          = R"pbdoc(If the :any:`Kambites.small_overlap_class` is not at least
+:math:`4`, then an exception is thrown.)pbdoc"sv;
 
       reduce_no_run<word_type>(thing, "Kambites", doc{.detail = extra_detail});
       reduce_no_run<std::string>(
           thing, "Kambites", doc{.detail = extra_detail});
 
-      // TODO
-      reduce<word_type>(thing);
-      reduce<std::string>(thing);
+      reduce<word_type>(thing,
+                        "Kambites",
+                        doc{.detail = extra_detail, .raises = extra_raises});
+      reduce<std::string>(thing,
+                          "Kambites",
+                          doc{.detail = extra_detail, .raises = extra_raises});
 
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific stuff

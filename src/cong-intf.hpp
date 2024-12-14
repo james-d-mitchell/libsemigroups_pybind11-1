@@ -237,5 +237,46 @@ form for the input word *w*.
             .c_str());
   }
 
+  template <typename Word, typename Thing>
+  void reduce(py::class_<Thing, CongruenceInterface>& thing,
+              std::string_view                        name,
+              doc                                     extra_doc = {}) {
+    thing.def(
+        "reduce",
+        [](Thing& self, Word const& w) {
+          return congruence_interface::reduce(self, w);
+        },
+        py::arg("w"),
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, w: List[int] | str) -> List[int] | str:
+:only-document-once:
+
+Reduce a word.
+
+This function triggers a full enumeration of an :py:class:`{0}` object and then
+reduces the word *w*. As such the returned word is a normal form for the input
+word.
+
+{1}
+
+:param w: the input word.
+:type w: List[int] | str
+
+:returns: A normal form for the input word.
+:rtype: List[int] | str
+
+:raises LibsemigroupsError:
+  if any of the values in *w* is out of range, i.e. they do not belong to
+  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+{2}
+)pbdoc",
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+
 }  // namespace libsemigroups
 #endif  // SRC_CONG_INTF_HPP_

@@ -47,49 +47,21 @@ namespace libsemigroups {
 
   namespace {
     template <typename Word, typename Rewriter>
-    void reduce(py::class_<KnuthBendix<Rewriter>, CongruenceInterface>& thing) {
-      thing.def(
-          "reduce",
-          [](KnuthBendix<Rewriter>& self, Word const& w) {
-            return knuth_bendix::reduce_no_run(self, w);
-          },
-          py::arg("w"),
-          R"pbdoc(
-:sig=(self: KnuthBendix, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-This function triggers a full enumeration and then reduces the word *w*
-according to the rules in the :py:class:`KnuthBendixRewriteTrie`
-instance.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-)pbdoc");
-    }
-
-    template <typename Word, typename Rewriter>
     void bind_normal_form_range(py::module& m, char const* name) {
       using NormalFormRange
           = detail::KnuthBendixNormalFormRange<Word, Rewriter, ShortLexCompare>;
-      py::class_<NormalFormRange> thing1(m, name);
+      py::class_<NormalFormRange> thing(m, name);
 
-      thing1.def("__repr__", [](NormalFormRange const& nfr) {
+      thing.def("__repr__", [](NormalFormRange const& nfr) {
         return to_human_readable_repr(nfr);
       });
 
-      thing1.def("__copy__", [](NormalFormRange const& nfr) {
+      thing.def("__copy__", [](NormalFormRange const& nfr) {
         return NormalFormRange(nfr);
       });
       // __len__ is not allowed to return anything other than an int, hence
       // __len__ and count don't have the same behaviour.
-      thing1.def("__len__", [](NormalFormRange const& nfr) {
+      thing.def("__len__", [](NormalFormRange const& nfr) {
         auto result = nfr.count();
         if (result == POSITIVE_INFINITY) {
           return py::module_::import("sys").attr("maxsize").cast<uint64_t>();
@@ -97,30 +69,30 @@ instance.
         return result;
       });
 
-      thing1.def("__iter__", [](NormalFormRange const& nfr) {
+      thing.def("__iter__", [](NormalFormRange const& nfr) {
         return py::make_iterator(rx::begin(nfr), rx::end(nfr));
       });
 
-      thing1.def("at_end", [](NormalFormRange& nfr) { return nfr.at_end(); });
-      thing1.def("count", [](NormalFormRange& nfr) { return nfr.count(); });
+      thing.def("at_end", [](NormalFormRange& nfr) { return nfr.at_end(); });
+      thing.def("count", [](NormalFormRange& nfr) { return nfr.count(); });
 
-      thing1.def("get", [](NormalFormRange& nfr) { return nfr.get(); });
+      thing.def("get", [](NormalFormRange& nfr) { return nfr.get(); });
 
-      thing1.def("max", [](NormalFormRange const& self) { return self.max(); });
+      thing.def("max", [](NormalFormRange const& self) { return self.max(); });
 
-      thing1.def("max",
-                 [](NormalFormRange& self, PositiveInfinity const& val)
-                     -> NormalFormRange& { return self.max(val); });
-      thing1.def("max",
-                 [](NormalFormRange& self, size_t val) -> NormalFormRange& {
-                   return self.max(val);
-                 });
-      thing1.def("min", [](NormalFormRange const& self) { return self.min(); });
-      thing1.def("min",
-                 [](NormalFormRange& self, size_t val) -> NormalFormRange& {
-                   return self.min(val);
-                 });
-      thing1.def("next", [](NormalFormRange& nfr) { nfr.next(); });
+      thing.def("max",
+                [](NormalFormRange& self, PositiveInfinity const& val)
+                    -> NormalFormRange& { return self.max(val); });
+      thing.def("max",
+                [](NormalFormRange& self, size_t val) -> NormalFormRange& {
+                  return self.max(val);
+                });
+      thing.def("min", [](NormalFormRange const& self) { return self.min(); });
+      thing.def("min",
+                [](NormalFormRange& self, size_t val) -> NormalFormRange& {
+                  return self.min(val);
+                });
+      thing.def("next", [](NormalFormRange& nfr) { nfr.next(); });
     }
 
     template <typename Rewriter>
@@ -225,8 +197,8 @@ current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
       reduce_no_run<word_type>(
           kb, "KnuthBendixRewriteTrie", doc{.detail = extra_detail});
 
-      reduce<std::string>(kb);
-      reduce<word_type>(kb);
+      reduce<std::string>(kb, "KnuthBendixRewriteTrie");
+      reduce<word_type>(kb, "KnuthBendixRewriteTrie");
 
       //////////////////////////////////////////////////////////////////////////
       // KnuthBendix specific stuff . . .

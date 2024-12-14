@@ -263,6 +263,9 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     //     extra_detail}); reduce_no_run<std::string>(
     //         thing, "ToddCoxeter", doc{.detail = extra_detail});
 
+    reduce<word_type>(thing, "ToddCoxeter");
+    reduce<std::string>(thing, "ToddCoxeter");
+
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
     ////////////////////////////////////////////////////////////////////////
@@ -1190,42 +1193,6 @@ it terminates.
 :rtype:
    int
 )pbdoc");
-
-    thing.def(
-        "reduce",
-        [](ToddCoxeter& self, word_type const& w) {
-          return todd_coxeter::reduce(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-This function triggers a full enumeration and then returns a reduced word
-equivalent to the input word *w*. The word output by this function is
-equivalent to the input word in the congruence defined by a :any:`ToddCoxeter`
-instance. In other words, the output word is a normal form for the input word
-or equivalently a canconical representative of its congruence class.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word` raises.
-  )pbdoc");
-
-    thing.def(
-        "reduce",
-        [](ToddCoxeter& self, std::string const& w) {
-          return todd_coxeter::reduce(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, w: List[int] | str) -> List[int] | str:
-  )pbdoc");
 
     // TODO(0) remove, see note above
     thing.def(
