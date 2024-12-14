@@ -182,6 +182,8 @@ two words :math:`AB` and :math:`BC`.
       init_from_kind_presentation<word_type>(kb, "KnuthBendixRewriteTrie");
       init_from_kind_presentation<std::string>(kb, "KnuthBendixRewriteTrie");
 
+      def_copy(kb, "KnuthBendixRewriteTrie");
+
       contains<std::string>(kb, "KnuthBendixRewriteTrie");
       contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
@@ -216,9 +218,9 @@ instance.
 )pbdoc");
 
       kb.def(
-            "init",
-            [](KnuthBendix<Rewriter>& self) { return self.init(); },
-            R"pbdoc(
+          "init",
+          [](KnuthBendix<Rewriter>& self) { return self.init(); },
+          R"pbdoc(
 Remove the presentation and rewriter data. This function clears the rewriter,
 presentation, settings and stats from the :any:`KnuthBendixRewriteTrie` object,
 putting it back into the state it would be in if it was newly default
@@ -228,21 +230,7 @@ constructed.
 
 :rtype:
    KnuthBendix
-)pbdoc")
-          .def(
-              "copy",
-              [](KnuthBendix<Rewriter> const& self) {
-                return KnuthBendix<Rewriter>(self);
-              },
-              R"pbdoc(
-Copy a :py:class:`KnuthBendixRewriteTrie` object.
-
-:returns: A copy.
-:rtype: KnuthBendixRewriteTrie
-)pbdoc")
-          .def("__copy__", [](KnuthBendix<Rewriter> const& self) {
-            return KnuthBendix<Rewriter>(self);
-          });
+)pbdoc");
 
       //////////////////////////////////////////////////////////////////////////
       // Setters and getters for optional parameters

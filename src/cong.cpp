@@ -16,12 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// C std headers....
-// TODO complete or delete
-
-// C++ stl headers....
-// TODO complete or delete
-
 // libsemigroups headers
 #include <libsemigroups/cong.hpp>
 
@@ -30,7 +24,6 @@
 // #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-// TODO uncomment/delete
 
 // libsemigroups_pybind11....
 #include "cong-intf.hpp"  // for contains etc
@@ -64,6 +57,7 @@ and :any:`ToddCoxeter`.
 
 .. doctest::
 
+    TODO(0)
  )pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
@@ -75,6 +69,8 @@ and :any:`ToddCoxeter`.
 
     init_from_kind_presentation<word_type>(thing, "Congruence");
     init_from_kind_presentation<std::string>(thing, "Congruence");
+
+    def_copy(thing, "Congruence");
 
     currently_contains<std::string>(thing, "Congruence");
     currently_contains<word_type>(thing, "Congruence");
@@ -131,6 +127,20 @@ representing a 1- or 2-sided congruence according to *knd*.
 :type wg: WordGraph
 )pbdoc");
 
+    thing.def(
+        "max_threads",
+        [](Congruence& self, size_t val) { return self.max_threads(val); },
+        py::arg("val"),
+        R"pbdoc(
+Set the maximum number of threads.
+
+:param val: the number of threads.
+:type val: int
+
+:returns: ``self``.
+:rtype: Congruence
+)pbdoc");
+
     /*
           thing.def("get",
                     &Congruence::get,
@@ -169,39 +179,6 @@ representing a 1- or 2-sided congruence according to *knd*.
               R"pbdoc(
     )pbdoc");
           thing.def(
-              "init",
-              [](Congruence&               self,
-                 congruence_kind           knd,
-                 Presentation<Word> const& p) { return self.init(knd, p); },
-              py::arg("knd"),
-              py::arg("p"),
-              R"pbdoc(
-    )pbdoc");
-          thing.def(
-              "init",
-              [](Congruence&                    self,
-                 congruence_kind                knd,
-                 Presentation<word_type> const& p) { return self.init(knd, p);
-    }, py::arg("knd"), py::arg("p"), R"pbdoc( Re-initialize a Congruence
-    instance.
-
-    :param knd: the kind (onesided or twosided) of the congruence.
-    :type knd: congruence_kind
-
-    :param p: the presentation.
-    :type p: Presentation
-    This function puts a :any:`Congruence` instance back into the state that
-    it would have been in if it had just been newly constructed from ``knd``
-    and ``p``.
-
-    :raises LibsemigroupsError:  if ``p`` is not valid.
-
-
-    :returns: A reference to ``self``.
-
-    :rtype: Congruence
-    )pbdoc");
-          thing.def(
               "max_threads",
               [](Congruence const& self) { return self.max_threads(); },
               R"pbdoc(
@@ -231,25 +208,6 @@ representing a 1- or 2-sided congruence according to *knd*.
     :returns: A :any:`std::shared_ptr` to a :any:`KnuthBendix` or ``nullptr``.
 
     :rtype: int
-    )pbdoc");
-          thing.def(
-              "max_threads",
-              [](Congruence& self, size_t val) { return self.max_threads(val);
-    }, py::arg("val"), R"pbdoc(
-
-    :param val: the number of threads.
-    :type val: int
-    Set the maximum number of threads.
-
-    :exceptions: This function is ``noexcept`` and is guaranteed never to
-    throw.
-
-    :complexity: Constant.
-
-
-    :returns: A reference to ``self``.
-
-    :rtype: Congruence
     )pbdoc");
           thing.def("number_of_classes",
                     &Congruence::number_of_classes,

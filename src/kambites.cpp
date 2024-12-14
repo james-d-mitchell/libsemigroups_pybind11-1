@@ -90,6 +90,8 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
       init_from_kind_presentation<std::string>(
           thing, "Kambites", doc{.raises = extra_raises});
 
+      def_copy(thing, "Kambites");
+
       extra_raises = R"pbdoc(
 :raises LibsemigroupsError:
     if :any:`small_overlap_class` is not at least :math:`4`.
@@ -130,26 +132,6 @@ Default constructor.
 
 This function default constructs an uninitialised :any:`Kambites` instance.
 )pbdoc");
-
-      thing.def(
-          "copy",
-          [](Kambites_ const& self) { return Kambites_(self); },
-          R"pbdoc(
-Copy a :any:`Kambites` object.
-
-:returns: A copy.
-:rtype: Kambites
-    )pbdoc");
-
-      thing.def(
-          "__copy__",
-          [](Kambites_ const& self) { return Kambites_(self); },
-          R"pbdoc(
-Copy a :any:`Kambites` object.
-
-:returns: A copy.
-:rtype: Kambites
-    )pbdoc");
 
       thing.def(
           "init",

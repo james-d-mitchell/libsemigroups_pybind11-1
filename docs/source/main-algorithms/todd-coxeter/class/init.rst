@@ -26,3 +26,8 @@ Initializers
 ------------
 
 .. automethod:: ToddCoxeter.init
+
+Copying
+-------
+
+.. automethod:: ToddCoxeter.copy

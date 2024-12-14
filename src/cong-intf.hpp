@@ -32,6 +32,8 @@ namespace libsemigroups {
     std::string_view raises = "";
   };
 
+  // TODO(0) move the definitions in to cong-intf.cpp since the types are fixed.
+
   template <typename Word, typename Thing>
   void constructor(py::class_<Thing, CongruenceInterface>& thing,
                    std::string_view                        name,
@@ -275,6 +277,39 @@ word.
                     name,
                     extra_doc.detail,
                     extra_doc.raises)
+            .c_str());
+  }
+
+  template <typename Thing>
+  void def_copy(py::class_<Thing, CongruenceInterface>& thing,
+                std::string_view                        name,
+                doc                                     extra_doc = {}) {
+    thing.def(
+        "copy",
+        [](Thing const& self) { return Thing(self); },
+        fmt::format(R"pbdoc(
+Copy a :any:`{0}` object.
+
+{1}
+
+:returns: A copy.
+:rtype: {0})pbdoc",
+                    name,
+                    extra_doc.detail)
+            .c_str());
+
+    thing.def(
+        "__copy__",
+        [](Thing const& self) { return Thing(self); },
+        fmt::format(R"pbdoc(
+Copy a :any:`{0}` object.
+
+{1}
+
+:returns: A copy.
+:rtype: {0})pbdoc",
+                    name,
+                    extra_doc.detail)
             .c_str());
   }
 

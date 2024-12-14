@@ -247,6 +247,8 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     init_from_kind_presentation<word_type>(thing, "ToddCoxeter");
     init_from_kind_presentation<std::string>(thing, "ToddCoxeter");
 
+    def_copy(thing, "ToddCoxeter");
+
     currently_contains<word_type>(thing, "ToddCoxeter");
     currently_contains<std::string>(thing, "ToddCoxeter");
 
@@ -281,6 +283,7 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 Default constructor. This function default constructs an uninitialised
 :any:`ToddCoxeter` instance.
 )pbdoc");
+
     thing.def(
         "init",
         [](ToddCoxeter& self) { return self.init(); },
@@ -295,24 +298,6 @@ in if it had just been newly default constructed.
     ``self``.
 :rtype:
     ToddCoxeter
-    )pbdoc");
-    thing.def(
-        "copy",
-        [](ToddCoxeter const& self) { return ToddCoxeter(self); },
-        R"pbdoc(
-Copy a :any:`ToddCoxeter` object.
-
-:returns: A copy.
-:rtype: ToddCoxeter
-    )pbdoc");
-    thing.def(
-        "__copy__",
-        [](ToddCoxeter const& self) { return ToddCoxeter(self); },
-        R"pbdoc(
-Copy a :any:`ToddCoxeter` object.
-
-:returns: A copy.
-:rtype: ToddCoxeter
     )pbdoc");
 
     thing.def(py::init<congruence_kind, ToddCoxeter&>(),
