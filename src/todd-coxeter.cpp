@@ -245,11 +245,11 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     def_init_default(thing, "ToddCoxeter");
 
-    constructor<word_type>(thing, "ToddCoxeter");
-    constructor<std::string>(thing, "ToddCoxeter");
+    def_construct_kind_presentation<word_type>(thing, "ToddCoxeter");
+    def_construct_kind_presentation<std::string>(thing, "ToddCoxeter");
 
-    init_from_kind_presentation<word_type>(thing, "ToddCoxeter");
-    init_from_kind_presentation<std::string>(thing, "ToddCoxeter");
+    def_init_kind_presentation<word_type>(thing, "ToddCoxeter");
+    def_init_kind_presentation<std::string>(thing, "ToddCoxeter");
 
     def_copy(thing, "ToddCoxeter");
 

@@ -179,11 +179,12 @@ two words :math:`AB` and :math:`BC`.
       def_construct_default(kb, "KnuthBendixRewriteTrie");
       def_init_default(kb, "KnuthBendixRewriteTrie");
 
-      constructor<word_type>(kb, "KnuthBendixRewriteTrie");
-      constructor<std::string>(kb, "KnuthBendixRewriteTrie");
+      def_construct_kind_presentation<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_construct_kind_presentation<std::string>(kb,
+                                                   "KnuthBendixRewriteTrie");
 
-      init_from_kind_presentation<word_type>(kb, "KnuthBendixRewriteTrie");
-      init_from_kind_presentation<std::string>(kb, "KnuthBendixRewriteTrie");
+      def_init_kind_presentation<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_init_kind_presentation<std::string>(kb, "KnuthBendixRewriteTrie");
 
       def_copy(kb, "KnuthBendixRewriteTrie");
 

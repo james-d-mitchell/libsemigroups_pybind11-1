@@ -68,11 +68,11 @@ and :any:`ToddCoxeter`.
 
     def_init_default(thing, "Congruence");
 
-    constructor<word_type>(thing, "Congruence");
-    constructor<std::string>(thing, "Congruence");
+    def_construct_kind_presentation<word_type>(thing, "Congruence");
+    def_construct_kind_presentation<std::string>(thing, "Congruence");
 
-    init_from_kind_presentation<word_type>(thing, "Congruence");
-    init_from_kind_presentation<std::string>(thing, "Congruence");
+    def_init_kind_presentation<word_type>(thing, "Congruence");
+    def_init_kind_presentation<std::string>(thing, "Congruence");
 
     def_copy(thing, "Congruence");
 
@@ -213,6 +213,7 @@ Get the number of runners. This function returns the number of distinct
     thing.def("presentation",
               &Congruence::presentation,
               R"pbdoc(
+              TODO(0) sig
 Get the presentation defining the parent semigroup of the congruence.
 This function returns the presentation used to construct a
 :any:`Congruence` object. This is not always possible.

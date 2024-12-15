@@ -76,11 +76,11 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
     if :any:`small_overlap_class` is not at least :math:`4`.
 )pbdoc"sv;
 
-      constructor<word_type>(
+      def_construct_kind_presentation<word_type>(
           thing,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
-      constructor<native_word_type>(
+      def_construct_kind_presentation<native_word_type>(
           thing,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
@@ -89,9 +89,9 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 :raises LibsemigroupsError: if *knd* is ``congruence_kind.onesided``.
 )pbdoc"sv;
 
-      init_from_kind_presentation<word_type>(
+      def_init_kind_presentation<word_type>(
           thing, "Kambites", doc{.raises = extra_raises});
-      init_from_kind_presentation<std::string>(
+      def_init_kind_presentation<std::string>(
           thing, "Kambites", doc{.raises = extra_raises});
 
       def_copy(thing, "Kambites");

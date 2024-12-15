@@ -38,121 +38,23 @@ namespace libsemigroups {
   template <typename Thing>
   void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
                              std::string_view                        name,
-                             doc extra_doc = {}) {
-    thing.def(py::init<>(),
-              fmt::format(R"pbdoc(
-Default constructor. This function default constructs an uninitialised
-:any:`{}` instance.
-
-{}
-)pbdoc",
-                          name,
-                          extra_doc.detail)
-                  .c_str());
-  }
+                             doc extra_doc = {});
 
   template <typename Word, typename Thing>
-  void constructor(py::class_<Thing, CongruenceInterface>& thing,
-                   std::string_view                        name,
-                   doc                                     extra_doc = {}) {
-    thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
-              py::arg("knd"),
-              py::arg("p"),
-              fmt::format(R"pbdoc(
-:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
-
-Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
-
-This function constructs a :any:`{0}` instance representing a congruence
-of kind *knd* over the semigroup or monoid defined by the presentation *p*.
-
-{1}
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: congruence_kind
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:raises LibsemigroupsError: if *p* is not valid.
-
-{2}
-  )pbdoc",
-                          name,
-                          extra_doc.detail,
-                          extra_doc.raises)
-                  .c_str());
-  }
+  void
+  def_construct_kind_presentation(py::class_<Thing, CongruenceInterface>& thing,
+                                  std::string_view                        name,
+                                  doc extra_doc = {});
 
   template <typename Thing>
   void def_init_default(py::class_<Thing, CongruenceInterface>& thing,
                         std::string_view                        name,
-                        doc extra_doc = {}) {
-    thing.def(
-        "init",
-        [](Thing& self) { return self.init(); },
-        fmt::format(R"pbdoc(
-Re-initialize a :any:`{0}` instance.
-
-This function puts a :any:`{0}` instance back into the state that it would
-have been in if it had just been newly default constructed.
-
-{1}
-
-:returns:
-  ``self``.
-:rtype:
-    {0})pbdoc",
-                    name,
-                    extra_doc.detail)
-            .c_str());
-  }
+                        doc                                     extra_doc = {});
 
   template <typename Word, typename Thing>
-  void
-  init_from_kind_presentation(py::class_<Thing, CongruenceInterface>& thing,
-                              std::string_view                        name,
-                              doc extra_doc = {}) {
-    thing.def(
-        "init",
-        [](Thing& self, congruence_kind knd, Presentation<Word> const& p) {
-          return self.init(knd, p);
-        },
-        py::arg("knd"),
-        py::arg("p"),
-        // TODO(0) adding only-document-once here means that the other
-        // overloads of init are suppressed also :(
-        // :only-document-once:
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> {0}:
-:only-document-once:
-
-Re-initialize a :any:`{0}` instance.
-
-This function re-initializes a :any:`{0}` instance as if it
-had been newly constructed from *knd* and *p*.
-
-{1}
-
-:param knd: the kind (onesided or twosided) of the congruence.
-:type knd: :any:`congruence_kind`
-
-:param p: the presentation.
-:type p: PresentationStrings
-
-:returns:  ``self``.
-:rtype: {0}
-
-:raises LibsemigroupsError: if *p* is not valid.
-
-{2}
-)pbdoc",
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
-            .c_str());
-  }
+  void def_init_kind_presentation(py::class_<Thing, CongruenceInterface>& thing,
+                                  std::string_view                        name,
+                                  doc extra_doc = {});
 
   template <typename Word, typename Thing>
   void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
