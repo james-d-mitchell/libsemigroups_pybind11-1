@@ -229,6 +229,77 @@ had been newly constructed from *knd* and *p*.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string, ToddCoxeter)
 
+  template <typename Word, typename Thing>
+  void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
+                               std::string_view                        name,
+                               doc extra_doc) {
+    thing.def(
+        "add_generating_pair",
+        [](Thing& self, Word const& u, Word const& v) -> Thing& {
+          return congruence_interface::add_generating_pair(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(
+            R"pbdoc(
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> {0}:
+:only-document-once:
+
+Add a generating pair.
+
+This function adds a generating pair to the congruence represented by a
+:any:`{0}` instance.
+
+{1}
+
+:param u: the first item in the pair.
+:type u: List[int] | str
+
+:param v: the second item in the pair.
+:type v: List[int] | str
+
+:returns: ``self``.
+:rtype: {0}
+
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+:raises LibsemigroupsError:  if :any:`Runner.started` returns ``True``.
+
+{2}
+)pbdoc",
+            name,
+            extra_doc.detail,
+            extra_doc.raises)
+            .c_str());
+  }
+
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, Congruence)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          word_type,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          word_type,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, ToddCoxeter)
+
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Congruence)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          std::string,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          std::string,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, ToddCoxeter)
+
+  ////////////////////////////////////////////////////////////////////////
+  // The init function for CongruenceInterface
+  ////////////////////////////////////////////////////////////////////////
+
   void init_cong_intf(py::module& m) {
     py::class_<CongruenceInterface, Runner> thing(m,
                                                   "CongruenceInterface",
