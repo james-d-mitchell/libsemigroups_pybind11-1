@@ -79,11 +79,11 @@ and :any:`ToddCoxeter`.
     def_add_generating_pair<word_type>(thing, "Congruence");
     def_add_generating_pair<std::string>(thing, "Congruence");
 
-    currently_contains<word_type>(thing, "Congruence");
-    currently_contains<std::string>(thing, "Congruence");
+    def_currently_contains<word_type>(thing, "Congruence");
+    def_currently_contains<std::string>(thing, "Congruence");
 
-    contains<word_type>(thing, "Congruence");
-    contains<std::string>(thing, "Congruence");
+    def_contains<word_type>(thing, "Congruence");
+    def_contains<std::string>(thing, "Congruence");
 
     // TODO(0) uncomment (not yet impled in Congruence)
     // reduce_no_run<word_type>(thing, "Congruence");

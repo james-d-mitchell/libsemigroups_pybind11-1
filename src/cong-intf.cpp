@@ -296,6 +296,133 @@ This function adds a generating pair to the congruence represented by a
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, ToddCoxeter)
 
+  template <typename Word, typename Thing>
+  void def_currently_contains(py::class_<Thing, CongruenceInterface>& thing,
+                              std::string_view                        name,
+                              doc extra_doc) {
+    thing.def(
+        "currently_contains",
+        [](Thing const& self, Word const& u, Word const& v) {
+          return congruence_interface::currently_contains(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
+:only-document-once:
+
+Check whether a pair of words is already known to belong to the congruence.
+
+This function checks whether or not the words *u* and *v* are already known to
+be contained in the congruence represented by a :py:class:`{0}` instance.
+This function performs no enumeration, so it is possible for the words to be
+contained in the congruence, but that this is not currently known.
+
+:param u: the first word.
+:type u: List[int] | str
+
+:param v: the second word.
+:type v: List[int] | str
+
+:returns:
+    *  :any:`tril.true` if the words are known to belong to the congruence;
+    *  :any:`tril.false` if the words are known to not belong to the congruence;
+    *  :any:`tril.unknown` otherwise.
+:rtype: tril
+
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+{1}
+)pbdoc",
+                    name,
+                    extra_doc.raises)
+            .c_str());
+  }
+
+  EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, Congruence)
+  EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          word_type,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          word_type,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, ToddCoxeter)
+
+  EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Congruence)
+  EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          std::string,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          std::string,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, ToddCoxeter)
+
+  template <typename Word, typename Thing>
+  void def_contains(py::class_<Thing, CongruenceInterface>& thing,
+                    std::string_view                        name,
+                    doc                                     extra_doc) {
+    thing.def(
+        "contains",
+        [](Thing& self, Word const& u, Word const& v) {
+          return congruence_interface::contains(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(R"pbdoc(
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
+:only-document-once:
+
+Check containment of a pair of words.
+
+This function checks whether or not the words *u* and *v* are contained in the
+congruence represented by a :py:class:`{0}` instance.
+
+:param u: the first word.
+:type u: List[int] | str
+
+:param v: the second word.
+:type v: List[int] | str
+
+:returns: Whether or not the pair belongs to the congruence.
+:rtype: bool
+
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
+
+{1}
+)pbdoc",
+                    name,
+                    extra_doc.raises)
+            .c_str());
+  }
+
+  EXPLICIT_INSTANTIATION2(def_contains, word_type, Congruence)
+  EXPLICIT_INSTANTIATION2(def_contains, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_contains,
+                          word_type,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_contains,
+                          word_type,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_contains, word_type, ToddCoxeter)
+
+  EXPLICIT_INSTANTIATION2(def_contains, std::string, Congruence)
+  EXPLICIT_INSTANTIATION2(def_contains, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_contains,
+                          std::string,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION2(def_contains,
+                          std::string,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION2(def_contains, std::string, ToddCoxeter)
+
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface
   ////////////////////////////////////////////////////////////////////////

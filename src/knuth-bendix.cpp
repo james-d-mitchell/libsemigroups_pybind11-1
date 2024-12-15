@@ -188,11 +188,11 @@ two words :math:`AB` and :math:`BC`.
 
       def_copy(kb, "KnuthBendixRewriteTrie");
 
-      contains<std::string>(kb, "KnuthBendixRewriteTrie");
-      contains<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      def_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
-      currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
-      currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_currently_contains<std::string>(kb, "KnuthBendixRewriteTrie");
+      def_currently_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 
       auto extra_detail = R"pbdoc(
 Otherwise, this function returns the word *w* rewritten according to the

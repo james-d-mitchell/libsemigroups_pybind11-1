@@ -100,15 +100,15 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 :raises LibsemigroupsError:
     if :any:`small_overlap_class` is not at least :math:`4`.
 )pbdoc"sv;
-      currently_contains<word_type>(
+      def_currently_contains<word_type>(
           thing, "Kambites", doc{.raises = extra_raises});
       // TODO(0) should this be "is known and not at least 4"?
-      currently_contains<std::string>(
+      def_currently_contains<std::string>(
           thing, "Kambites", doc{.raises = extra_raises});
       // TODO(0) should this be "is known and not at least 4"?
 
-      contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
-      contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
+      def_contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
+      def_contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
 
       extra_detail
           = R"pbdoc(If the :any:`Kambites.small_overlap_class` is not at least

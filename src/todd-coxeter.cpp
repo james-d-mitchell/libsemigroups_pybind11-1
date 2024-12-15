@@ -253,11 +253,11 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     def_copy(thing, "ToddCoxeter");
 
-    currently_contains<word_type>(thing, "ToddCoxeter");
-    currently_contains<std::string>(thing, "ToddCoxeter");
+    def_currently_contains<word_type>(thing, "ToddCoxeter");
+    def_currently_contains<std::string>(thing, "ToddCoxeter");
 
-    contains<word_type>(thing, "ToddCoxeter");
-    contains<std::string>(thing, "ToddCoxeter");
+    def_contains<word_type>(thing, "ToddCoxeter");
+    def_contains<std::string>(thing, "ToddCoxeter");
 
     // TODO(0) uncomment, issue in libsemigroups itself
     //     auto extra_detail = R"pbdoc(
