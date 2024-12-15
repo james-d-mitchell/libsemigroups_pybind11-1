@@ -114,14 +114,14 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           = R"pbdoc(If the :any:`Kambites.small_overlap_class` is not at least
 :math:`4`, then an exception is thrown.)pbdoc"sv;
 
-      reduce_no_run<word_type>(thing, "Kambites", doc{.detail = extra_detail});
-      reduce_no_run<std::string>(
+      def_reduce_no_run<word_type>(thing, "Kambites", doc{.detail = extra_detail});
+      def_reduce_no_run<std::string>(
           thing, "Kambites", doc{.detail = extra_detail});
 
-      reduce<word_type>(thing,
+      def_reduce<word_type>(thing,
                         "Kambites",
                         doc{.detail = extra_detail, .raises = extra_raises});
-      reduce<std::string>(thing,
+      def_reduce<std::string>(thing,
                           "Kambites",
                           doc{.detail = extra_detail, .raises = extra_raises});
 

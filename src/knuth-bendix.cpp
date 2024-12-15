@@ -198,13 +198,13 @@ two words :math:`AB` and :math:`BC`.
 Otherwise, this function returns the word *w* rewritten according to the
 current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
 
-      reduce_no_run<std::string>(
+      def_reduce_no_run<std::string>(
           kb, "KnuthBendixRewriteTrie", doc{.detail = extra_detail});
-      reduce_no_run<word_type>(
+      def_reduce_no_run<word_type>(
           kb, "KnuthBendixRewriteTrie", doc{.detail = extra_detail});
 
-      reduce<std::string>(kb, "KnuthBendixRewriteTrie");
-      reduce<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_reduce<std::string>(kb, "KnuthBendixRewriteTrie");
+      def_reduce<word_type>(kb, "KnuthBendixRewriteTrie");
 
       //////////////////////////////////////////////////////////////////////////
       // Setters and getters for optional parameters

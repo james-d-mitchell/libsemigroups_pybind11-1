@@ -265,12 +265,12 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     // it might be that equivalent input words produce different output words.
     // This function triggers no congruence enumeration.)pbdoc"sv;
     //
-    //     reduce_no_run<word_type>(thing, "ToddCoxeter", doc{.detail =
-    //     extra_detail}); reduce_no_run<std::string>(
+    //     def_reduce_no_run<word_type>(thing, "ToddCoxeter", doc{.detail =
+    //     extra_detail}); def_reduce_no_run<std::string>(
     //         thing, "ToddCoxeter", doc{.detail = extra_detail});
 
-    reduce<word_type>(thing, "ToddCoxeter");
-    reduce<std::string>(thing, "ToddCoxeter");
+    def_reduce<word_type>(thing, "ToddCoxeter");
+    def_reduce<std::string>(thing, "ToddCoxeter");
 
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers

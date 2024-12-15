@@ -86,12 +86,12 @@ and :any:`ToddCoxeter`.
     def_contains<std::string>(thing, "Congruence");
 
     // TODO(0) uncomment (not yet impled in Congruence)
-    // reduce_no_run<word_type>(thing, "Congruence");
-    // reduce_no_run<std::string>(thing, "Congruence");
+    // def_reduce_no_run<word_type>(thing, "Congruence");
+    // def_reduce_no_run<std::string>(thing, "Congruence");
 
     // TODO(0) uncomment (not yet impled in Congruence)
-    // reduce<word_type>(thing, "Congruence");
-    // reduce<std::string>(thing, "Congruence");
+    // def_reduce<word_type>(thing, "Congruence");
+    // def_reduce<std::string>(thing, "Congruence");
 
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff
