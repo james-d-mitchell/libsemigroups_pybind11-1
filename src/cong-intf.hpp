@@ -26,14 +26,14 @@
 namespace py = pybind11;
 
 namespace libsemigroups {
+  class CongruenceInterface;
 
+  // A little helper struct to simulate keyword arguments for the functions
+  // declared below.
   struct doc {
     std::string_view detail = "";
     std::string_view raises = "";
   };
-
-  // TODO(0) move the definitions in to cong-intf.cpp since the types are fixed.
-  // TODO(0) add prefix def_
 
   template <typename Thing>
   void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
