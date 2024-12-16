@@ -125,7 +125,10 @@ to index *i* back to the root of that tree.
 @_template_params_as_kwargs(
     Word={str: _str_normal_forms, List[int]: _word_normal_forms}
 )
-def normal_forms(kb: ToddCoxeter, **kwargs) -> Iterator[Union[str, List[int]]]:  # pylint: disable=unused-argument
+def normal_forms(  # pylint: disable=unused-argument
+    kb: ToddCoxeter,
+    **kwargs,
+) -> Iterator[Union[str, List[int]]]:
     r"""
     Returns an iterator yielding normal forms.
 

@@ -121,7 +121,8 @@ def test_operators():
     presentation.add_rule(p, [0, 0, 0, 0, 0, 0, 0, 0], [0])
     tc = ToddCoxeter(congruence_kind.onesided, p)
     tc.run_until(
-        lambda: tc.currently_contains([0, 0, 0, 0, 0, 0, 0, 0], [0]) == tril.true
+        lambda: tc.currently_contains([0, 0, 0, 0, 0, 0, 0, 0], [0])
+        == tril.true
     )
     assert tc.stopped_by_predicate()
     assert not tc.finished()
@@ -281,13 +282,17 @@ def test_096():
     assert tc.strategy() == strategy.felsch
     wg = tc.current_word_graph()
     assert not word_graph.is_complete(wg)
-    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
+    for lhs, rhs in (
+        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
+    ):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
     assert tc.number_of_classes() == 1
     tc.shrink_to_fit()
     assert list(todd_coxeter.normal_forms(tc, Word=List[int])) == [[0]]
     assert word_graph.is_complete(tc.current_word_graph())
-    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
+    for lhs, rhs in (
+        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
+    ):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
 
     copy = tc.copy()
@@ -298,7 +303,9 @@ def test_096():
     assert copy.number_of_classes() == 1
     wg = copy.current_word_graph()
     assert word_graph.is_complete(wg)
-    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
+    for lhs, rhs in (
+        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
+    ):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
 
 

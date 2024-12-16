@@ -56,7 +56,9 @@ class ExtendedAutodocDirective(AutodocDirective):
         docstring = list(node.findall(condition=desc_content))
 
         if not docstring:
-            logger.warning(f"The docstring for {self.arguments[0]} cannot be found.")
+            logger.warning(
+                f"The docstring for {self.arguments[0]} cannot be found."
+            )
             return []
 
         return docstring
@@ -102,7 +104,9 @@ templates_path = ["_templates"]
 source_suffix = ".rst"
 master_doc = "index"
 project = "libsemigroups_pybind11"
-copyright = "2021-2024, Joseph Edwards, James Mitchell, Maria Tsalakou, Murray Whyte"
+copyright = (
+    "2021-2024, Joseph Edwards, James Mitchell, Maria Tsalakou, Murray Whyte"
+)
 author = "Joseph Edwards, James Mitchell, Maria Tsalakou, Murray Whyte"
 version = "1.0.0"
 release = "1.0.0"
@@ -302,7 +306,8 @@ def make_only_doc(lines):
     if not called_correctly:
         raise RuntimeError(
             ":only-document-once: has been invoked in a function where "
-            "documentation has not been repeated. Invoked in:\n" + "\n".join(lines)
+            "documentation has not been repeated. Invoked in:\n"
+            + "\n".join(lines)
         )
 
     # If the new doc shouldn't be overloaded, remove the "Overloaded

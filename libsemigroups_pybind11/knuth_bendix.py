@@ -51,7 +51,9 @@ def KnuthBendix(*args, rewriter="RewriteTrie"):  # pylint: disable=invalid-name
     Construct a KnuthBendix instance of the type specified by its arguments
     """
     if len(args) not in (0, 2):
-        raise TypeError(f"expected 0 or 2 positional arguments, found {len(args)}")
+        raise TypeError(
+            f"expected 0 or 2 positional arguments, found {len(args)}"
+        )
 
     if len(args) == 2 and not isinstance(args[0], _congruence_kind):
         raise TypeError(
@@ -176,7 +178,10 @@ def non_trivial_classes(
         List[int]: _knuth_bendix_word_normal_forms,
     }
 )
-def normal_forms(kb: KnuthBendix, **kwargs) -> Iterator[Union[str, List[int]]]:  # pylint: disable=unused-argument
+def normal_forms(
+    kb: KnuthBendix,  # pylint: disable=unused-argument
+    **kwargs,
+) -> Iterator[Union[str, List[int]]]:
     r"""
     Returns an iterator yielding normal forms.
 
