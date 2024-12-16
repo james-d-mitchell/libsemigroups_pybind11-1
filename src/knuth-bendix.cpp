@@ -188,6 +188,9 @@ two words :math:`AB` and :math:`BC`.
 
       def_copy(kb, "KnuthBendixRewriteTrie");
 
+      def_add_generating_pair<word_type>(kb, "KnuthBendixRewriteTrie");
+      def_add_generating_pair<std::string>(kb, "KnuthBendixRewriteTrie");
+
       def_contains<std::string>(kb, "KnuthBendixRewriteTrie");
       def_contains<word_type>(kb, "KnuthBendixRewriteTrie");
 

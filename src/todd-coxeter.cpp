@@ -253,6 +253,9 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     def_copy(thing, "ToddCoxeter");
 
+    def_add_generating_pair<word_type>(thing, "ToddCoxeter");
+    def_add_generating_pair<std::string>(thing, "ToddCoxeter");
+
     def_currently_contains<word_type>(thing, "ToddCoxeter");
     def_currently_contains<std::string>(thing, "ToddCoxeter");
 

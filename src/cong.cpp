@@ -231,7 +231,6 @@ This function returns the presentation used to construct a
    if no :any:`Presentation` was used to construct or initialise ``self``.
 )pbdoc");
 
-    // TODO(0) add_generating_pair (also for the other types too)
     /*
      * TODO(0) add these
           thing.def("get",

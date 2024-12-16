@@ -96,6 +96,9 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 
       def_copy(thing, "Kambites");
 
+      def_add_generating_pair<word_type>(thing, "Kambites");
+      def_add_generating_pair<std::string>(thing, "Kambites");
+
       extra_raises = R"pbdoc(
 :raises LibsemigroupsError:
     if :any:`small_overlap_class` is not at least :math:`4`.
