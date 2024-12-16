@@ -62,7 +62,7 @@ and :any:`ToddCoxeter`.
  )pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
-    // Things from cong-intf.hpp . . .
+    // Methods from cong-intf.hpp . . .
     ////////////////////////////////////////////////////////////////////////
 
     def_construct_default(thing, "Congruence");
@@ -313,7 +313,16 @@ This function returns the presentation used to construct a
       :rtype: int
       )pbdoc");
       */
-    // TODO(0) the helpers too
+
+    ////////////////////////////////////////////////////////////////////////
+    // Helpers from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    // TODO(0) requires Congruence::reduce to work
+
+    // def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
+    // def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
+
   }  // init_cong
 
 }  // namespace libsemigroups

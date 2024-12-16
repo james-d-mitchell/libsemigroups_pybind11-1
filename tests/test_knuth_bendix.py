@@ -24,6 +24,8 @@ from libsemigroups_pybind11 import (
     LibsemigroupsError,
     POSITIVE_INFINITY,
     is_obviously_infinite,
+    StringRange,
+    knuth_bendix,
 )
 
 # TODO should this be for presentation?
@@ -324,7 +326,78 @@ def test_006():
     )
 
 
-# TODO Decided what to do with this. Does the alphabet bug persist? Either way, this seems like a
+def test_non_trivial_classes():
+    p = Presentation("ab")
+    presentation.add_rule(p, "ba", "ababbb")
+    presentation.add_rule(p, "abab", "a" * 6)
+    kb = KnuthBendix(congruence_kind.twosided, p)
+    strings = StringRange().alphabet("ab").first("").last("a" * 6)
+    assert strings.count() == 63
+    assert knuth_bendix.non_trivial_classes(kb, kb, Word=str) == []
+    assert knuth_bendix.non_trivial_classes(kb, list(strings)) == [
+        [
+            "aba",
+            "baa",
+        ],
+        [
+            "bab",
+            "bba",
+        ],
+        [
+            "aaba",
+            "abaa",
+            "baaa",
+        ],
+        [
+            "abab",
+            "abba",
+            "baab",
+            "baba",
+            "bbaa",
+        ],
+        [
+            "babb",
+            "bbab",
+            "bbba",
+        ],
+        [
+            "aaaba",
+            "aabaa",
+            "abaaa",
+            "baaaa",
+        ],
+        [
+            "aabab",
+            "aabba",
+            "abaab",
+            "ababa",
+            "abbaa",
+            "baaab",
+            "baaba",
+            "babaa",
+            "bbaaa",
+        ],
+        [
+            "ababb",
+            "abbab",
+            "abbba",
+            "baabb",
+            "babab",
+            "babba",
+            "bbaab",
+            "bbaba",
+            "bbbaa",
+        ],
+        [
+            "babbb",
+            "bbabb",
+            "bbbab",
+            "bbbba",
+        ],
+    ]
+
+
+# TODO(0) Decided what to do with this. Does the alphabet bug persist? Either way, this seems like a
 # test for presentation
 # def test_alphabet_bug():
 #     k = KnuthBendix()

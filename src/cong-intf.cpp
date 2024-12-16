@@ -582,6 +582,79 @@ word.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, ToddCoxeter)
 
+  template <typename Word, typename Thing>
+  void def_non_trivial_classes(py::module&      m,
+                               std::string_view name,
+                               doc              extra_doc) {
+    std::string func_name(name);
+    std::transform(func_name.begin(),
+                   func_name.end(),
+                   func_name.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    func_name += "_non_trivial_classes";
+    m.def(
+        func_name.c_str(),
+        [](Thing& ci, std::vector<Word> const& words) {
+          return congruence_interface::non_trivial_classes(
+              ci, rx::iterator_range(words.begin(), words.end()));
+        },
+        py::arg("ci"),
+        py::arg("words"),
+        fmt::format(
+            R"pbdoc(
+:sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
+:only-document-once:
+
+Find the non-trivial classes in the partition of a list of words.
+
+This function returns the classes with size at least :math:`2` in the partition
+of the words in the list *words* induced by the :any:`{0}` instance *ci*.
+
+{1}
+
+:param ci: the :any:`{0}` instance.
+:type ci: {0}
+
+:param words: the input list of words.
+:type words: List[List[int] | str]
+
+:returns: The partition of the input list.
+:rtype: List[List[List[int]] | List[str]]
+
+{2})pbdoc",
+            name,
+            extra_doc.detail,
+            extra_doc.raises)
+            .c_str());
+  }
+
+  // TODO(0) uncomment
+  // template void def_non_trivial_classes<word_type, Congruence>(py::module&,
+  //                                                              std::string_view,
+  //                                                              doc);
+  template void
+  def_non_trivial_classes<word_type, KnuthBendix<>>(py::module&,
+                                                    std::string_view,
+                                                    doc);
+
+  template void
+  def_non_trivial_classes<word_type, Kambites<word_type>>(py::module&,
+                                                          std::string_view,
+                                                          doc);
+
+  // TODO(0) uncomment
+  // template void def_non_trivial_classes<std::string, Congruence>(py::module&,
+  //                                                              std::string_view,
+  //                                                              doc);
+  template void
+  def_non_trivial_classes<std::string, KnuthBendix<>>(py::module&,
+                                                      std::string_view,
+                                                      doc);
+  template void
+  def_non_trivial_classes<std::string, Kambites<word_type>>(py::module&,
+                                                            std::string_view,
+                                                            doc);
+
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface
   ////////////////////////////////////////////////////////////////////////

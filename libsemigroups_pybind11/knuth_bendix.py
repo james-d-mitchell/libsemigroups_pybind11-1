@@ -29,6 +29,7 @@ from _libsemigroups_pybind11 import (
     knuth_bendix_word_non_trivial_classes as _knuth_bendix_word_non_trivial_classes,
     knuth_bendix_redundant_rule as redundant_rule,
     knuth_bendix_is_reduced as is_reduced,
+    knuthbendixrewritetrie_non_trivial_classes as _knuth_bendix_non_trivial_classes,
 )
 
 from .detail.decorators import (
@@ -39,10 +40,10 @@ from .detail.decorators import (
 _Presentation = (_PresentationStrings, _PresentationWords)
 _KnuthBendix = (_KnuthBendixRewriteFromLeft, _KnuthBendixRewriteTrie)
 
-for KB in _KnuthBendix:
-    KB.number_of_classes = _may_return_positive_infinity(KB._number_of_classes)
-    KB.number_of_classes.__doc__ = "\n".join(
-        KB._number_of_classes.__doc__.split("\n")[1:]
+for _KB in _KnuthBendix:
+    _KB.number_of_classes = _may_return_positive_infinity(_KB._number_of_classes)
+    _KB.number_of_classes.__doc__ = "\n".join(
+        _KB._number_of_classes.__doc__.split("\n")[1:]
     )
 
 
@@ -51,9 +52,7 @@ def KnuthBendix(*args, rewriter="RewriteTrie"):  # pylint: disable=invalid-name
     Construct a KnuthBendix instance of the type specified by its arguments
     """
     if len(args) not in (0, 2):
-        raise TypeError(
-            f"expected 0 or 2 positional arguments, found {len(args)}"
-        )
+        raise TypeError(f"expected 0 or 2 positional arguments, found {len(args)}")
 
     if len(args) == 2 and not isinstance(args[0], _congruence_kind):
         raise TypeError(
@@ -89,85 +88,28 @@ def KnuthBendix(*args, rewriter="RewriteTrie"):  # pylint: disable=invalid-name
 KnuthBendix.options = _KnuthBendixRewriteTrie.options
 
 
-# The next function (non_trivial_classes) is documented here not in the cpp
-# file because we add the additional kwarg Word.
-@_template_params_as_kwargs(
-    Word={
-        str: _knuth_bendix_str_non_trivial_classes,
-        List[int]: _knuth_bendix_word_non_trivial_classes,
-    }
-)
+# The next function (non_trivial_classes) is documented in
+# knuth-bendix/helpers.rst not in the cpp file because we add the additional
+# kwarg Word, and because there are two overloads, which are documented
+# separately.
 def non_trivial_classes(
     kb1: KnuthBendix,
     kb2: KnuthBendix,
     **kwargs,  # pylint: disable=unused-argument
 ) -> List[List[Union[str, List[int]]]]:
     r"""
-    Find the non-trivial classes of the quotient of one KnuthBendix instance in
-    another.
-
-    This function returns the classes with size at least :math:`2` in the normal
-    forms of *kb1* in *kb2* (the greater congruence, with fewer classes). This
-    function triggers a full enumeration of both *kb1* and *kb2*. Note that this
-    function does **not** compute the normal forms of *kb1* and try to compute the
-    partition of these induced by *kb2*, before filtering out the classes of
-    size :math:`1`. In particular, it is possible to compute the non-trivial
-    classes of *kb2* in *kb1* if there are only finitely many finite such
-    classes, regardless of whether or not *kb1* or *kb2* has infinitely many
-    classes.
-
-    :param kb1: the first KnuthBendix instance.
-    :type kb1: KnuthBendixRewriteTrie
-
-    :param kb2: the second KnuthBendix instance.
-    :type kb2: KnuthBendixRewriteTrie
-
-    :Keyword Arguments:
-        * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-
-    :returns: The non-trivial classes of *kb1* in *kb2*.
-    :rtype: List[List[str | List[int]]]
-
-    :raises LibsemigroupsError:
-        if *kb2* has infinitely many classes and *kb1* has finitely many
-        classes (so that there is at least one infinite non-trivial class).
-
-    :raises LibsemigroupsError:
-        if the alphabets of the presentations of *kb1* and *kb2* are not equal.
-
-    :raises LibsemigroupsError:
-        if the :any:`KnuthBendixRewriteTrie.gilman_graph` of *kb2* has fewer nodes
-        than that of *kb1*.
-
-    :raises TypeError:
-        if the keyword argument *Word* is not present, any other keyword
-        argument is present, or is present but has value other than ``str`` or
-        ``List[int]``.
-
-    .. doctest::
-
-        >>> from libsemigroups_pybind11 import (knuth_bendix, presentation,
-        ... Presentation, congruence_kind, KnuthBendix)
-        >>> from typing import List
-        >>> p = Presentation("abc")
-        >>> p.rules = ["ab", "ba", "ac", "ca", "aa", "a", "ac", "a", "ca",
-        ... "a", "bc", "cb", "bbb", "b", "bc", "b", "cb", "b"]
-        >>> kb1 = KnuthBendix(congruence_kind.twosided, p)
-        >>> presentation.add_rule(p, "a", "b")
-        >>> kb2 = KnuthBendix(congruence_kind.twosided, p)
-        >>> knuth_bendix.non_trivial_classes(kb1, kb2, Word=str)
-        [['b', 'ab', 'bb', 'abb', 'a']]
-        >>> knuth_bendix.non_trivial_classes(kb1, kb2, Word=List[int])
-        [[[98], [97, 98], [98, 98], [97, 98, 98], [97]]]
-        >>> p = Presentation([0, 1, 2])
-        >>> p.rules = [[0, 1], [1, 0], [0, 2], [2, 0], [0, 0], [0], [0, 2], [0], [2, 0],
-        ... [0], [1, 2], [2, 1], [1, 1, 1], [1], [1, 2], [1], [2, 1], [1]]
-        >>> kb1 = KnuthBendix(congruence_kind.twosided, p)
-        >>> presentation.add_rule(p, [0], [1])
-        >>> kb2 = KnuthBendix(congruence_kind.twosided, p)
-        >>> knuth_bendix.non_trivial_classes(kb1, kb2, Word=List[int])
-        [[[1], [0, 1], [1, 1], [0, 1, 1], [0]]]
+    Overloaded function.
     """
+
+    if len(kwargs) > 0:
+        # TODO(1) yuck
+        return _template_params_as_kwargs(
+            Word={
+                str: _knuth_bendix_str_non_trivial_classes,
+                List[int]: _knuth_bendix_word_non_trivial_classes,
+            }
+        )(lambda x: None)(kb1, kb2, **kwargs)
+    return _knuth_bendix_non_trivial_classes(kb1, kb2)
 
 
 # The next function (normal_forms) is documented here not in the cpp
@@ -208,7 +150,7 @@ def normal_forms(
     .. doctest::
 
         >>> from libsemigroups_pybind11 import (KnuthBendix, Presentation,
-        ... presentation, congruence_kind)
+        ... presentation, congruence_kind, knuth_bendix)
         >>> from typing import List
         >>> p = Presentation("abc")
         >>> presentation.add_rule(p, "aaaa", "a")

@@ -59,5 +59,11 @@ Congruence.has = _has
 Congruence.number_of_classes = _may_return_positive_infinity(
     Congruence._number_of_classes
 )
+Congruence.number_of_classes.__doc__ = "\n".join(
+    Congruence._number_of_classes.__doc__.split("\n")[1:]
+)
 
 Congruence.max_threads = _may_return_positive_infinity(Congruence._max_threads)
+Congruence.max_threads.__doc__ = "\n".join(
+    Congruence._max_threads.__doc__.split("\n")[1:]
+)

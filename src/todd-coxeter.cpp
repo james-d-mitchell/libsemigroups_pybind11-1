@@ -40,20 +40,18 @@ namespace libsemigroups {
         m, "ToddCoxeter", R"pbdoc(
 Class containing an implementation of the Todd-Coxeter Algorithm.
 
-This class contains an implementation of the Todd-Coxeter
-algorithm for computing 1-sided (right), and 2-sided congruences on
-a semigroup or monoid.
+This class contains an implementation of the Todd-Coxeter algorithm for
+computing 1-sided (right), and 2-sided congruences on a semigroup or monoid.
 
-In this documentation we use the term "congruence enumeration" to mean
-the execution of (any version of) the Todd-Coxeter algorithm.
+In this documentation we use the term "congruence enumeration" to mean the
+execution of (any version of) the Todd-Coxeter algorithm.
 
 .. seealso :any:`congruence_kind` and :any:`tril`.
 
 .. doctest::
 
-   >>> from libsemigroups_pybind11 import presentation, Presentation, ToddCoxeter
-   >>> from libsemigroups_pybind11 import congruence_kind, word_graph, Order
-   >>> from libsemigroups_pybind11 import todd_coxeter
+   >>> from libsemigroups_pybind11 import (presentation, Presentation, ToddCoxeter,
+   ... congruence_kind, word_graph, Order, todd_coxeter)
    >>> p = Presentation("ab")
    >>> p.contains_empty_word(True)
    <monoid presentation with 2 letters, 0 rules, and length 0>
@@ -1591,7 +1589,17 @@ to index *i* back to the root of that tree.
 )pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
-    // Helpers
+    // Helpers from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    // Can't use the def_non_trivial_classes from cong-intf.hpp here because
+    // todd_coxeter::non_trivial_classes uses todd_coxeter::partition which is
+    // not the same as congruence_interface::partition, which is used by
+    // congruence_interface::non_trivial_classes in def_non_trivial_classes.
+    // JDM tried a few things to fix this, but couldn't.
+
+    ////////////////////////////////////////////////////////////////////////
+    // ToddCoxeter specific helpers
     ////////////////////////////////////////////////////////////////////////
 
     // The next 2 functions are documented in the wrapper in

@@ -219,6 +219,23 @@ determine the pieces, and decompositions of the relation words.
     Ukkonen
 )pbdoc");
 
+      ////////////////////////////////////////////////////////////////////////
+      // Helpers from cong-intf.hpp . . .
+      ////////////////////////////////////////////////////////////////////////
+
+      extra_raises = R"pbdoc(
+:raises LibsemigroupsError:
+    if ``k.small_overlap_class()`` is not at least :math:`4`.
+)pbdoc"sv;
+
+      def_non_trivial_classes<word_type, Kambites_>(
+          m, "Kambites", doc{.raises = extra_raises});
+      def_non_trivial_classes<std::string, Kambites_>(
+          m, "Kambites", doc{.raises = extra_raises});
+
+      ////////////////////////////////////////////////////////////////////////
+      // Kambites specific helpers . . .
+      ////////////////////////////////////////////////////////////////////////
       m.def(
           "kambites_normal_forms",
           [](Kambites_& k) {
@@ -239,48 +256,6 @@ classes of the congruence represented by an instance of :any:`Kambites`.
 
 :returns: An iterator yielding normal forms.
 :rtype: Iterator[List[int]]
-)pbdoc");
-
-      m.def(
-          "kambites_non_trivial_classes",
-          [](Kambites_& k, std::vector<word_type> const& words) {
-            return kambites::non_trivial_classes(
-                k, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg("k"),
-          py::arg("words"),
-          R"pbdoc(
-:sig=(k: Kambites, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
-
-Find the non-trivial classes in the partition of a list of words.
-
-This function returns the classes with size at least :math:`2` in the partition
-of the words in the list *words* induced by the :any:`Kambites` instance *k*.
-
-:param k: the :any:`Kambites` instance.
-:type k: Kambites
-
-:param words: the input list of words.
-:type r: List[List[int] | str]
-
-:returns: The partition of the input list.
-:rtype: List[List[List[int]] | List[str]]
-
-:raises LibsemigroupsError:
-    if ``k.small_overlap_class()`` is not at least :math:`4`.
-)pbdoc");
-
-      m.def(
-          "kambites_non_trivial_classes",
-          [](Kambites_& k, std::vector<std::string> const& words) {
-            return kambites::non_trivial_classes(
-                k, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg("k"),
-          py::arg("words"),
-          R"pbdoc(
-:sig=(k: Kambites, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
 )pbdoc");
 
       m.def(

@@ -86,5 +86,10 @@ namespace libsemigroups {
                   std::string_view                        name,
                   doc                                     extra_doc = {});
 
+  template <typename Word, typename Thing>
+  void def_non_trivial_classes(py::module&      m,
+                               std::string_view name,
+                               doc              extra_doc = {});
+
 }  // namespace libsemigroups
 #endif  // SRC_CONG_INTF_HPP_

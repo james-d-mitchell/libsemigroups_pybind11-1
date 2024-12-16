@@ -545,8 +545,17 @@ This function computes the number of classes in the congruence represented by a
     int | PositiveInfinity
 )pbdoc");
 
+      ////////////////////////////////////////////////////////////////////////
+      // Helpers from cong-intf.hpp . . .
+      ////////////////////////////////////////////////////////////////////////
+
+      def_non_trivial_classes<word_type, KnuthBendix<Rewriter>>(
+          m, "KnuthBendixRewriteTrie");
+      def_non_trivial_classes<std::string, KnuthBendix<Rewriter>>(
+          m, "KnuthBendixRewriteTrie");
+
       //////////////////////////////////////////////////////////////////////////
-      // Helpers
+      // KnuthBendix specific helpers . . .
       //////////////////////////////////////////////////////////////////////////
 
       m.def(
