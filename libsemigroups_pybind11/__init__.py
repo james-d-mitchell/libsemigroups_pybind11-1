@@ -66,7 +66,6 @@ try:
         Ukkonen,
         tril,
         Kambites,
-        Congruence,
     )
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError(
@@ -80,8 +79,7 @@ from .detail.dot import _Dot as Dot
 
 from .action import Action, RightAction, LeftAction
 from .adapters import ImageRightAction, ImageLeftAction
-
-
+from .congruence import Congruence
 from .knuth_bendix import KnuthBendix
 from .matrix import _Matrix as Matrix, _MatrixKind as MatrixKind
 from .presentation import Presentation, InversePresentation

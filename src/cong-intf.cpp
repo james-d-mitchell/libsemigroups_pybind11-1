@@ -35,6 +35,14 @@ namespace py = pybind11;
 
 namespace libsemigroups {
 
+#define EXPLICIT_INSTANTIATION1(FUNC, TYPE1) \
+  template void FUNC<TYPE1>(                 \
+      py::class_<TYPE1, CongruenceInterface>&, std::string_view, doc);
+
+#define EXPLICIT_INSTANTIATION2(FUNC, TYPE1, TYPE2) \
+  template void FUNC<TYPE1, TYPE2>(                 \
+      py::class_<TYPE2, CongruenceInterface>&, std::string_view, doc);
+
   template <typename Thing>
   void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
                              std::string_view                        name,
@@ -50,14 +58,6 @@ Default def_construct_kind_presentation. This function default constructs an uni
                           extra_doc.detail)
                   .c_str());
   }
-
-#define EXPLICIT_INSTANTIATION1(FUNC, TYPE1) \
-  template void FUNC<TYPE1>(                 \
-      py::class_<TYPE1, CongruenceInterface>&, std::string_view, doc);
-
-#define EXPLICIT_INSTANTIATION2(FUNC, TYPE1, TYPE2) \
-  template void FUNC<TYPE1, TYPE2>(                 \
-      py::class_<TYPE2, CongruenceInterface>&, std::string_view, doc);
 
   EXPLICIT_INSTANTIATION1(def_construct_default, Congruence)
   EXPLICIT_INSTANTIATION1(def_construct_default, Kambites<>)
@@ -140,7 +140,7 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
                         doc                                     extra_doc) {
     thing.def(
         "init",
-        [](Thing& self) { return self.init(); },
+        [](Thing& self) -> Thing& { return self.init(); },
         fmt::format(R"pbdoc(
 Re-initialize a :any:`{0}` instance.
 
@@ -171,9 +171,9 @@ have been in if it had just been newly default constructed.
                                   doc extra_doc) {
     thing.def(
         "init",
-        [](Thing& self, congruence_kind knd, Presentation<Word> const& p) {
-          return self.init(knd, p);
-        },
+        [](Thing&                    self,
+           congruence_kind           knd,
+           Presentation<Word> const& p) -> Thing& { return self.init(knd, p); },
         py::arg("knd"),
         py::arg("p"),
         // TODO(0) adding only-document-once here means that the other
@@ -601,6 +601,7 @@ data that are common to all its derived classes. These classes are:
 *  :py:class:`KnuthBendixRewriteTrie`
 *  :any:`ToddCoxeter`
 )pbdoc");
+
     thing.def(
         "kind",
         [](CongruenceInterface const& self) { return self.kind(); },
@@ -619,6 +620,7 @@ of :any:`CongruenceInterface`. See :any:`congruence_kind` for details.
 :rtype:
    congruence_kind
 )pbdoc");
+
     thing.def("generating_pairs",
               &CongruenceInterface::generating_pairs,
               R"pbdoc(
@@ -640,6 +642,7 @@ the derived class.
 :rtype:
    List[List[int]]
 )pbdoc");
+
     thing.def("number_of_generating_pairs",
               &CongruenceInterface::number_of_generating_pairs,
               R"pbdoc(

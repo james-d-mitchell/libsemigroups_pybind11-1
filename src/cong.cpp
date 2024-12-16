@@ -27,7 +27,8 @@
 
 // libsemigroups_pybind11....
 #include "cong-intf.hpp"  // for contains etc
-#include "main.hpp"       // for init_congruence
+#include "detail/rewriters.hpp"
+#include "main.hpp"  // for init_congruence
 
 namespace py = pybind11;
 
@@ -128,7 +129,9 @@ representing a 1- or 2-sided congruence according to *knd*.
         [](Congruence&                self,
            congruence_kind            knd,
            FroidurePinBase&           S,
-           WordGraph<uint32_t> const& wg) { return self.init(knd, S, wg); },
+           WordGraph<uint32_t> const& wg) -> Congruence& {
+          return self.init(knd, S, wg);
+        },
         py::arg("knd"),
         py::arg("S"),
         py::arg("wg"),
@@ -157,7 +160,9 @@ or 2-sided congruence according to *knd*.
 
     thing.def(
         "max_threads",
-        [](Congruence& self, size_t val) { return self.max_threads(val); },
+        [](Congruence& self, size_t val) -> Congruence& {
+          return self.max_threads(val);
+        },
         py::arg("val"),
         R"pbdoc(
 Set the maximum number of threads.
@@ -170,7 +175,7 @@ Set the maximum number of threads.
 )pbdoc");
 
     thing.def(
-        "max_threads",
+        "_max_threads",
         [](Congruence const& self) { return self.max_threads(); },
         R"pbdoc(
 Get the current maximum number of threads.
@@ -180,7 +185,7 @@ Get the current maximum number of threads.
     )pbdoc");
 
     // TODO(0) move to cong-intf.hpp
-    thing.def("number_of_classes",
+    thing.def("_number_of_classes",
               &Congruence::number_of_classes,
               R"pbdoc(
 :sig=(self: Congruence) -> int | PositiveInfinity:
@@ -213,7 +218,8 @@ Get the number of runners. This function returns the number of distinct
     thing.def("presentation",
               &Congruence::presentation,
               R"pbdoc(
-              TODO(0) sig
+:sig=(self: Congruence) -> PresentationStrings:
+
 Get the presentation defining the parent semigroup of the congruence.
 This function returns the presentation used to construct a
 :any:`Congruence` object. This is not always possible.
@@ -221,54 +227,92 @@ This function returns the presentation used to construct a
 :returns:
    The presentation.
 :rtype:
-   Presentation
+   PresentationStrings
 
 :raises LibsemigroupsError:
    if :any:`Runner.finished` returns ``True`` and ``has(KnuthBendix)`` returns
    ``True``.
 
 :raises LibsemigroupsError:
-   if no :any:`Presentation` was used to construct or initialise ``self``.
+   if no :any:`PresentationStrings` was used to construct or initialise ``self``.
 )pbdoc");
 
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    thing.def("_get_knuth_bendix", [](Congruence const& self) {
+      return *self.get<KnuthBendix<>>();
+    });
+
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    thing.def("_get_todd_coxeter",
+              [](Congruence const& self) { return *self.get<ToddCoxeter>(); });
+
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    // TODO(0) this won't currently work as we don't wrap Kambites<word_type>
+    // ATM
+    thing.def("_get_kambites", [](Congruence const& self) {
+      return *self.get<Kambites<word_type>>();
+    });
+
+    thing.def("_has_knuth_bendix", [](Congruence const& self) {
+      return self.has<KnuthBendix<detail::RewriteTrie>>();
+    });
+
+    thing.def("_has_todd_coxeter",
+              [](Congruence const& self) { return self.has<ToddCoxeter>(); });
+
+    thing.def("_has_kambites", [](Congruence const& self) {
+      return self.has<Kambites<word_type>>();
+    });
+
+    // TODO(0) add these
     /*
-     * TODO(0) add these
-          thing.def("get",
-                    &Congruence::get,
-                    R"pbdoc(
-    )pbdoc");
-          thing.def("has",
-                    &Congruence::has,
-                    R"pbdoc(
-    )pbdoc");
-    Returns the :any:`KnuthBendix` instance used to compute the congruence (if
-    any).
+      thing.def("has",
+                &Congruence::has,
+                R"pbdoc(
+      )pbdoc");
+      Returns the :any:`KnuthBendix` instance used to compute the congruence (if
+      any).
 
-    :exceptions: This function guarantees not to throw a
-    :any:`LibsemigroupsError`.
+      :exceptions: This function guarantees not to throw a
+      :any:`LibsemigroupsError`.
 
-    :complexity: Constant.
+      :complexity: Constant.
 
-    .. seealso::  has<KnuthBendix>. Checks if a :any:`KnuthBendix` instance is
-    being used to compute the congruence.
+      .. seealso::  has<KnuthBendix>. Checks if a :any:`KnuthBendix` instance is
+      being used to compute the congruence.
 
-    :exceptions: This function guarantees not to throw a
-    :any:`LibsemigroupsError`.
+      :exceptions: This function guarantees not to throw a
+      :any:`LibsemigroupsError`.
 
-    :complexity: Constant.
+      :complexity: Constant.
 
-    .. seealso::  get<KnuthBendix>. Get the current maximum number of threads.
+      .. seealso::  get<KnuthBendix>. Get the current maximum number of threads.
 
-    :exceptions: This function is ``noexcept`` and is guaranteed never to
-    throw.
+      :exceptions: This function is ``noexcept`` and is guaranteed never to
+      throw.
 
-    :complexity: Constant.
+      :complexity: Constant.
 
-    :returns: A :any:`std::shared_ptr` to a :any:`KnuthBendix` or ``nullptr``.
+      :returns: A :any:`std::shared_ptr` to a :any:`KnuthBendix` or ``nullptr``.
 
-    :rtype: int
-    )pbdoc");
-    */
+      :rtype: int
+      )pbdoc");
+      */
     // TODO(0) the helpers too
   }  // init_cong
 
