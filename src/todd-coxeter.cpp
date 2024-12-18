@@ -1555,11 +1555,14 @@ to index *i* back to the root of that tree.
     // Helpers from cong-intf.hpp . . .
     ////////////////////////////////////////////////////////////////////////
 
-    // Can't use the def_non_trivial_classes from cong-intf.hpp here because
-    // todd_coxeter::non_trivial_classes uses todd_coxeter::partition which is
-    // not the same as congruence_interface::partition, which is used by
-    // congruence_interface::non_trivial_classes in def_non_trivial_classes.
-    // JDM tried a few things to fix this, but couldn't.
+    // TODO(0) include this extra doc
+    // This function triggers a full enumeration of *tc*.
+
+    // :raises LibsemigroupsError:
+    //   if the number of classes in *tc* is infinite. In this case, the
+    //   enumeration of *tc* will not terminate successfully.
+    def_non_trivial_classes<word_type, ToddCoxeter>(m, "ToddCoxeter");
+    def_non_trivial_classes<std::string, ToddCoxeter>(m, "ToddCoxeter");
 
     ////////////////////////////////////////////////////////////////////////
     // ToddCoxeter specific helpers
@@ -1678,49 +1681,11 @@ instance.
 :rtype: tril
 )pbdoc");
 
-    m.def(
-        "todd_coxeter_non_trivial_classes",
-        [](ToddCoxeter& tc, std::vector<word_type> const& words) {
-          return todd_coxeter::non_trivial_classes(
-              tc, rx::iterator_range(words.begin(), words.end()));
-        },
-        py::arg("tc"),
-        py::arg("words"),
-        R"pbdoc(
-:sig=(tc: ToddCoxeter, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
+    // This function triggers a full enumeration of *tc*.
 
-Find the non-trivial classes in the partition of a list of words.
-
-This function returns the classes with size at least :math:`2` in the partition
-of the words in the list *words* induced by the :any:`ToddCoxeter` instance
-*tc*. This function triggers a full enumeration of *tc*.
-
-:param tc: the ToddCoxeter instance.
-:type tc: ToddCoxeter
-
-:param words: the input list of words.
-:type r: List[List[int] | str]
-
-:returns: The partition of the input list.
-:rtype: List[List[List[int]] | List[str]]
-
-:raises LibsemigroupsError:
-  if the number of classes in *tc* is infinite. In this case, the enumeration
-  of *tc* will not terminate successfully.
-)pbdoc");
-
-    m.def(
-        "todd_coxeter_non_trivial_classes",
-        [](ToddCoxeter& tc, std::vector<std::string> const& words) {
-          return todd_coxeter::non_trivial_classes(
-              tc, rx::iterator_range(words.begin(), words.end()));
-        },
-        py::arg("tc"),
-        py::arg("words"),
-        R"pbdoc(
-:sig=(tc: ToddCoxeter, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-)pbdoc");
+    // :raises LibsemigroupsError:
+    //   if the number of classes in *tc* is infinite. In this case, the
+    //   enumeration of *tc* will not terminate successfully.
 
     m.def(
         "todd_coxeter_partition",

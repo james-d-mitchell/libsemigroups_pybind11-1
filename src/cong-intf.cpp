@@ -652,6 +652,10 @@ of the words in the list *words* induced by the :any:`{0}` instance *ci*.
   template void def_non_trivial_classes<word_type, Kambites<>>(py::module&,
                                                                std::string_view,
                                                                doc);
+  template void
+  def_non_trivial_classes<word_type, ToddCoxeter>(py::module&,
+                                                  std::string_view,
+                                                  doc);
 
   // TODO(0) uncomment
   // template void def_non_trivial_classes<std::string, Congruence>(py::module&,
@@ -677,6 +681,11 @@ of the words in the list *words* induced by the :any:`{0}` instance *ci*.
   def_non_trivial_classes<std::string, Kambites<>>(py::module&,
                                                    std::string_view,
                                                    doc);
+
+  template void
+  def_non_trivial_classes<std::string, ToddCoxeter>(py::module&,
+                                                    std::string_view,
+                                                    doc);
 
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface

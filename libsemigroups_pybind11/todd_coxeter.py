@@ -21,7 +21,7 @@ from _libsemigroups_pybind11 import (
     class_of,
     todd_coxeter_is_non_trivial as is_non_trivial,
     todd_coxeter_partition as partition,
-    todd_coxeter_non_trivial_classes as non_trivial_classes,
+    toddcoxeter_non_trivial_classes as non_trivial_classes,
     todd_coxeter_redundant_rule as redundant_rule,
     Dot as _Dot,
 )
