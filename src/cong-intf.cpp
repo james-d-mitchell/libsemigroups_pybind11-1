@@ -628,10 +628,9 @@ of the words in the list *words* induced by the :any:`{0}` instance *ci*.
             .c_str());
   }
 
-  // TODO(0) uncomment
-  // template void def_non_trivial_classes<word_type, Congruence>(py::module&,
-  //                                                              std::string_view,
-  //                                                              doc);
+  template void def_non_trivial_classes<word_type, Congruence>(py::module&,
+                                                               std::string_view,
+                                                               doc);
   template void
   def_non_trivial_classes<word_type, KnuthBendix<detail::RewriteTrie>>(
       py::module&,
@@ -657,10 +656,11 @@ of the words in the list *words* induced by the :any:`{0}` instance *ci*.
                                                   std::string_view,
                                                   doc);
 
-  // TODO(0) uncomment
-  // template void def_non_trivial_classes<std::string, Congruence>(py::module&,
-  //                                                              std::string_view,
-  //                                                              doc);
+  template void
+  def_non_trivial_classes<std::string, Congruence>(py::module&,
+                                                   std::string_view,
+                                                   doc);
+
   template void
   def_non_trivial_classes<std::string, KnuthBendix<detail::RewriteTrie>>(
       py::module&,
