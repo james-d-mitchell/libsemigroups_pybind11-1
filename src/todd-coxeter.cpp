@@ -260,15 +260,15 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     def_contains<word_type>(thing, "ToddCoxeter");
     def_contains<std::string>(thing, "ToddCoxeter");
 
-    // TODO(0) uncomment, issue in libsemigroups itself
-    //     auto extra_detail = R"pbdoc(
-    // If the  :any:`ToddCoxeter` instance is not :any:`Runner.finished`, then
-    // it might be that equivalent input words produce different output words.
-    // This function triggers no congruence enumeration.)pbdoc"sv;
-    //
-    //     def_reduce_no_run<word_type>(thing, "ToddCoxeter", doc{.detail =
-    //     extra_detail}); def_reduce_no_run<std::string>(
-    //         thing, "ToddCoxeter", doc{.detail = extra_detail});
+    auto extra_detail = R"pbdoc(
+     If the  :any:`ToddCoxeter` instance is not :any:`Runner.finished`, then
+     it might be that equivalent input words produce different output words.
+     This function triggers no congruence enumeration.)pbdoc"sv;
+
+    def_reduce_no_run<word_type>(
+        thing, "ToddCoxeter", doc{.detail = extra_detail});
+    def_reduce_no_run<std::string>(
+        thing, "ToddCoxeter", doc{.detail = extra_detail});
 
     def_reduce<word_type>(thing, "ToddCoxeter");
     def_reduce<std::string>(thing, "ToddCoxeter");
@@ -1158,43 +1158,6 @@ it terminates.
 :rtype:
    int
 )pbdoc");
-
-    // TODO(0) remove, see note above
-    thing.def(
-        "reduce_no_run",
-        [](ToddCoxeter& self, word_type const& w) {
-          return todd_coxeter::reduce_no_run(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, w: List[int] | str) -> List[int] | str:
-:only-document-once:
-
-Reduce a word.
-
-This function writes a reduced word equivalent to the input word *w* This
-function triggers no congruence enumeration. The word output by this function
-is equivalent to the input word in the congruence. If is :any:`Runner.finished`, then
-the output word is a normal form for the input word. If the  :any:`ToddCoxeter`
-instance is not :any:`Runner.finished`, then it might be that equivalent input words
-produce different output words.
-
-:param w: the input word.
-:type w: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word` raises.)pbdoc");
-
-    // TODO(0) remove, see note above
-    thing.def(
-        "reduce_no_run",
-        [](ToddCoxeter& self, std::string const& w) {
-          return todd_coxeter::reduce_no_run(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, w: List[int] | str) -> List[int] | str:)pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
     // Accessors

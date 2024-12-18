@@ -509,7 +509,7 @@ form for the input word *w*.
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           word_type,
                           KnuthBendix<detail::RewriteFromLeft>)
-  // EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, ToddCoxeter)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, ToddCoxeter)
 
   // EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<>)
@@ -519,7 +519,7 @@ form for the input word *w*.
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           std::string,
                           KnuthBendix<detail::RewriteFromLeft>)
-  // EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, ToddCoxeter)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, ToddCoxeter)
 
   template <typename Word, typename Thing>
   void def_reduce(py::class_<Thing, CongruenceInterface>& thing,
@@ -633,27 +633,50 @@ of the words in the list *words* induced by the :any:`{0}` instance *ci*.
   //                                                              std::string_view,
   //                                                              doc);
   template void
-  def_non_trivial_classes<word_type, KnuthBendix<>>(py::module&,
-                                                    std::string_view,
-                                                    doc);
+  def_non_trivial_classes<word_type, KnuthBendix<detail::RewriteTrie>>(
+      py::module&,
+      std::string_view,
+      doc);
+
+  template void
+  def_non_trivial_classes<word_type, KnuthBendix<detail::RewriteFromLeft>>(
+      py::module&,
+      std::string_view,
+      doc);
 
   template void
   def_non_trivial_classes<word_type, Kambites<word_type>>(py::module&,
                                                           std::string_view,
                                                           doc);
 
+  template void def_non_trivial_classes<word_type, Kambites<>>(py::module&,
+                                                               std::string_view,
+                                                               doc);
+
   // TODO(0) uncomment
   // template void def_non_trivial_classes<std::string, Congruence>(py::module&,
   //                                                              std::string_view,
   //                                                              doc);
   template void
-  def_non_trivial_classes<std::string, KnuthBendix<>>(py::module&,
-                                                      std::string_view,
-                                                      doc);
+  def_non_trivial_classes<std::string, KnuthBendix<detail::RewriteTrie>>(
+      py::module&,
+      std::string_view,
+      doc);
+
+  template void
+  def_non_trivial_classes<std::string, KnuthBendix<detail::RewriteFromLeft>>(
+      py::module&,
+      std::string_view,
+      doc);
+
   template void
   def_non_trivial_classes<std::string, Kambites<word_type>>(py::module&,
                                                             std::string_view,
                                                             doc);
+  template void
+  def_non_trivial_classes<std::string, Kambites<>>(py::module&,
+                                                   std::string_view,
+                                                   doc);
 
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface
