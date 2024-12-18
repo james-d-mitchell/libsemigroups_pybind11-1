@@ -126,7 +126,7 @@ to index *i* back to the root of that tree.
     Word={str: _str_normal_forms, List[int]: _word_normal_forms}
 )
 def normal_forms(  # pylint: disable=unused-argument
-    kb: ToddCoxeter,
+    tc: ToddCoxeter,
     **kwargs,
 ) -> Iterator[Union[str, List[int]]]:
     r"""
