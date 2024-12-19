@@ -269,8 +269,6 @@ This function returns the presentation used to construct a
     // stored as shared_ptr, and then everything above KnuthBendix in the class
     // hierarchy, and then possibly everything below Reporter too which is then
     // basically everything.
-    // TODO(0) this won't currently work as we don't wrap Kambites<word_type>
-    // ATM
     thing.def("_get_kambites", [](Congruence const& self) {
       return *self.get<Kambites<word_type>>();
     });
@@ -285,41 +283,6 @@ This function returns the presentation used to construct a
     thing.def("_has_kambites", [](Congruence const& self) {
       return self.has<Kambites<word_type>>();
     });
-
-    // TODO(0) add the doc from these
-    /*
-      thing.def("has",
-                &Congruence::has,
-                R"pbdoc(
-      )pbdoc");
-      Returns the :any:`KnuthBendix` instance used to compute the congruence (if
-      any).
-
-      :exceptions: This function guarantees not to throw a
-      :any:`LibsemigroupsError`.
-
-      :complexity: Constant.
-
-      .. seealso::  has<KnuthBendix>. Checks if a :any:`KnuthBendix` instance is
-      being used to compute the congruence.
-
-      :exceptions: This function guarantees not to throw a
-      :any:`LibsemigroupsError`.
-
-      :complexity: Constant.
-
-      .. seealso::  get<KnuthBendix>. Get the current maximum number of threads.
-
-      :exceptions: This function is ``noexcept`` and is guaranteed never to
-      throw.
-
-      :complexity: Constant.
-
-      :returns: A :any:`std::shared_ptr` to a :any:`KnuthBendix` or ``nullptr``.
-
-      :rtype: int
-      )pbdoc");
-      */
 
     ////////////////////////////////////////////////////////////////////////
     // Helpers from cong-intf.hpp . . .
