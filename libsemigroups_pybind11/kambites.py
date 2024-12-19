@@ -17,4 +17,21 @@ from _libsemigroups_pybind11 import (
     kambites_normal_forms as normal_forms,
     kambites_non_trivial_classes as non_trivial_classes,
     kambites_partition as partition,
+    Kambites,
+)
+
+from .detail.decorators import (
+    may_return_positive_infinity as _may_return_positive_infinity,
+)
+
+Kambites.number_of_classes = _may_return_positive_infinity(Kambites._number_of_classes)
+Kambites.number_of_classes.__doc__ = "\n".join(
+    Kambites._number_of_classes.__doc__.split("\n")[1:]
+)
+
+Kambites.small_overlap_class = _may_return_positive_infinity(
+    Kambites._small_overlap_class
+)
+Kambites.small_overlap_class.__doc__ = "\n".join(
+    Kambites._small_overlap_class.__doc__.split("\n")[1:]
 )

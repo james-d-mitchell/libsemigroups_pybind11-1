@@ -33,7 +33,13 @@ namespace libsemigroups {
   struct doc {
     std::string_view detail = "";
     std::string_view raises = "";
+    // TODO(1) add argument names
+    // TODO(1) add argument example
   };
+
+  ////////////////////////////////////////////////////////////////////////
+  // Member functions/methods
+  ////////////////////////////////////////////////////////////////////////
 
   template <typename Thing>
   void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
@@ -61,6 +67,11 @@ namespace libsemigroups {
                 std::string_view                        name,
                 doc                                     extra_doc = {});
 
+  template <typename Thing>
+  void def_number_of_classes(py::class_<Thing, CongruenceInterface>& thing,
+                             std::string_view                        name,
+                             doc extra_doc = {});
+
   template <typename Word, typename Thing>
   void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
                                std::string_view                        name,
@@ -85,6 +96,10 @@ namespace libsemigroups {
   void def_reduce(py::class_<Thing, CongruenceInterface>& thing,
                   std::string_view                        name,
                   doc                                     extra_doc = {});
+
+  ////////////////////////////////////////////////////////////////////////
+  // Helpers
+  ////////////////////////////////////////////////////////////////////////
 
   template <typename Word, typename Thing>
   void def_non_trivial_classes(py::module&      m,

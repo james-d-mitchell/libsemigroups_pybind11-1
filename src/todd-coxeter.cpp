@@ -251,6 +251,8 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
 
     def_copy(thing, "ToddCoxeter");
 
+    def_number_of_classes(thing, "ToddCoxeter");
+
     def_add_generating_pair<word_type>(thing, "ToddCoxeter");
     def_add_generating_pair<std::string>(thing, "ToddCoxeter");
 
@@ -303,7 +305,7 @@ the word graph represented by *tc*.
 
 :raises LibsemigroupsError:
   if the arguments *knd* and *tc* are not compatible. If the first item is
-  ``tc.kind()`` and the second is the parameter *knd* , then compatible
+  ``tc.kind()`` and the second is the parameter *knd*, then compatible
   arguments are (one-sided, one-sided), (two-sided, one-sided), and (two-sided,
   two-sided).)pbdoc");
 
@@ -346,7 +348,7 @@ Re-initialize a ToddCoxeter instance.
 
 This function puts a :any:`ToddCoxeter` instance back into the state
 that it would have been in if it had just been newly constructed from
-``knd`` and ``tc``.
+*knd* and *tc*.
 
 :param knd: the kind (onesided, or twosided) of the congruence.
 :type knd: congruence_kind
@@ -358,8 +360,8 @@ that it would have been in if it had just been newly constructed from
 :rtype: ToddCoxeter
 
 :raises LibsemigroupsError:
-  if the arguments ``knd`` and ``tc`` are not compatible. If the first item is
-  ``tc.kind()`` and the second is the parameter ``knd`` , then compatible
+  if the arguments *knd* and *tc* are not compatible. If the first item is
+  ``tc.kind()`` and the second is the parameter *knd*, then compatible
   arguments are (one-sided, one-sided), (two-sided, one-sided), and (two-sided,
   two-sided).
 )pbdoc");
@@ -715,7 +717,7 @@ This setting determines by what factor the number of nodes required to trigger
 a lookahead grows. More specifically, at the end of any lookahead if the number
 of active nodes already exceeds the value of :any:`lookahead_next` or the
 number of nodes killed during the lookahead is less than the number of active
-nodes divided by :any:`lookahead_growth_threshold` , then the value of
+nodes divided by :any:`lookahead_growth_threshold`, then the value of
 :any:`lookahead_next` is increased by a multiple of ``val``. The default value
 is of this setting is ``2.0``.
 
@@ -755,7 +757,7 @@ This setting determines the threshold for the number of nodes required to
 trigger a lookahead. More specifically, at the end of any lookahead if the
 number of active nodes already exceeds the value of :any:`lookahead_next` or
 the number of nodes killed during the lookahead is less than the number of
-active nodes divided by :any:`lookahead_growth_threshold` , then the value of
+active nodes divided by :any:`lookahead_growth_threshold`, then the value of
 :any:`lookahead_next` is increased. The default value is ``4``.
 
 :param val: the value indicating the lookahead growth threshold.
@@ -1140,25 +1142,6 @@ This function adds a generating pair to the congruence represented by a :any:`To
         R"pbdoc(
 :sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:)pbdoc");
 
-    thing.def("_number_of_classes",
-              &ToddCoxeter::number_of_classes,
-              R"pbdoc(
-:sig=(self: ToddCoxeter) -> int | PositiveInfinity:
-
-Compute the number of classes in the congruence. This function computes
-the number of classes in the congruence represented by a
-:any:`ToddCoxeter` instance by running the congruence enumeration until
-it terminates.
-
-:returns:
-   The number of congruences classes of a :any:`ToddCoxeter` instance if
-   this number is finite, or :any:`POSITIVE_INFINITY` in some cases if
-   this number is not finite.
-
-:rtype:
-   int
-)pbdoc");
-
     ////////////////////////////////////////////////////////////////////////
     // Accessors
     ////////////////////////////////////////////////////////////////////////
@@ -1371,10 +1354,10 @@ Perform a lookahead.
 
 This function can be used to explicitly perform a lookahead. The style and
 extent of this lookahead are controlled by the settings :any:`ToddCoxeter.lookahead_style`
-and :any:`ToddCoxeter.lookahead_extent`. If the argument *stop_early* is ``True`` , then
+and :any:`ToddCoxeter.lookahead_extent`. If the argument *stop_early* is ``True``, then
 the settings :any:`lookahead_stop_early_interval` and
 :any:`lookahead_stop_early_ratio` are used to determine whether or not the
-lookahead should be aborted early. If *stop_early* is ``False`` , then these
+lookahead should be aborted early. If *stop_early* is ``False``, then these
 settings are ignored.
 
 :param stop_early:
@@ -1387,7 +1370,7 @@ settings are ignored.
               R"pbdoc(
 Shrink the underlying word graph to remove all dead nodes. This function
 triggers a full enumeration, and standardization, and removes from
-:any:`word_graph` any dead nodes. If :any:`Runner.finished` returns ``False`` ,
+:any:`word_graph` any dead nodes. If :any:`Runner.finished` returns ``False``,
 then this function does nothing.
 )pbdoc");
     thing.def("standardize",
@@ -1396,12 +1379,12 @@ then this function does nothing.
               R"pbdoc(
 Standardize the current_word_graph.
 
-This function standardizes the return value of :any:`current_word_graph` , and
+This function standardizes the return value of :any:`current_word_graph`, and
 does not trigger any enumeration. See :any:`standardization_order` for a full
 description. The return value of this function indicates whether or not the
 :any:`current_word_graph` was modified. In other words, if this function
 returns ``True``, then the word graph was not previously standardized with
-respect to *val* , and was modified by calling this function if ``False`` is
+respect to *val*, and was modified by calling this function if ``False`` is
 returned, then the word graph was previously standardized with respect to
 *val* (although this might not have been known), and was not modified by
 calling this function.

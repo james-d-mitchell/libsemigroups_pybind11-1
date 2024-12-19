@@ -283,6 +283,45 @@ Copy a :any:`{0}` object.
   EXPLICIT_INSTANTIATION1(def_copy, KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION1(def_copy, ToddCoxeter)
 
+  template <typename Thing>
+  void def_number_of_classes(py::class_<Thing, CongruenceInterface>& thing,
+                             std::string_view                        name,
+                             doc extra_doc) {
+    thing.def(
+        "_number_of_classes",
+        [](Thing& self) { return self.number_of_classes(); },
+        fmt::format(R"pbdoc(
+:sig=(self: {0}) -> int | PositiveInfinity:
+
+Compute the number of classes in the congruence. This function computes the
+number of classes in the congruence represented by a :any:`{0}` instance.
+
+{1}
+
+:returns:
+   The number of congruence classes of a :any:`{0}` instance if this number is
+   finite, or :any:`POSITIVE_INFINITY` in some cases if this number is not
+   finite.
+:rtype:
+   int | PositiveInfinity
+
+{2}
+)pbdoc",
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+
+  EXPLICIT_INSTANTIATION1(def_number_of_classes, Congruence)
+  EXPLICIT_INSTANTIATION1(def_number_of_classes, Kambites<>)
+  EXPLICIT_INSTANTIATION1(def_number_of_classes, Kambites<word_type>)
+  EXPLICIT_INSTANTIATION1(def_number_of_classes,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION1(def_number_of_classes,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION1(def_number_of_classes, ToddCoxeter)
+
   template <typename Word, typename Thing>
   void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
                                std::string_view                        name,

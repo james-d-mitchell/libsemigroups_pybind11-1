@@ -188,6 +188,8 @@ two words :math:`AB` and :math:`BC`.
 
       def_copy(kb, "KnuthBendixRewriteTrie");
 
+      def_number_of_classes(kb, "KnuthBendixRewriteTrie");
+
       def_add_generating_pair<word_type>(kb, "KnuthBendixRewriteTrie");
       def_add_generating_pair<std::string>(kb, "KnuthBendixRewriteTrie");
 
@@ -523,26 +525,6 @@ unique prefixes of the left-hand sides of the rules of the rewriting system.
 :rtype: List[str]
 
 .. seealso:: :any:`gilman_graph`.
-)pbdoc");
-
-      //////////////////////////////////////////////////////////////////////////
-      // Attributes
-      //////////////////////////////////////////////////////////////////////////
-
-      kb.def("_number_of_classes",
-             &libsemigroups::KnuthBendix<Rewriter>::number_of_classes,
-             R"pbdoc(
-:sig=(kb: KnuthBendixRewriteTrie) -> int | PositiveInfinity:
-
-Compute the number of classes in the congruence.
-
-This function computes the number of classes in the congruence represented by a
-:py:class:`KnuthBendixRewriteTrie` instance.
-
-:returns:
-    The number of congruences classes of a :py:class:`KnuthBendixRewriteTrie` object.
-:rtype:
-    int | PositiveInfinity
 )pbdoc");
 
       ////////////////////////////////////////////////////////////////////////

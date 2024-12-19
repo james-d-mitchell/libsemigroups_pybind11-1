@@ -102,6 +102,8 @@ and :any:`ToddCoxeter`.
 
     def_copy(thing, "Congruence");
 
+    def_number_of_classes(thing, "Congruence");
+
     def_add_generating_pair<word_type>(thing, "Congruence");
     def_add_generating_pair<std::string>(thing, "Congruence");
 
@@ -206,24 +208,6 @@ Get the current maximum number of threads.
 :returns: The current maximum number of threads.
 :rtype: int
     )pbdoc");
-
-    // TODO(0) move to cong-intf.hpp
-    thing.def("_number_of_classes",
-              &Congruence::number_of_classes,
-              R"pbdoc(
-:sig=(self: Congruence) -> int | PositiveInfinity:
-
-Compute the number of classes in the congruence. This function computes
-the number of classes in the congruence represented by a
-:any:`Congruence` instance.
-
-:returns:
-   The number of congruence classes of a :any:`Congruence` instance if
-   this number is finite, or :any:`POSITIVE_INFINITY` in some cases if
-   this number is not finite.
-:rtype:
-   int | PositiveInfinity
-)pbdoc");
 
     thing.def("number_of_runners",
               &Congruence::number_of_runners,

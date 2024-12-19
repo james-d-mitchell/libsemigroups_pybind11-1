@@ -132,34 +132,25 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
 
+      extra_detail = R"pbdoc(This function computes the number of classes in
+      the congruence represented by a :any:`Kambites` instance if the
+      :any:`small_overlap_class` is at least :math:`4`. :any:`Kambites`
+      instances can only compute the number of classes if the condition of the
+      previous sentence is fulfilled, and in this case the number of classes is
+      always :any:`POSITIVE_INFINITY`. Otherwise an exception is
+      raised.)pbdoc"sv;
+
+      def_number_of_classes(
+          thing,
+          "Kambites",
+          doc{.detail = extra_detail, .raises = extra_raises});
+
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific stuff
       ////////////////////////////////////////////////////////////////////////
 
       thing.def("__repr__",
                 [](Kambites_& thing) { return to_human_readable_repr(thing); });
-
-      thing.def("number_of_classes", &Kambites_::number_of_classes, R"pbdoc(
-Compute the number of classes in the congruence.
-
-This function computes the number of classes in the congruence represented by a
-:any:`Kambites` instance if the :any:`small_overlap_class` is at least
-:math:`4`. :any:`Kambites` instances can only compute the number of classes if
-the condition of the previous sentence is fulfilled, and in this case the
-number of classes is always :any:`POSITIVE_INFINITY`. Otherwise an exception
-is raised.
-
-:raises LibsemigroupsError:
-    if it is not possible to compute the number of classes of the
-    congruence because the small overlap class is too small.
-
-:returns:
-    The number of congruences classes of a :any:`Kambites` if
-    :any:`small_overlap_class` is at least :math:`4`.
-
-:rtype:
-    int
-)pbdoc");
 
       thing.def("presentation",
                 &Kambites_::presentation,
@@ -175,7 +166,7 @@ returned by this function.
     PresentationStrings
       )pbdoc");
 
-      thing.def("small_overlap_class",
+      thing.def("_small_overlap_class",
                 py::overload_cast<>(&Kambites_::small_overlap_class),
                 R"pbdoc(
 :sig=(self: Kambites) -> int | PositiveInfinity:
