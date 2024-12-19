@@ -1544,8 +1544,8 @@ to index *i* back to the root of that tree.
     // :raises LibsemigroupsError:
     //   if the number of classes in *tc* is infinite. In this case, the
     //   enumeration of *tc* will not terminate successfully.
-    def_partition<word_type, ToddCoxeter>(m, "ToddCoxeter");
-    def_partition<std::string, ToddCoxeter>(m, "ToddCoxeter");
+    def_partition<word_type, ToddCoxeter>(m, "ToddCoxeter", doc{.var = "tc"});
+    def_partition<std::string, ToddCoxeter>(m, "ToddCoxeter", doc{.var = "tc"});
 
     def_non_trivial_classes<word_type, ToddCoxeter>(m, "ToddCoxeter");
     def_non_trivial_classes<std::string, ToddCoxeter>(m, "ToddCoxeter");

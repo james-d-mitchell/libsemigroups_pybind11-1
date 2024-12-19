@@ -708,8 +708,8 @@ full enumeration of *{0}*.
 
 {3}
 )pbdoc",
-                    name,
                     extra_doc.var,
+                    name,
                     extra_doc.detail,
                     extra_doc.raises)
             .c_str());

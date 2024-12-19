@@ -110,5 +110,8 @@ namespace libsemigroups {
                                std::string_view name,
                                doc              extra_doc = {});
 
+  // TODO(1) add normal_forms here, not currently done because Kambites can only
+  // output List[int]
+
 }  // namespace libsemigroups
 #endif  // SRC_CONG_INTF_HPP_
