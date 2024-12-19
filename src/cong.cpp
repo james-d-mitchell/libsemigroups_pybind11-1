@@ -69,7 +69,21 @@ and :any:`ToddCoxeter`.
 
 .. doctest::
 
-    TODO(0)
+    >>> from libsemigroups_pybind11 import (Presentation, presentation, Congruence,
+    ... congruence_kind, is_obviously_infinite)
+    >>> p = Presentation([0, 1])
+    >>> p.contains_empty_word(True)
+    <monoid presentation with 2 letters, 0 rules, and length 0>
+    >>> presentation.add_rule(p, [0, 1], [])
+    >>> cong = Congruence(congruence_kind.twosided, p)
+    >>> is_obviously_infinite(cong)
+    True
+    >>> cong.add_generating_pair([1, 1, 1], [])
+    <Congruence over <monoid presentation with 2 letters, 1 rule, and length 2> with 4 runners>
+    >>> cong.number_of_classes()
+    3
+    >>> is_obviously_infinite(cong)
+    False
  )pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
@@ -204,7 +218,7 @@ the number of classes in the congruence represented by a
 :any:`Congruence` instance.
 
 :returns:
-   The number of congruences classes of a :any:`Congruence` instance if
+   The number of congruence classes of a :any:`Congruence` instance if
    this number is finite, or :any:`POSITIVE_INFINITY` in some cases if
    this number is not finite.
 :rtype:
