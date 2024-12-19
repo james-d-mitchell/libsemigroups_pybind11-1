@@ -501,7 +501,7 @@ form for the input word *w*.
             .c_str());
   }
 
-  // EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Congruence)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           word_type,
@@ -511,7 +511,7 @@ form for the input word *w*.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, ToddCoxeter)
 
-  // EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Congruence)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           std::string,
@@ -562,7 +562,7 @@ word.
             .c_str());
   }
 
-  // EXPLICIT_INSTANTIATION2(def_reduce, word_type, Congruence)
+  EXPLICIT_INSTANTIATION2(def_reduce, word_type, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce, word_type, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_reduce,
                           word_type,
@@ -572,7 +572,7 @@ word.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_reduce, word_type, ToddCoxeter)
 
-  // EXPLICIT_INSTANTIATION2(def_reduce, std::string, Congruence)
+  EXPLICIT_INSTANTIATION2(def_reduce, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_reduce,
                           std::string,

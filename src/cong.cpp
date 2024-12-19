@@ -86,13 +86,11 @@ and :any:`ToddCoxeter`.
     def_contains<word_type>(thing, "Congruence");
     def_contains<std::string>(thing, "Congruence");
 
-    // TODO(0) uncomment (not yet impled in Congruence)
-    // def_reduce_no_run<word_type>(thing, "Congruence");
-    // def_reduce_no_run<std::string>(thing, "Congruence");
+    def_reduce_no_run<word_type>(thing, "Congruence");
+    def_reduce_no_run<std::string>(thing, "Congruence");
 
-    // TODO(0) uncomment (not yet impled in Congruence)
-    // def_reduce<word_type>(thing, "Congruence");
-    // def_reduce<std::string>(thing, "Congruence");
+    def_reduce<word_type>(thing, "Congruence");
+    def_reduce<std::string>(thing, "Congruence");
 
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff
@@ -318,10 +316,8 @@ This function returns the presentation used to construct a
     // Helpers from cong-intf.hpp . . .
     ////////////////////////////////////////////////////////////////////////
 
-    // TODO(0) requires Congruence::reduce to work
-
-    // def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
-    // def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
+    def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
+    def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
 
   }  // init_cong
 
