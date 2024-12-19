@@ -27,12 +27,23 @@
 
 // libsemigroups_pybind11....
 #include "cong-intf.hpp"  // for contains etc
-#include "detail/rewriters.hpp"
-#include "main.hpp"  // for init_congruence
+#include "cong.hpp"       // for non_trivial_classes etc
+#include "main.hpp"       // for init_congruence
 
 namespace py = pybind11;
 
 namespace libsemigroups {
+  namespace {
+
+    template <typename Word>
+    void def_non_trivial_classes_present(py::module& m) {
+      m.def("congruence_non_trivial_classes",
+            [](Congruence& thing, Presentation<Word> const& p) {
+              return congruence::non_trivial_classes(thing, p);
+            });
+    }
+
+  }  // namespace
 
   ////////////////////////////////////////////////////////////////////////
   // init_congruence
@@ -277,7 +288,7 @@ This function returns the presentation used to construct a
       return self.has<Kambites<word_type>>();
     });
 
-    // TODO(0) add these
+    // TODO(0) add the doc from these
     /*
       thing.def("has",
                 &Congruence::has,
@@ -318,6 +329,13 @@ This function returns the presentation used to construct a
 
     def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
     def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
+
+    ////////////////////////////////////////////////////////////////////////
+    // Helpers specific to Congruence . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    def_non_trivial_classes_present<word_type>(m);
+    def_non_trivial_classes_present<std::string>(m);
 
   }  // init_cong
 

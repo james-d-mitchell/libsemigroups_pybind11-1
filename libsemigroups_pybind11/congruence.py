@@ -20,6 +20,7 @@ from _libsemigroups_pybind11 import (
     Kambites,
     Congruence,
     LibsemigroupsError,
+    congruence_non_trivial_classes as non_trivial_classes,
 )
 
 from .knuth_bendix import KnuthBendix

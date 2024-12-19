@@ -27,6 +27,7 @@ from libsemigroups_pybind11 import (
     Kambites,
     KnuthBendix,
     LibsemigroupsError,
+    congruence,
 )
 
 
@@ -49,12 +50,12 @@ def test_018():
     cong = Congruence(congruence_kind.twosided, p)
     cong.add_generating_pair([0], [1])
     assert not cong.finished()
-    assert cong.number_of_classes()
+    assert cong.number_of_classes() == POSITIVE_INFINITY
     assert cong.finished()
 
-    # TODO(0) uncomment
-    # assert cong.number_of_non_trivial_classes() == 1
-    # assert cong.non_trivial_classes(0) == [[0], [1], [0, 1], [1, 1], [0, 1, 1]]
+    assert sorted(congruence.non_trivial_classes(cong, p)) == [
+        [[1], [0, 1], [1, 1], [0, 1, 1], [0]]
+    ]
     # The next line does nothing except check that it's possible to call
     # `run_for` with a timedelta
     cong.run_for(timedelta(seconds=1))
