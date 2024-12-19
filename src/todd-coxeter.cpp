@@ -1092,57 +1092,6 @@ specifies whether or not to do this.The default value of this setting is
 )pbdoc");
 
     ////////////////////////////////////////////////////////////////////////
-    // Interface common functions
-    ////////////////////////////////////////////////////////////////////////
-
-    thing.def(
-        "add_generating_pair",
-        [](ToddCoxeter&     self,
-           word_type const& u,
-           word_type const& v) -> ToddCoxeter& {
-          return todd_coxeter::add_generating_pair(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:
-:only-document-once:
-
-Add a generating pair.
-
-This function adds a generating pair to the congruence represented by a :any:`ToddCoxeter` instance.
-
-:param u: the first item in the pair.
-:type u: List[int] | str
-
-:param v: the second item in the pair.
-:type v: List[int] | str
-
-:raises LibsemigroupsError:
-  if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
-  raises.
-
-:raises LibsemigroupsError:  if :any:`Runner.started` returns ``True``.
-
-:returns: ``self``.
-:rtype: ToddCoxeter
-)pbdoc");
-
-    // TODO remove
-    thing.def(
-        "add_generating_pair",
-        [](ToddCoxeter&       self,
-           std::string const& u,
-           std::string const& v) -> ToddCoxeter& {
-          return todd_coxeter::add_generating_pair(self, u, v);
-        },
-        py::arg("u"),
-        py::arg("v"),
-        R"pbdoc(
-:sig=(self: ToddCoxeter, u: List[int] | str, v: List[int] | str) -> ToddCoxeter:)pbdoc");
-
-    ////////////////////////////////////////////////////////////////////////
     // Accessors
     ////////////////////////////////////////////////////////////////////////
 
@@ -1539,9 +1488,9 @@ to index *i* back to the root of that tree.
     ////////////////////////////////////////////////////////////////////////
 
     auto raises = R"pbdoc(
-   :raises LibsemigroupsError:
-     if the number of classes in *tc* is infinite. In this case, the
-     enumeration of *tc* will not terminate successfully.)pbdoc"sv;
+:raises LibsemigroupsError:
+  if the number of classes in *tc* is infinite. In this case, the
+  enumeration of *tc* will not terminate successfully.)pbdoc"sv;
 
     def_partition<word_type, ToddCoxeter>(
         m, "ToddCoxeter", doc{.raises = raises, .var = "tc"});
