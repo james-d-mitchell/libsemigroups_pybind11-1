@@ -28,6 +28,7 @@ from libsemigroups_pybind11 import (
     KnuthBendix,
     LibsemigroupsError,
     congruence,
+    kambites,
 )
 
 
@@ -85,3 +86,65 @@ def test_has_get():
 
     with pytest.raises(LibsemigroupsError):
         c.get(ToddCoxeter)
+
+
+def test_normal_forms():
+    p = Presentation("abcdefg")
+    presentation.add_rule(p, "abcd", "aaaeaa")
+    presentation.add_rule(p, "ef", "dg")
+    cong = Congruence(congruence_kind.twosided, p)
+    assert cong.number_of_classes() == POSITIVE_INFINITY
+    k = cong.get(Kambites)
+    it = kambites.normal_forms(k)
+    assert [next(it) for _ in range(50)] == [
+        [97],
+        [98],
+        [99],
+        [100],
+        [101],
+        [102],
+        [103],
+        [97, 97],
+        [97, 98],
+        [97, 99],
+        [97, 100],
+        [97, 101],
+        [97, 102],
+        [97, 103],
+        [98, 97],
+        [98, 98],
+        [98, 99],
+        [98, 100],
+        [98, 101],
+        [98, 102],
+        [98, 103],
+        [99, 97],
+        [99, 98],
+        [99, 99],
+        [99, 100],
+        [99, 101],
+        [99, 102],
+        [99, 103],
+        [100, 97],
+        [100, 98],
+        [100, 99],
+        [100, 100],
+        [100, 101],
+        [100, 102],
+        [100, 103],
+        [101, 97],
+        [101, 98],
+        [101, 99],
+        [101, 100],
+        [101, 101],
+        [101, 103],
+        [102, 97],
+        [102, 98],
+        [102, 99],
+        [102, 100],
+        [102, 101],
+        [102, 102],
+        [102, 103],
+        [103, 97],
+        [103, 98],
+    ]

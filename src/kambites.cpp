@@ -22,6 +22,7 @@
 
 // pybind11....
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 // libsemigroups_pybind11....
 #include "cong-intf.hpp"  // for contains etc
@@ -236,6 +237,7 @@ determine the pieces, and decompositions of the relation words.
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific helpers . . .
       ////////////////////////////////////////////////////////////////////////
+      // TODO(0) to cong-intf
       m.def(
           "kambites_normal_forms",
           [](Kambites_& k) {
@@ -258,6 +260,7 @@ classes of the congruence represented by an instance of :any:`Kambites`.
 :rtype: Iterator[List[int]]
 )pbdoc");
 
+      // TODO(0) to cong-intf
       m.def(
           "kambites_partition",
           [](Kambites_& k, std::vector<word_type> const& words) {
@@ -289,6 +292,7 @@ triggers a full enumeration of *k*.
    if ``k.small_overlap_class()`` is not at least :math:`4`.
 )pbdoc");
 
+      // TODO(0) to cong-intf
       m.def(
           "kambites_partition",
           [](Kambites_& k, std::vector<std::string> const& words) {
@@ -299,7 +303,7 @@ triggers a full enumeration of *k*.
           py::arg("words"),
           R"pbdoc(
 :sig=(k: Kambites, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-
+:only-document-once:
 )pbdoc");
     }  // bind_kambites
   }  // namespace
@@ -307,6 +311,7 @@ triggers a full enumeration of *k*.
   void init_kambites(py::module& m) {
     // One call to bind is required per list of types
     bind_kambites<detail::MultiStringView>(m, "Kambites");
+    bind_kambites<word_type>(m, "KambitesWordType");
   }
 
 }  // namespace libsemigroups

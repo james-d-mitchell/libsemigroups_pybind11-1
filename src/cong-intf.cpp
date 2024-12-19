@@ -61,6 +61,7 @@ Default def_construct_kind_presentation. This function default constructs an uni
 
   EXPLICIT_INSTANTIATION1(def_construct_default, Congruence)
   EXPLICIT_INSTANTIATION1(def_construct_default, Kambites<>)
+  EXPLICIT_INSTANTIATION1(def_construct_default, Kambites<word_type>)
   EXPLICIT_INSTANTIATION1(def_construct_default,
                           KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION1(def_construct_default,
@@ -110,6 +111,9 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
                           Kambites<>)
   EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
                           word_type,
+                          Kambites<word_type>)
+  EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
+                          word_type,
                           KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
                           word_type,
@@ -124,6 +128,9 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
   EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
                           std::string,
                           Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
+                          std::string,
+                          Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -160,6 +167,7 @@ have been in if it had just been newly default constructed.
 
   EXPLICIT_INSTANTIATION1(def_init_default, Congruence)
   EXPLICIT_INSTANTIATION1(def_init_default, Kambites<>)
+  EXPLICIT_INSTANTIATION1(def_init_default, Kambites<word_type>)
   EXPLICIT_INSTANTIATION1(def_init_default, KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION1(def_init_default,
                           KnuthBendix<detail::RewriteFromLeft>)
@@ -213,6 +221,9 @@ had been newly constructed from *knd* and *p*.
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation, word_type, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
                           word_type,
+                          Kambites<word_type>)
+  EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
+                          word_type,
                           KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
                           word_type,
@@ -221,6 +232,9 @@ had been newly constructed from *knd* and *p*.
 
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
+                          std::string,
+                          Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -264,6 +278,7 @@ Copy a :any:`{0}` object.
 
   EXPLICIT_INSTANTIATION1(def_copy, Congruence)
   EXPLICIT_INSTANTIATION1(def_copy, Kambites<>)
+  EXPLICIT_INSTANTIATION1(def_copy, Kambites<word_type>)
   EXPLICIT_INSTANTIATION1(def_copy, KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION1(def_copy, KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION1(def_copy, ToddCoxeter)
@@ -319,6 +334,9 @@ This function adds a generating pair to the congruence represented by a
   EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_add_generating_pair,
                           word_type,
+                          Kambites<word_type>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          word_type,
                           KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION2(def_add_generating_pair,
                           word_type,
@@ -327,6 +345,9 @@ This function adds a generating pair to the congruence represented by a
 
   EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_add_generating_pair,
+                          std::string,
+                          Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_add_generating_pair,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -385,6 +406,9 @@ contained in the congruence, but that this is not currently known.
   EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, Kambites<>)
   EXPLICIT_INSTANTIATION2(def_currently_contains,
                           word_type,
+                          Kambites<word_type>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          word_type,
                           KnuthBendix<detail::RewriteTrie>)
   EXPLICIT_INSTANTIATION2(def_currently_contains,
                           word_type,
@@ -393,6 +417,9 @@ contained in the congruence, but that this is not currently known.
 
   EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_currently_contains,
+                          std::string,
+                          Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_currently_contains,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -444,6 +471,7 @@ congruence represented by a :py:class:`{0}` instance.
 
   EXPLICIT_INSTANTIATION2(def_contains, word_type, Congruence)
   EXPLICIT_INSTANTIATION2(def_contains, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_contains, word_type, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_contains,
                           word_type,
                           KnuthBendix<detail::RewriteTrie>)
@@ -454,6 +482,7 @@ congruence represented by a :py:class:`{0}` instance.
 
   EXPLICIT_INSTANTIATION2(def_contains, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_contains, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_contains, std::string, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_contains,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -503,6 +532,7 @@ form for the input word *w*.
 
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           word_type,
                           KnuthBendix<detail::RewriteTrie>)
@@ -513,6 +543,7 @@ form for the input word *w*.
 
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_reduce_no_run,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
@@ -564,6 +595,7 @@ word.
 
   EXPLICIT_INSTANTIATION2(def_reduce, word_type, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce, word_type, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_reduce, word_type, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_reduce,
                           word_type,
                           KnuthBendix<detail::RewriteTrie>)
@@ -574,6 +606,7 @@ word.
 
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, Congruence)
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, Kambites<>)
+  EXPLICIT_INSTANTIATION2(def_reduce, std::string, Kambites<word_type>)
   EXPLICIT_INSTANTIATION2(def_reduce,
                           std::string,
                           KnuthBendix<detail::RewriteTrie>)
