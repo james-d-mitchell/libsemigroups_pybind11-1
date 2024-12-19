@@ -33,7 +33,21 @@ from .detail.decorators import (
 
 def _get(self: Congruence, t: type) -> Union[KnuthBendix, ToddCoxeter, Kambites]:
     """
-    TODO
+    Returns the *t* instance used to compute the congruence (if any).
+
+    This function returns (a copy of) the object of type *t* used to compute
+    the congruence (if any). If there is no such object, then an exception is
+    raised.
+
+    :param t:
+        The type of object being sought (must be :any:`Kambites`,
+        :any:`KnuthBendixRewriteTrie`, or :any:`ToddCoxeter`).
+    :type t: type
+
+    :returns: A copy of the instance of type *t*.
+
+    :raises LibsemigroupsError:
+        if there is no object of type *t* within *self*.
     """
     if t is KnuthBendix:
         return self._get_knuth_bendix()
@@ -45,7 +59,18 @@ def _get(self: Congruence, t: type) -> Union[KnuthBendix, ToddCoxeter, Kambites]
 
 def _has(self: Congruence, t: type) -> bool:
     """
-    TODO
+    Returns whether or not there is an instance of type *t* within the
+    congruence.
+
+    This function returns ``True`` if *self* contains an instance of type *t*,
+    and ``False`` if not.
+
+    :param t:
+        The type of object being sought (must be :any:`Kambites`,
+        :any:`KnuthBendixRewriteTrie`, or :any:`ToddCoxeter`).
+    :type t: type
+
+    :returns: Whether or not there is an object of type *t* in *self*.
     """
     if t is KnuthBendix:
         return self._has_knuth_bendix()
