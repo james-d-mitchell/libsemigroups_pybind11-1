@@ -102,14 +102,17 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
 
       extra_raises = R"pbdoc(
 :raises LibsemigroupsError:
-    if :any:`small_overlap_class` is not at least :math:`4`.
+    if :any:`small_overlap_class` is known and not at least :math:`4`.
 )pbdoc"sv;
       def_currently_contains<word_type>(
           thing, "Kambites", doc{.raises = extra_raises});
-      // TODO(0) should this be "is known and not at least 4"?
       def_currently_contains<std::string>(
           thing, "Kambites", doc{.raises = extra_raises});
-      // TODO(0) should this be "is known and not at least 4"?
+
+      extra_raises = R"pbdoc(
+:raises LibsemigroupsError:
+    if :any:`small_overlap_class` is not at least :math:`4`.
+)pbdoc"sv;
 
       def_contains<word_type>(thing, "Kambites", doc{.raises = extra_raises});
       def_contains<std::string>(thing, "Kambites", doc{.raises = extra_raises});
@@ -221,9 +224,9 @@ determine the pieces, and decompositions of the relation words.
 )pbdoc"sv;
 
       def_partition<word_type, Kambites_>(
-          m, "Kambites", doc{.var = "k", .raises = extra_raises});
+          m, "Kambites", doc{.raises = extra_raises, .var = "k"});
       def_partition<std::string, Kambites_>(
-          m, "Kambites", doc{.var = "k", .raises = extra_raises});
+          m, "Kambites", doc{.raises = extra_raises, .var = "k"});
 
       def_non_trivial_classes<word_type, Kambites_>(
           m, "Kambites", doc{.raises = extra_raises});
@@ -234,7 +237,7 @@ determine the pieces, and decompositions of the relation words.
       // Kambites specific helpers . . .
       ////////////////////////////////////////////////////////////////////////
       // TODO(1) it is currently only possible to have the return type of the
-      // next function to be List[int], we
+      // next function to be List[int]
       m.def(
           "kambites_normal_forms",
           [](Kambites_& k) {
