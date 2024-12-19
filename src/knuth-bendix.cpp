@@ -531,6 +531,11 @@ unique prefixes of the left-hand sides of the rules of the rewriting system.
       // Helpers from cong-intf.hpp . . .
       ////////////////////////////////////////////////////////////////////////
 
+      def_partition<word_type, KnuthBendix<Rewriter>>(m,
+                                                      "KnuthBendixRewriteTrie");
+      def_partition<std::string, KnuthBendix<Rewriter>>(
+          m, "KnuthBendixRewriteTrie");
+
       def_non_trivial_classes<word_type, KnuthBendix<Rewriter>>(
           m, "KnuthBendixRewriteTrie");
       def_non_trivial_classes<std::string, KnuthBendix<Rewriter>>(

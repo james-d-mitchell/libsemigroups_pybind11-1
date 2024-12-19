@@ -30,6 +30,7 @@ from _libsemigroups_pybind11 import (
     knuth_bendix_redundant_rule as redundant_rule,
     knuth_bendix_is_reduced as is_reduced,
     knuthbendixrewritetrie_non_trivial_classes as _knuth_bendix_non_trivial_classes,
+    knuthbendixrewritetrie_partition as partition,
 )
 
 from .detail.decorators import (

@@ -16,6 +16,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "cong-intf.hpp"  // for doc
+
+#include <string_view>
+
 // libsemigroups headers
 #include <libsemigroups/cong-intf.hpp>
 #include <libsemigroups/cong.hpp>
@@ -28,8 +32,7 @@
 #include <pybind11/stl.h>
 
 // libsemigroups_pybind11....
-#include "cong-intf.hpp"  // for doc
-#include "main.hpp"       // for init_cong_intf
+#include "main.hpp"  // for init_cong_intf
 
 namespace py = pybind11;
 
@@ -42,6 +45,19 @@ namespace libsemigroups {
 #define EXPLICIT_INSTANTIATION2(FUNC, TYPE1, TYPE2) \
   template void FUNC<TYPE1, TYPE2>(                 \
       py::class_<TYPE2, CongruenceInterface>&, std::string_view, doc);
+
+  namespace {
+
+    std::string add_prefix(std::string_view name, std::string_view suffix) {
+      std::string func_name(name);
+      std::transform(func_name.begin(),
+                     func_name.end(),
+                     func_name.begin(),
+                     [](unsigned char c) { return std::tolower(c); });
+      func_name += suffix;
+      return func_name;
+    }
+  }  // namespace
 
   template <typename Thing>
   void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
@@ -654,16 +670,107 @@ word.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, ToddCoxeter)
 
+  ////////////////////////////////////////////////////////////////////////
+  // Helpers
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Word, typename Thing>
+  void def_partition(py::module& m, std::string_view name, doc extra_doc) {
+    std::string func_name = add_prefix(name, "_partition");
+    m.def(
+        func_name.c_str(),
+        [](Thing& ci, std::vector<Word> const& words) {
+          return congruence_interface::partition(
+              ci, rx::iterator_range(words.begin(), words.end()));
+        },
+        py::arg(extra_doc.var.data()),
+        py::arg("words"),
+        fmt::format(R"pbdoc(
+:sig=({0}: {1}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
+:only-document-once:
+
+Partition a list of words.
+
+This function returns the classes in the partition of the words in the input
+list *words* induced by the :any:`{1}` instance *{0}*. This function triggers a
+full enumeration of *{0}*.
+
+{2}
+
+:param {0}: the :any:`{1}` instance.
+:type {0}: {1}
+
+:param words: the input list of words.
+:type words: List[List[int] | str]
+
+:returns: The partitioned list of words.
+:rtype: List[List[List[int]] | List[str]]
+
+{3}
+)pbdoc",
+                    name,
+                    extra_doc.var,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+
+  template void def_partition<word_type, Congruence>(py::module&,
+                                                     std::string_view,
+                                                     doc);
+  template void
+  def_partition<word_type, KnuthBendix<detail::RewriteTrie>>(py::module&,
+                                                             std::string_view,
+                                                             doc);
+
+  template void def_partition<word_type, KnuthBendix<detail::RewriteFromLeft>>(
+      py::module&,
+      std::string_view,
+      doc);
+
+  template void def_partition<word_type, Kambites<word_type>>(py::module&,
+                                                              std::string_view,
+                                                              doc);
+
+  template void def_partition<word_type, Kambites<>>(py::module&,
+                                                     std::string_view,
+                                                     doc);
+  template void def_partition<word_type, ToddCoxeter>(py::module&,
+                                                      std::string_view,
+                                                      doc);
+
+  template void def_partition<std::string, Congruence>(py::module&,
+                                                       std::string_view,
+                                                       doc);
+
+  template void
+  def_partition<std::string, KnuthBendix<detail::RewriteTrie>>(py::module&,
+                                                               std::string_view,
+                                                               doc);
+
+  template void
+  def_partition<std::string, KnuthBendix<detail::RewriteFromLeft>>(
+      py::module&,
+      std::string_view,
+      doc);
+
+  template void
+                def_partition<std::string, Kambites<word_type>>(py::module&,
+                                                  std::string_view,
+                                                  doc);
+  template void def_partition<std::string, Kambites<>>(py::module&,
+                                                       std::string_view,
+                                                       doc);
+
+  template void def_partition<std::string, ToddCoxeter>(py::module&,
+                                                        std::string_view,
+                                                        doc);
+
   template <typename Word, typename Thing>
   void def_non_trivial_classes(py::module&      m,
                                std::string_view name,
                                doc              extra_doc) {
-    std::string func_name(name);
-    std::transform(func_name.begin(),
-                   func_name.end(),
-                   func_name.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
-    func_name += "_non_trivial_classes";
+    std::string func_name = add_prefix(name, "_non_trivial_classes");
     m.def(
         func_name.c_str(),
         [](Thing& ci, std::vector<Word> const& words) {

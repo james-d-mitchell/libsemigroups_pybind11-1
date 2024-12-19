@@ -21,6 +21,7 @@ from _libsemigroups_pybind11 import (
     Congruence,
     LibsemigroupsError,
     congruence_non_trivial_classes as non_trivial_classes,
+    congruence_partition as partition,
 )
 
 from .knuth_bendix import KnuthBendix

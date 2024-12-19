@@ -14,14 +14,14 @@ from typing import Union, List, Iterator
 from _libsemigroups_pybind11 import (
     ToddCoxeter,
     PositiveInfinity,
+    toddcoxeter_partition as partition,
+    toddcoxeter_non_trivial_classes as non_trivial_classes,
     todd_coxeter_str_normal_forms as _str_normal_forms,
     todd_coxeter_word_normal_forms as _word_normal_forms,
     _word_class_by_index,
     _str_class_by_index,
     class_of,
     todd_coxeter_is_non_trivial as is_non_trivial,
-    todd_coxeter_partition as partition,
-    toddcoxeter_non_trivial_classes as non_trivial_classes,
     todd_coxeter_redundant_rule as redundant_rule,
     Dot as _Dot,
 )

@@ -220,6 +220,11 @@ determine the pieces, and decompositions of the relation words.
     if ``k.small_overlap_class()`` is not at least :math:`4`.
 )pbdoc"sv;
 
+      def_partition<word_type, Kambites_>(
+          m, "Kambites", doc{.var = "k", .raises = extra_raises});
+      def_partition<std::string, Kambites_>(
+          m, "Kambites", doc{.var = "k", .raises = extra_raises});
+
       def_non_trivial_classes<word_type, Kambites_>(
           m, "Kambites", doc{.raises = extra_raises});
       def_non_trivial_classes<std::string, Kambites_>(
@@ -228,7 +233,8 @@ determine the pieces, and decompositions of the relation words.
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific helpers . . .
       ////////////////////////////////////////////////////////////////////////
-      // TODO(0) to cong-intf
+      // TODO(1) it is currently only possible to have the return type of the
+      // next function to be List[int], we
       m.def(
           "kambites_normal_forms",
           [](Kambites_& k) {
@@ -251,51 +257,6 @@ classes of the congruence represented by an instance of :any:`Kambites`.
 :rtype: Iterator[List[int]]
 )pbdoc");
 
-      // TODO(0) to cong-intf
-      m.def(
-          "kambites_partition",
-          [](Kambites_& k, std::vector<word_type> const& words) {
-            return kambites::partition(
-                k, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg("k"),
-          py::arg("words"),
-          R"pbdoc(
-:sig=(k: Kambites, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
-
-Partition a list of words.
-
-This function returns the classes in the partition of the words in the input
-list *words* induced by the :any:`Kambites` instance *k*. This function
-triggers a full enumeration of *k*.
-
-:param k: the :any:`Kambites` instance.
-:type k: Kambites
-
-:param words: the input list of words.
-:type words: List[List[int] | str]
-
-:returns: The partitioned list of words.
-:rtype: List[List[List[int]] | List[str]]
-
-:raises LibsemigroupsError:
-   if ``k.small_overlap_class()`` is not at least :math:`4`.
-)pbdoc");
-
-      // TODO(0) to cong-intf
-      m.def(
-          "kambites_partition",
-          [](Kambites_& k, std::vector<std::string> const& words) {
-            return kambites::partition(
-                k, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg("k"),
-          py::arg("words"),
-          R"pbdoc(
-:sig=(k: Kambites, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
-)pbdoc");
     }  // bind_kambites
   }  // namespace
 

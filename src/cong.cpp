@@ -325,6 +325,9 @@ This function returns the presentation used to construct a
     // Helpers from cong-intf.hpp . . .
     ////////////////////////////////////////////////////////////////////////
 
+    def_partition<word_type, Congruence>(m, "Congruence", doc{.var = "c"});
+    def_partition<std::string, Congruence>(m, "Congruence", doc{.var = "c"});
+
     def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
     def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
 

@@ -1544,6 +1544,9 @@ to index *i* back to the root of that tree.
     // :raises LibsemigroupsError:
     //   if the number of classes in *tc* is infinite. In this case, the
     //   enumeration of *tc* will not terminate successfully.
+    def_partition<word_type, ToddCoxeter>(m, "ToddCoxeter");
+    def_partition<std::string, ToddCoxeter>(m, "ToddCoxeter");
+
     def_non_trivial_classes<word_type, ToddCoxeter>(m, "ToddCoxeter");
     def_non_trivial_classes<std::string, ToddCoxeter>(m, "ToddCoxeter");
 
@@ -1662,56 +1665,6 @@ instance.
 
 :returns: Whether or not a non-trivial quotient was found.
 :rtype: tril
-)pbdoc");
-
-    // This function triggers a full enumeration of *tc*.
-
-    // :raises LibsemigroupsError:
-    //   if the number of classes in *tc* is infinite. In this case, the
-    //   enumeration of *tc* will not terminate successfully.
-
-    m.def(
-        "todd_coxeter_partition",
-        [](ToddCoxeter& tc, std::vector<word_type> const& words) {
-          return todd_coxeter::partition(
-              tc, rx::iterator_range(words.begin(), words.end()));
-        },
-        py::arg("tc"),
-        py::arg("words"),
-        R"pbdoc(
-:sig=(tc: ToddCoxeter, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
-
-Partition a list of words.
-
-This function returns the classes in the partition of the words in the input
-list *words* induced by the :any:`ToddCoxeter` instance *tc*. This function
-triggers a full enumeration of *tc*.
-
-:param tc: the ToddCoxeter instance.
-:type tc: ToddCoxeter
-
-:param words: the input list of words.
-:type words: List[List[int] | str]
-
-:returns: The partitioned list of words.
-:rtype: List[List[List[int]] | List[str]]
-
-:raises LibsemigroupsError:
-  if the number of classes in *tc* is infinite. In this case, the enumeration
-  of *tc* will not terminate successfully.
-)pbdoc");
-
-    m.def(
-        "todd_coxeter_partition",
-        [](ToddCoxeter& tc, std::vector<std::string> const& words) {
-          return todd_coxeter::partition(
-              tc, rx::iterator_range(words.begin(), words.end()));
-        },
-        py::arg("tc"),
-        py::arg("words"),
-        R"pbdoc(
-:sig=(tc: ToddCoxeter, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
 )pbdoc");
 
     m.def(
