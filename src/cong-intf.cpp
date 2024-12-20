@@ -65,8 +65,11 @@ namespace libsemigroups {
                              doc extra_doc) {
     thing.def(py::init<>(),
               fmt::format(R"pbdoc(
-Default def_construct_kind_presentation. This function default constructs an uninitialised
-:any:`{}` instance.
+:sig=() -> None:
+:only-document-once:
+
+Default def_construct_kind_presentation. This function default constructs an
+uninitialised :any:`{}` instance.
 
 {}
 )pbdoc",
@@ -165,6 +168,9 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
         "init",
         [](Thing& self) -> Thing& { return self.init(); },
         fmt::format(R"pbdoc(
+:sig=(self: {0}) -> {0}:
+:only-document-once:
+
 Re-initialize a :any:`{0}` instance.
 
 This function puts a :any:`{0}` instance back into the state that it would
@@ -175,6 +181,7 @@ have been in if it had just been newly default constructed.
 :returns:
   ``self``.
 :rtype:
+
     {0})pbdoc",
                     name,
                     extra_doc.detail)
@@ -267,6 +274,9 @@ had been newly constructed from *knd* and *p*.
         "copy",
         [](Thing const& self) { return Thing(self); },
         fmt::format(R"pbdoc(
+:sig=(self: {0}) -> {0}:
+:only-document-once:
+
 Copy a :any:`{0}` object.
 
 {1}
@@ -277,19 +287,7 @@ Copy a :any:`{0}` object.
                     extra_doc.detail)
             .c_str());
 
-    thing.def(
-        "__copy__",
-        [](Thing const& self) { return Thing(self); },
-        fmt::format(R"pbdoc(
-Copy a :any:`{0}` object.
-
-{1}
-
-:returns: A copy.
-:rtype: {0})pbdoc",
-                    name,
-                    extra_doc.detail)
-            .c_str());
+    thing.def("__copy__", [](Thing const& self) { return Thing(self); });
   }
 
   EXPLICIT_INSTANTIATION1(def_copy, Congruence)
@@ -308,6 +306,7 @@ Copy a :any:`{0}` object.
         [](Thing& self) { return self.number_of_classes(); },
         fmt::format(R"pbdoc(
 :sig=(self: {0}) -> int | PositiveInfinity:
+:only-document-once:
 
 Compute the number of classes in the congruence. This function computes the
 number of classes in the congruence represented by a :any:`{0}` instance.
@@ -423,7 +422,7 @@ This function adds a generating pair to the congruence represented by a
         py::arg("u"),
         py::arg("v"),
         fmt::format(R"pbdoc(
-:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> tril:
 :only-document-once:
 
 Check whether a pair of words is already known to belong to the congruence.
@@ -779,6 +778,7 @@ full enumeration of *{0}*.
         },
         py::arg("ci"),
         py::arg("words"),
+        // TODO(1) use doc.var instead of using ci here
         fmt::format(
             R"pbdoc(
 :sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
@@ -891,6 +891,7 @@ data that are common to all its derived classes. These classes are:
         [](CongruenceInterface const& self) { return self.kind(); },
         R"pbdoc(
 :sig=(self: CongruenceInterface) -> congruence_kind:
+
 The kind of the congruence (1- or 2-sided).
 
 This function returns the kind of the congruence represented by a derived class

@@ -337,4 +337,5 @@ def test_current_word_of():
         tc.current_index_of(tc.current_word_of(nodes[-1] - 1, Word=str))
         == nodes[-1] - 1
     )
+
     assert not tc.finished()
