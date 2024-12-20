@@ -121,8 +121,7 @@ def test_operators():
     presentation.add_rule(p, [0, 0, 0, 0, 0, 0, 0, 0], [0])
     tc = ToddCoxeter(congruence_kind.onesided, p)
     tc.run_until(
-        lambda: tc.currently_contains([0, 0, 0, 0, 0, 0, 0, 0], [0])
-        == tril.true
+        lambda: tc.currently_contains([0, 0, 0, 0, 0, 0, 0, 0], [0]) == tril.true
     )
     assert tc.stopped_by_predicate()
     assert not tc.finished()
@@ -282,17 +281,13 @@ def test_096():
     assert tc.strategy() == strategy.felsch
     wg = tc.current_word_graph()
     assert not word_graph.is_complete(wg)
-    for lhs, rhs in (
-        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
-    ):
+    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
     assert tc.number_of_classes() == 1
     tc.shrink_to_fit()
     assert list(todd_coxeter.normal_forms(tc, Word=List[int])) == [[0]]
     assert word_graph.is_complete(tc.current_word_graph())
-    for lhs, rhs in (
-        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
-    ):
+    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
 
     copy = tc.copy()
@@ -303,9 +298,7 @@ def test_096():
     assert copy.number_of_classes() == 1
     wg = copy.current_word_graph()
     assert word_graph.is_complete(wg)
-    for lhs, rhs in (
-        (p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)
-    ):
+    for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
 
 
@@ -314,3 +307,34 @@ def test_redundant_rule():
     p.rules = ["aaa", "a", "bbbb", "b", "abab", "aaaaaa"]
 
     assert todd_coxeter.redundant_rule(p, timedelta(milliseconds=10)) is None
+
+
+def test_current_word_of():
+    p = Presentation("abcd")
+    presentation.add_rule(p, "aa", "a")
+    presentation.add_rule(p, "ba", "b")
+    presentation.add_rule(p, "ab", "b")
+    presentation.add_rule(p, "ca", "c")
+    presentation.add_rule(p, "ac", "c")
+    presentation.add_rule(p, "da", "d")
+    presentation.add_rule(p, "ad", "d")
+    presentation.add_rule(p, "bb", "a")
+    presentation.add_rule(p, "cd", "a")
+    presentation.add_rule(p, "ccc", "a")
+    presentation.add_rule(p, "bcbcbcbcbcbcbc", "a")
+    presentation.add_rule(p, "bcbdbcbdbcbdbcbdbcbdbcbdbcbdbcbd", "a")
+    tc = ToddCoxeter(congruence_kind.twosided, p)
+    tc.run_for(timedelta(seconds=0.01))
+    assert not tc.finished()
+    wg = tc.current_word_graph()
+    nodes = list(word_graph.nodes_reachable_from(wg, 0))
+    assert len(nodes) > 0
+    # Some caution is required here, since the nodes and indices are out by 1
+    # (there's 1 more node than index), hence the -1 in the next line.
+    # Be better if tc.current_word_graph() returned a view into the nodes 1 to
+    # n - 1 so that the initial node is not present
+    assert (
+        tc.current_index_of(tc.current_word_of(nodes[-1] - 1, Word=str))
+        == nodes[-1] - 1
+    )
+    assert not tc.finished()

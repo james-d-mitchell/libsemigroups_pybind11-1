@@ -1429,7 +1429,6 @@ word graph is complete, and so the return value is never :any:`UNDEFINED`.
 :sig=(self: ToddCoxeter, w: List[int] | str) -> int:
 )pbdoc");
 
-    // FIXME(0) this causes a full enumeration
     thing.def("_current_word_of", [](ToddCoxeter& self, size_t i) {
       return todd_coxeter::current_word_of<word_type>(self, i);
     });
