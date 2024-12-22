@@ -119,6 +119,8 @@ and :any:`ToddCoxeter`.
     def_reduce<word_type>(thing, "Congruence");
     def_reduce<std::string>(thing, "Congruence");
 
+    def_generating_pairs(thing, "Congruence");
+
     ////////////////////////////////////////////////////////////////////////
     // Congruence specific stuff
     ////////////////////////////////////////////////////////////////////////

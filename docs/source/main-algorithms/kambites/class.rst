@@ -22,6 +22,7 @@ Contents
     ~Kambites
     Kambites.contains
     Kambites.currently_contains
+    Kambites.generating_pairs
     Kambites.init
     Kambites.number_of_classes
     Kambites.presentation

@@ -16,6 +16,7 @@ that are implemented in all of the classes :any:`Congruence`, :any:`Kambites`,
 .. automethod:: ToddCoxeter.add_generating_pair
 .. automethod:: ToddCoxeter.contains
 .. automethod:: ToddCoxeter.currently_contains
+.. automethod:: ToddCoxeter.generating_pairs
 .. automethod:: ToddCoxeter.number_of_classes
 .. automethod:: ToddCoxeter.reduce
 .. automethod:: ToddCoxeter.reduce_no_run

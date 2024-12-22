@@ -275,6 +275,8 @@ definitions in the stack exceeds the value :any:`ToddCoxeter.def_max`.
     def_reduce<word_type>(thing, "ToddCoxeter");
     def_reduce<std::string>(thing, "ToddCoxeter");
 
+    def_generating_pairs(thing, "ToddCoxeter");
+
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
     ////////////////////////////////////////////////////////////////////////
@@ -1279,11 +1281,12 @@ contains the empty word; or the number of classes plus one if
 :any:`presentation` does not contain the empty word. The returned
 :any:`WordGraph` is also short-lex standardized. The returned :any:`WordGraph`
 will usually be complete and compatible with the relations of the
-:any:`presentation` and with the generating_pairs. The :any:`WordGraph` may not
-be complete or compatible for some values of the settings. For example, if the
-setting :any:`lower_bound` is used but is not the same as the number of classes
-in the congruence, then the :any:`WordGraph` returned by this function may not
-be compatible with the relations of :any:`presentation` or :any:`generating_pairs`.
+:any:`presentation` and with the :any:`ToddCoxeter.generating_pairs`. The
+:any:`WordGraph` may not be complete or compatible for some values of the
+settings. For example, if the setting :any:`lower_bound` is used but is not the
+same as the number of classes in the congruence, then the :any:`WordGraph`
+returned by this function may not be compatible with the relations of
+:any:`presentation` or :any:`ToddCoxeter.generating_pairs`.
 
 :returns:
    The underlying :any:`WordGraph`.

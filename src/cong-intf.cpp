@@ -35,6 +35,7 @@
 #include "main.hpp"  // for init_cong_intf
 
 namespace py = pybind11;
+using namespace fmt::literals;
 
 namespace libsemigroups {
 
@@ -275,7 +276,6 @@ had been newly constructed from *knd* and *p*.
         [](Thing const& self) { return Thing(self); },
         fmt::format(R"pbdoc(
 :sig=(self: {0}) -> {0}:
-:only-document-once:
 
 Copy a :any:`{0}` object.
 
@@ -305,26 +305,27 @@ Copy a :any:`{0}` object.
         "_number_of_classes",
         [](Thing& self) { return self.number_of_classes(); },
         fmt::format(R"pbdoc(
-:sig=(self: {0}) -> int | PositiveInfinity:
-:only-document-once:
+:sig=(self: {name}) -> int | PositiveInfinity:
+{onlydoconce}
 
 Compute the number of classes in the congruence. This function computes the
-number of classes in the congruence represented by a :any:`{0}` instance.
+number of classes in the congruence represented by a :any:`{name}` instance.
 
-{1}
+{detail}
 
 :returns:
-   The number of congruence classes of a :any:`{0}` instance if this number is
+   The number of congruence classes of a :any:`{name}` instance if this number is
    finite, or :any:`POSITIVE_INFINITY` in some cases if this number is not
    finite.
 :rtype:
    int | PositiveInfinity
 
-{2}
+{raises}
 )pbdoc",
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
+                    "name"_a        = name,
+                    "detail"_a      = extra_doc.detail,
+                    "raises"_a      = extra_doc.raises,
+                    "onlydoconce"_a = extra_doc.only_document_once)
             .c_str());
   }
 
@@ -669,6 +670,44 @@ word.
                           KnuthBendix<detail::RewriteFromLeft>)
   EXPLICIT_INSTANTIATION2(def_reduce, std::string, ToddCoxeter)
 
+  template <typename Thing>
+  void def_generating_pairs(py::class_<Thing, CongruenceInterface>& thing,
+                            std::string_view                        name,
+                            doc                                     extra_doc) {
+    thing.def("generating_pairs",
+              &Thing::generating_pairs,
+              fmt::format(
+                  R"pbdoc(
+:sig=(self : {name}) -> List[List[int] | str]:
+{onlydoconce}
+
+Get the generating pairs of the congruence.
+
+This function returns the generating pairs of the congruence. The words
+comprising the generating pairs are converted to the internally used type
+(called the *native word type* and usually either :any:`str` or
+``List[int]``) as they are added via :any:`{name}.add_generating_pair`. This
+function returns the :any:`list` of these native word types.
+
+:returns:
+   The list of generating pairs.
+:rtype:
+   List[List[int] | str]
+)pbdoc",
+                  "name"_a        = name,
+                  "onlydoconce"_a = extra_doc.only_document_once)
+                  .c_str());
+  }
+
+  EXPLICIT_INSTANTIATION1(def_generating_pairs, Congruence)
+  EXPLICIT_INSTANTIATION1(def_generating_pairs, Kambites<>)
+  EXPLICIT_INSTANTIATION1(def_generating_pairs, Kambites<word_type>)
+  EXPLICIT_INSTANTIATION1(def_generating_pairs,
+                          KnuthBendix<detail::RewriteTrie>)
+  EXPLICIT_INSTANTIATION1(def_generating_pairs,
+                          KnuthBendix<detail::RewriteFromLeft>)
+  EXPLICIT_INSTANTIATION1(def_generating_pairs, ToddCoxeter)
+
   ////////////////////////////////////////////////////////////////////////
   // Helpers
   ////////////////////////////////////////////////////////////////////////
@@ -907,7 +946,7 @@ of :any:`CongruenceInterface`. See :any:`congruence_kind` for details.
 )pbdoc");
 
     thing.def("generating_pairs",
-              &CongruenceInterface::generating_pairs,
+              &CongruenceInterface::internal_generating_pairs,
               R"pbdoc(
 :sig=(self: CongruenceInterface) -> List[List[int]]:
 
@@ -933,8 +972,7 @@ the derived class.
               R"pbdoc(
 Returns the number of generating pairs.
 
-This function returns the number of generating pairs, which is the size of
-:any:`generating_pairs` divided by :math:`2`.
+This function returns the number of generating pairs of the congruence.
 
 :complexity:
    Constant.

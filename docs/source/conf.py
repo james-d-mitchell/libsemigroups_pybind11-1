@@ -300,10 +300,11 @@ def make_only_doc(lines):
         del lines[-3:]
 
     if not called_correctly:
-        raise RuntimeError(
+        print(
             ":only-document-once: has been invoked in a function where "
             "documentation has not been repeated. Invoked in:\n" + "\n".join(lines)
         )
+        return
 
     # If the new doc shouldn't be overloaded, remove the "Overloaded
     # function" part

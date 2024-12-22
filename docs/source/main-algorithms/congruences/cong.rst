@@ -24,6 +24,7 @@ Contents
    Congruence.contains
    Congruence.copy
    Congruence.currently_contains
+   Congruence.generating_pairs
    Congruence.init
    Congruence.max_threads
    Congruence.number_of_classes

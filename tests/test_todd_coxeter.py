@@ -269,6 +269,13 @@ def test_036():
     tc.add_generating_pair([0], [1])
     tc.add_generating_pair([0, 0], [0])
     assert tc.number_of_classes() == 1
+    assert tc.generating_pairs() == [[0], [1], [0, 0], [0]]
+
+    p = Presentation("ab")
+    p.rules = ["aaa", "a", "bbbb", "b", "abab", "aaaaaa"]
+    tc.init(congruence_kind.twosided, p)
+    tc.add_generating_pair("a", "b")
+    assert tc.generating_pairs() == [[97], [98]]
 
 
 def test_096():

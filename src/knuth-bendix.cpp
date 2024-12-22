@@ -15,6 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// TODO(1) this file is not organised like any other:
+// * kb should be called thing
+// * we don't chain the "def"s in the other files (easier to wrangle)
+
 // C std headers....
 #include <cstddef>  // for size_t
 
@@ -210,6 +214,8 @@ current rules in the :py:class:`KnuthBendixRewriteTrie` instance.)pbdoc"sv;
 
       def_reduce<std::string>(kb, "KnuthBendixRewriteTrie");
       def_reduce<word_type>(kb, "KnuthBendixRewriteTrie");
+
+      def_generating_pairs(kb, "KnuthBendixRewriteTrie");
 
       //////////////////////////////////////////////////////////////////////////
       // Setters and getters for optional parameters
@@ -502,14 +508,14 @@ The Gilman :py:class:`WordGraph` is a digraph where the labels of the paths from
 the initial node (corresponding to the empty word) correspond to the short-lex
 normal forms of the semigroup elements.
 
-The semigroup is finite if the graph is cyclic, and infinite otherwise.
+The semigroup is finite if the graph is acyclic, and infinite otherwise.
 
 :return: The Gilman :py:class:`WordGraph`.
 :rtype: WordGraph
 
-.. warning:: This will terminate when the
-  :any:`KnuthBendixRewriteTrie` instance is reduced and
-  confluent, which might be never.
+.. warning::
+  This will terminate when the :any:`KnuthBendixRewriteTrie` instance is
+  reduced and confluent, which might be never.
 
 .. seealso:: :any:`number_of_classes` and :any:`knuth_bendix.normal_forms`.
 )pbdoc")

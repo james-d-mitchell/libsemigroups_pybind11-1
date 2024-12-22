@@ -53,9 +53,9 @@ small overlap class of a presentation, and, for small overlap monoids (those
 with small overlap class 4 or higher) checking equality of words and for
 computing normal forms. Note that a :any:`Kambites` instance represents a
 congruence on the free monoid or semigroup containing the rules of a
-presentation used to construct the instance, and the :any:`generating_pairs`.
-As such generating pairs or rules are interchangeable in the context of
-:any:`Kambites` objects.)pbdoc");
+presentation used to construct the instance, and the
+:any:`Kambites.generating_pairs`. As such generating pairs or rules are
+interchangeable in the context of :any:`Kambites` objects.)pbdoc");
 
       ////////////////////////////////////////////////////////////////////////
       // Things from cong-intf.hpp . . .
@@ -147,6 +147,9 @@ uniformity of interface between with :any:`KnuthBendixRewriteTrie`,
           thing,
           "Kambites",
           doc{.detail = extra_detail, .raises = extra_raises});
+
+      def_generating_pairs(
+          thing, "Kambites", doc{.only_document_once = ":only-document-once"});
 
       ////////////////////////////////////////////////////////////////////////
       // Kambites specific stuff

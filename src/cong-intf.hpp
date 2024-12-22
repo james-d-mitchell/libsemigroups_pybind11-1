@@ -31,9 +31,10 @@ namespace libsemigroups {
   // A little helper struct to simulate keyword arguments for the functions
   // declared below.
   struct doc {
-    std::string_view detail = "";
-    std::string_view raises = "";
-    std::string_view var    = "";
+    std::string_view detail             = "";
+    std::string_view raises             = "";
+    std::string_view var                = "";
+    std::string_view only_document_once = "";
     // TODO(1) add argument names
     // TODO(1) add argument example
   };
@@ -97,6 +98,12 @@ namespace libsemigroups {
   void def_reduce(py::class_<Thing, CongruenceInterface>& thing,
                   std::string_view                        name,
                   doc                                     extra_doc = {});
+
+  // TODO(0) out of line
+  template <typename Thing>
+  void def_generating_pairs(py::class_<Thing, CongruenceInterface>& thing,
+                            std::string_view                        name,
+                            doc extra_doc = {});
 
   ////////////////////////////////////////////////////////////////////////
   // Helpers
