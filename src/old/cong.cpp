@@ -1,6 +1,6 @@
 //
-// libsemigroups - C++ library for semigroups and monoids
-// Copyright (C) 2021-2024 James D. Mitchell
+// libsemigroups_pybind11
+// Copyright (C) 2024 James D. Mitchell
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,242 +16,293 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// C std headers....
-#include <stddef.h>  // for size_t
-
-// C++ stl headers....
-#include <array>             // for array
-#include <chrono>            // for nanoseconds
-#include <functional>        // for __base, function
-#include <initializer_list>  // for initializer_list
-#include <memory>            // for shared_ptr
-#include <vector>            // for vector
-
-// libsemigroups....
-#include <libsemigroups/cong-intf.hpp>  // for congruence_kind
-#include <libsemigroups/cong.hpp>       // for Congruence
-#include <libsemigroups/runner.hpp>     // for Runner
-#include <libsemigroups/types.hpp>      // for word_type
+// libsemigroups headers
+#include <libsemigroups/cong.hpp>
 
 // pybind11....
-#include <pybind11/chrono.h>    // for auto conversion of py types for run_for
-#include <pybind11/pybind11.h>  // for class_, init, make_iterator, module
+// #include <pybind11/chrono.h>
+// #include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 // libsemigroups_pybind11....
-#include "doc-strings.hpp"  // for add_pair, class_index_to_word
-#include "main.hpp"         // for init_cong
-
-// Forward decls
-namespace libsemigroups {
-  class FroidurePinBase;
-}
+#include "cong-intf.hpp"  // for contains etc
+#include "cong.hpp"       // for non_trivial_classes etc
+#include "main.hpp"       // for init_congruence
 
 namespace py = pybind11;
 
 namespace libsemigroups {
-  /*
+  namespace {
+
+    template <typename Word>
+    void def_non_trivial_classes_present(py::module& m) {
+      m.def("congruence_non_trivial_classes",
+            [](Congruence& thing, Presentation<Word> const& p) {
+              return congruence::non_trivial_classes(thing, p);
+            });
+    }
+
+  }  // namespace
+
+  ////////////////////////////////////////////////////////////////////////
+  // init_congruence
+  ////////////////////////////////////////////////////////////////////////
+
   void init_cong(py::module& m) {
-    py::class_<Congruence>(m, "Congruence")
-        .def(py::init<congruence_kind>(),
-             py::arg("kind"),
-             R"pbdoc(
-               Construct from kind (left/right/2-sided) and options.
+    py::class_<Congruence, CongruenceInterface> thing(m,
+                                                      "Congruence",
+                                                      R"pbdoc(
+Class for running :any:`Kambites`, :any:`KnuthBendixRewriteTrie`, and
+:any:`ToddCoxeter` in parallel.
 
-               Constructs an empty instance of an interface to a congruence of
-               type specified by the argument.
+On this page we describe the functionality relating to the class
+:any:`Congruence` in ``libsemigroups``. This class can be used for computing a
+congruence over a semigroup or monoid by running every applicable algorithm
+from ``libsemigroups`` (and some variants of the same algorithm) in parallel.
+This class is provided for convenience, at present it is not very customisable,
+and lacks some of the fine grained control offered by the classes implementing
+individual algorithms, such as :any:`Kambites`, :any:`KnuthBendixRewriteTrie`,
+and :any:`ToddCoxeter`.
 
-               :Parameters: - **kind** (congruence_kind) the handedness of the
-  congruence.
+.. seealso::  :any:`congruence_kind` and :any:`tril`.
 
-               :Complexity: Constant.
+.. doctest::
 
-               .. seealso:: :py:meth:`set_number_of_generators` and
-                            :py:meth:`add_pair`.
-             )pbdoc")
-        .def(py::init<congruence_kind, std::shared_ptr<FroidurePinBase>>(),
-             py::arg("kind"),
-             py::arg("S"),
-             R"pbdoc(
-               Construct from kind (left/right/2-sided) and
-               :py:class:`FroidurePin`.
+    >>> from libsemigroups_pybind11 import (Presentation, presentation, Congruence,
+    ... congruence_kind, is_obviously_infinite)
+    >>> p = Presentation([0, 1])
+    >>> p.contains_empty_word(True)
+    <monoid presentation with 2 letters, 0 rules, and length 0>
+    >>> presentation.add_rule(p, [0, 1], [])
+    >>> cong = Congruence(congruence_kind.twosided, p)
+    >>> is_obviously_infinite(cong)
+    True
+    >>> cong.add_generating_pair([1, 1, 1], [])
+    <Congruence over <monoid presentation with 2 letters, 1 rule, and length 2> with 4 runners>
+    >>> cong.number_of_classes()
+    3
+    >>> is_obviously_infinite(cong)
+    False
+ )pbdoc");
 
-               Constructs a Congruence over the FroidurePin instance ``S``
-               representing a left/right/2-sided congruence according to
-               ``kind``.
+    ////////////////////////////////////////////////////////////////////////
+    // Methods from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
 
-               :Parameters: - **kind** (congruence_kind) the handedness of the
-                              congruence.
-                            - **S** (FroidurePin) semigroup over which the
-                              congruence is defined.
+    def_construct_default(thing, "Congruence");
 
-               :Complexity: Linear in the size of ``S``.
-             )pbdoc")
-        .def(py::init<congruence_kind, FpSemigroup&>(),
-             py::arg("kind"),
-             py::arg("S"),
-             R"pbdoc(
-               Construct from kind (left/right/2-sided) and
-               :py:class:`FpSemigroup`.
+    def_init_default(thing, "Congruence");
 
-               Constructs a Congruence over the FpSemigroup instance ``S``
-               representing a left/right/2-sided congruence according to
-  ``type``.
+    def_construct_kind_presentation<word_type>(thing, "Congruence");
+    def_construct_kind_presentation<std::string>(thing, "Congruence");
 
-               :Parameters: - **kind** (congruence_kind) the handedness of the
-                              congruence.
-                            - **S** (FpSemigroup) semigroup over which the
-                              congruence is defined.
+    def_init_kind_presentation<word_type>(thing, "Congruence");
+    def_init_kind_presentation<std::string>(thing, "Congruence");
 
-               :Complexity: Constant.
-             )pbdoc")
-        .def("set_number_of_generators",
-             &Congruence::set_number_of_generators,
-             py::arg("n"),
-             cong_intf_doc_strings::set_number_of_generators)
-        .def("number_of_generators",
-             &Congruence::number_of_generators,
-             cong_intf_doc_strings::number_of_generators)
-        .def("add_pair",
-             py::overload_cast<word_type const&, word_type const&>(
-                 &Congruence::add_pair),
-             py::arg("u"),
-             py::arg("v"),
-             cong_intf_doc_strings::add_pair)
-        .def("number_of_generating_pairs",
-             &Congruence::number_of_generating_pairs,
-             cong_intf_doc_strings::number_of_generating_pairs)
-        .def("report_every",
-             (void (Congruence::*)(std::chrono::nanoseconds))
-                 & Runner::report_every,
-             py::arg("t"),
-             runner_doc_strings::report_every)
-        .def("report", &Congruence::report, runner_doc_strings::report)
-        .def("report_why_we_stopped",
-             &Congruence::report_why_we_stopped,
-             runner_doc_strings::report_why_we_stopped)
-        .def("kill", &Congruence::kill, runner_doc_strings::kill)
-        .def("run",
-             &Congruence::run,
-             R"pbdoc(
-               Run all the underlying algorithms to determine the structure of
-               the congruence.
+    def_copy(thing, "Congruence");
 
-               :Parameters: None
-               :return: (None)
-             )pbdoc")
-        .def("run_for",
-             (void (Congruence::*)(std::chrono::nanoseconds)) & Runner::run_for,
-             py::arg("t"),
-             runner_doc_strings::run_for)
-        .def("run_until",
-             (void (Congruence::*)(std::function<bool()>&)) & Runner::run_until,
-             py::arg("func"),
-             runner_doc_strings::run_until)
-        .def("less",
-             &Congruence::less,
-             py::arg("u"),
-             py::arg("v"),
-             cong_intf_doc_strings::less)
-        .def("const_contains",
-             &Congruence::const_contains,
-             py::arg("u"),
-             py::arg("v"),
-             cong_intf_doc_strings::const_contains)
-        .def("contains",
-             &Congruence::contains,
-             py::arg("u"),
-             py::arg("v"),
-             cong_intf_doc_strings::contains)
-        .def("number_of_classes",
-             &Congruence::number_of_classes,
-             cong_intf_doc_strings::number_of_classes)
-        .def("number_of_non_trivial_classes",
-             &Congruence::number_of_non_trivial_classes,
-             cong_intf_doc_strings::number_of_non_trivial_classes)
-        .def(
-            "non_trivial_classes",
-            [](Congruence& C, size_t i) {
-              return C.non_trivial_classes()->at(i);
-            },
-            py::arg("i"),
-            cong_intf_doc_strings::non_trivial_classes)
-        .def("quotient_froidure_pin",
-             &Congruence::quotient_froidure_pin,
-             cong_intf_doc_strings::quotient_froidure_pin)
-        .def("has_quotient_froidure_pin",
-             &Congruence::has_quotient_froidure_pin,
-             cong_intf_doc_strings::has_quotient_froidure_pin)
-        .def("parent_froidure_pin",
-             &Congruence::parent_froidure_pin,
-             cong_intf_doc_strings::parent_froidure_pin)
-        .def("has_parent_froidure_pin",
-             &Congruence::has_parent_froidure_pin,
-             cong_intf_doc_strings::has_parent_froidure_pin)
-        .def("is_quotient_obviously_finite",
-             &Congruence::is_quotient_obviously_finite,
-             cong_intf_doc_strings::is_quotient_obviously_finite)
-        .def("is_quotient_obviously_infinite",
-             &Congruence::is_quotient_obviously_infinite,
-             cong_intf_doc_strings::is_quotient_obviously_infinite)
-        .def("has_todd_coxeter",
-             &Congruence::has_todd_coxeter,
-             R"pbdoc(
-               Checks if a :py:class:`ToddCoxeter` instance is being used to
-               compute the congruence.
+    def_number_of_classes(thing, "Congruence");
 
-               :Parameters: None
-               :return: A ``bool``.
-               )pbdoc")
-        .def("todd_coxeter",
-             &Congruence::todd_coxeter,
-             R"pbdoc(
-               Returns the :py:class:`ToddCoxeter` being used to compute the
-               congruence (if any).
+    def_add_generating_pair<word_type>(thing, "Congruence");
+    def_add_generating_pair<std::string>(thing, "Congruence");
 
-               :Parameters: None
-               :return: A :py:class:`ToddCoxeter` or ``None``.
-             )pbdoc")
-        .def("has_knuth_bendix",
-             &Congruence::has_knuth_bendix,
-             R"pbdoc(
-               Checks if a :py:class:`KnuthBendix` instance is being used to
-               compute the congruence.
+    def_currently_contains<word_type>(thing, "Congruence");
+    def_currently_contains<std::string>(thing, "Congruence");
 
-               :Parameters: None
-               :return: A ``bool``.
-             )pbdoc")
-        .def("knuth_bendix",
-             &Congruence::knuth_bendix,
-             R"pbdoc(
-               Returns the :py:class:`KnuthBendix` being used to compute the
-               congruence (if any).
+    def_contains<word_type>(thing, "Congruence");
+    def_contains<std::string>(thing, "Congruence");
 
-               :Parameters: None
-               :return: A :py:class:`KnuthBendix` or ``None``.
-             )pbdoc")
-        .def("word_to_class_index",
-             &Congruence::word_to_class_index,
-             py::arg("w"),
-             cong_intf_doc_strings::word_to_class_index)
-        .def("class_index_to_word",
-             &Congruence::class_index_to_word,
-             py::arg("i"),
-             cong_intf_doc_strings::class_index_to_word)
-        .def("kind", &Congruence::kind, cong_intf_doc_strings::kind)
-        .def("dead", &Congruence::dead, runner_doc_strings::dead)
-        .def("finished", &Congruence::finished, runner_doc_strings::finished)
-        .def("timed_out", &Congruence::timed_out, runner_doc_strings::timed_out)
-        .def("stopped_by_predicate",
-             &Congruence::stopped_by_predicate,
-             runner_doc_strings::stopped_by_predicate)
-        .def(
-            "generating_pairs",
-            [](Congruence const& c) {
-              return py::make_iterator(c.cbegin_generating_pairs(),
-                                       c.cend_generating_pairs());
-            },
-            cong_intf_doc_strings::generating_pairs);
-  }
-*/
+    def_reduce_no_run<word_type>(thing, "Congruence");
+    def_reduce_no_run<std::string>(thing, "Congruence");
+
+    def_reduce<word_type>(thing, "Congruence");
+    def_reduce<std::string>(thing, "Congruence");
+
+    def_generating_pairs(thing, "Congruence");
+
+    ////////////////////////////////////////////////////////////////////////
+    // Congruence specific stuff
+    ////////////////////////////////////////////////////////////////////////
+
+    thing.def("__repr__", [](Congruence const& thing) {
+      return to_human_readable_repr(thing);
+    });
+
+    thing.def(py::init<congruence_kind,
+                       FroidurePinBase&,
+                       WordGraph<uint32_t> const&>(),
+              R"pbdoc(
+Construct from congruence_kind, FroidurePin, and WordGraph.
+
+Constructs a :any:`Congruence` over the :any:`FroidurePin` instance *S*
+representing a 1- or 2-sided congruence according to *knd*.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param S: a reference to the FroidurePin over which the congruence is being defined.
+:type S: FroidurePinBase
+
+:param wg: the left or right Cayley graph of S.
+:type wg: WordGraph
+
+:returns:  ``self``.
+:rtype: Congruence
+)pbdoc");
+
+    thing.def(
+        "init",
+        [](Congruence&                self,
+           congruence_kind            knd,
+           FroidurePinBase&           S,
+           WordGraph<uint32_t> const& wg) -> Congruence& {
+          return self.init(knd, S, wg);
+        },
+        py::arg("knd"),
+        py::arg("S"),
+        py::arg("wg"),
+        R"pbdoc(
+Re-initialize from :any:`congruence_kind`, :any:`FroidurePin`, and
+:any:`WordGraph`.
+
+This function re-initializes a :any:`Congruence` instance as if it had been
+newly constructed over the :any:`FroidurePin` instance *S* representing a 1-
+or 2-sided congruence according to *knd*.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param S:
+  a reference to the FroidurePin over which the congruence is being
+  defined.
+:type S: FroidurePinBase
+
+:param wg: the left or right Cayley graph of S.
+:type wg: WordGraph
+
+:returns:  ``self``.
+:rtype: Congruence
+)pbdoc");
+
+    thing.def(
+        "max_threads",
+        [](Congruence& self, size_t val) -> Congruence& {
+          return self.max_threads(val);
+        },
+        py::arg("val"),
+        R"pbdoc(
+Set the maximum number of threads.
+
+:param val: the number of threads.
+:type val: int
+
+:returns: ``self``.
+:rtype: Congruence
+)pbdoc");
+
+    thing.def(
+        "_max_threads",
+        [](Congruence const& self) { return self.max_threads(); },
+        R"pbdoc(
+Get the current maximum number of threads.
+
+:returns: The current maximum number of threads.
+:rtype: int
+    )pbdoc");
+
+    thing.def("number_of_runners",
+              &Congruence::number_of_runners,
+              R"pbdoc(
+Get the number of runners. This function returns the number of distinct
+:any:`CongruenceInterface` instances that are contained in a
+:any:`Congruence` object.
+
+:returns:
+   The number of runners.
+:rtype:
+   int
+)pbdoc");
+
+    thing.def("presentation",
+              &Congruence::presentation,
+              R"pbdoc(
+:sig=(self: Congruence) -> PresentationStrings:
+
+Get the presentation defining the parent semigroup of the congruence.
+This function returns the presentation used to construct a
+:any:`Congruence` object. This is not always possible.
+
+:returns:
+   The presentation.
+:rtype:
+   PresentationStrings
+
+:raises LibsemigroupsError:
+   if :any:`Runner.finished` returns ``True`` and ``has(KnuthBendix)`` returns
+   ``True``.
+
+:raises LibsemigroupsError:
+   if no :any:`PresentationStrings` was used to construct or initialise ``self``.
+)pbdoc");
+
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    thing.def("_get_knuth_bendix", [](Congruence const& self) {
+      return *self.get<KnuthBendix<>>();
+    });
+
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    thing.def("_get_todd_coxeter",
+              [](Congruence const& self) { return *self.get<ToddCoxeter>(); });
+
+    // Return by value on purpose, to avoid complications with "get" being
+    // called before "run" and the obtained object being deleted.
+    // Might be better to return a shared_ptr but then KnuthBendix must be
+    // stored as shared_ptr, and then everything above KnuthBendix in the class
+    // hierarchy, and then possibly everything below Reporter too which is then
+    // basically everything.
+    thing.def("_get_kambites", [](Congruence const& self) {
+      return *self.get<Kambites<word_type>>();
+    });
+
+    thing.def("_has_knuth_bendix", [](Congruence const& self) {
+      return self.has<KnuthBendix<detail::RewriteTrie>>();
+    });
+
+    thing.def("_has_todd_coxeter",
+              [](Congruence const& self) { return self.has<ToddCoxeter>(); });
+
+    thing.def("_has_kambites", [](Congruence const& self) {
+      return self.has<Kambites<word_type>>();
+    });
+
+    ////////////////////////////////////////////////////////////////////////
+    // Helpers from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    def_partition<word_type, Congruence>(m, "Congruence", doc{.var = "c"});
+    def_partition<std::string, Congruence>(m, "Congruence", doc{.var = "c"});
+
+    def_non_trivial_classes<word_type, Congruence>(m, "Congruence");
+    def_non_trivial_classes<std::string, Congruence>(m, "Congruence");
+
+    ////////////////////////////////////////////////////////////////////////
+    // Helpers specific to Congruence . . .
+    ////////////////////////////////////////////////////////////////////////
+
+    def_non_trivial_classes_present<word_type>(m);
+    def_non_trivial_classes_present<std::string>(m);
+
+  }  // init_cong
+
 }  // namespace libsemigroups
