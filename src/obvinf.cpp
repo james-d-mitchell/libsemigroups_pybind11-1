@@ -96,7 +96,7 @@ monoid defined by the :any:`PresentationStrings` object *p* is obviously infinit
 
     m.def(
         "is_obviously_infinite",
-        [](ToddCoxeter const& tc) { return is_obviously_infinite(tc); },
+        [](ToddCoxeterBase const& tc) { return is_obviously_infinite(tc); },
         py::arg("tc"),
         R"pbdoc(
 :sig=(p: ToddCoxeter) -> bool:
@@ -120,31 +120,31 @@ infinite; ``False`` is returned if it is not.
     defined by the ToddCoxeter object *tc* is infinite.
 )pbdoc");
 
-    m.def(
-        "is_obviously_infinite",
-        [](Congruence& c) { return is_obviously_infinite(c); },
-        py::arg("c"),
-        R"pbdoc(
-:sig=(c: Congruence) -> bool:
-
-Function for checking if a congruence obviously has infinite many
-classes.
-
-This function returns ``True`` if the quotient of the finitely presented
-semigroup or monoid defined by the :any:`Congruence` object *c* is obviously
-infinite; ``False`` is returned if it is not.
-
-:param c: the :any:`Congruence` instance.
-:type c: Congruence
-
-:returns:
-    Whether or not the congruence obviously has infinitely many
-    classes.
-
-.. note::
-    If this function returns ``False``, it is still possible that the
-    congruence has infinitely many classes.
-)pbdoc");
+    //     m.def(
+    //         "is_obviously_infinite",
+    //         [](Congruence& c) { return is_obviously_infinite(c); },
+    //         py::arg("c"),
+    //         R"pbdoc(
+    // :sig=(c: Congruence) -> bool:
+    //
+    // Function for checking if a congruence obviously has infinite many
+    // classes.
+    //
+    // This function returns ``True`` if the quotient of the finitely presented
+    // semigroup or monoid defined by the :any:`Congruence` object *c* is
+    // obviously infinite; ``False`` is returned if it is not.
+    //
+    // :param c: the :any:`Congruence` instance.
+    // :type c: Congruence
+    //
+    // :returns:
+    //     Whether or not the congruence obviously has infinitely many
+    //     classes.
+    //
+    // .. note::
+    //     If this function returns ``False``, it is still possible that the
+    //     congruence has infinitely many classes.
+    // )pbdoc");
 
     m.def(
         "is_obviously_infinite",

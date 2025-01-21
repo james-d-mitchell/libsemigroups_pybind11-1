@@ -238,44 +238,45 @@ definitions in the stack exceeds the value :any:`ToddCoxeterBase.def_max`.
     //////////////////////////////////////////////////////////////////////////
     // Things from cong-intf.hpp . . .
     //////////////////////////////////////////////////////////////////////////
-
-    def_construct_default(thing, "ToddCoxeterBase");
-
-    def_init_default(thing, "ToddCoxeterBase");
-
-    def_construct_kind_presentation<word_type>(thing, "ToddCoxeterBase");
-    def_construct_kind_presentation<std::string>(thing, "ToddCoxeterBase");
-
-    def_init_kind_presentation<word_type>(thing, "ToddCoxeterBase");
-    def_init_kind_presentation<std::string>(thing, "ToddCoxeterBase");
-
-    def_copy(thing, "ToddCoxeterBase");
-
     def_number_of_classes(thing, "ToddCoxeterBase");
 
-    def_add_generating_pair<word_type>(thing, "ToddCoxeterBase");
-    def_add_generating_pair<std::string>(thing, "ToddCoxeterBase");
+    /*    def_construct_default(thing, "ToddCoxeterBase");
 
-    def_currently_contains<word_type>(thing, "ToddCoxeterBase");
-    def_currently_contains<std::string>(thing, "ToddCoxeterBase");
+        def_init_default(thing, "ToddCoxeterBase");
 
-    def_contains<word_type>(thing, "ToddCoxeterBase");
-    def_contains<std::string>(thing, "ToddCoxeterBase");
+        def_construct_kind_presentation<word_type>(thing, "ToddCoxeterBase");
+        def_construct_kind_presentation<std::string>(thing, "ToddCoxeterBase");
 
-    auto extra_detail = R"pbdoc(
-     If the  :any:`ToddCoxeterBase` instance is not :any:`Runner.finished`, then
-     it might be that equivalent input words produce different output words.
-     This function triggers no congruence enumeration.)pbdoc"sv;
+        def_init_kind_presentation<word_type>(thing, "ToddCoxeterBase");
+        def_init_kind_presentation<std::string>(thing, "ToddCoxeterBase");
 
-    def_reduce_no_run<word_type>(
-        thing, "ToddCoxeterBase", doc{.detail = extra_detail});
-    def_reduce_no_run<std::string>(
-        thing, "ToddCoxeterBase", doc{.detail = extra_detail});
+        def_copy(thing, "ToddCoxeterBase");
 
-    def_reduce<word_type>(thing, "ToddCoxeterBase");
-    def_reduce<std::string>(thing, "ToddCoxeterBase");
 
-    def_generating_pairs(thing, "ToddCoxeterBase");
+        def_add_generating_pair<word_type>(thing, "ToddCoxeterBase");
+        def_add_generating_pair<std::string>(thing, "ToddCoxeterBase");
+
+        def_currently_contains<word_type>(thing, "ToddCoxeterBase");
+        def_currently_contains<std::string>(thing, "ToddCoxeterBase");
+
+        def_contains<word_type>(thing, "ToddCoxeterBase");
+        def_contains<std::string>(thing, "ToddCoxeterBase");
+
+        auto extra_detail = R"pbdoc(
+         If the  :any:`ToddCoxeterBase` instance is not :any:`Runner.finished`,
+       then it might be that equivalent input words produce different output
+       words. This function triggers no congruence enumeration.)pbdoc"sv;
+
+        def_reduce_no_run<word_type>(
+            thing, "ToddCoxeterBase", doc{.detail = extra_detail});
+        def_reduce_no_run<std::string>(
+            thing, "ToddCoxeterBase", doc{.detail = extra_detail});
+
+        def_reduce<word_type>(thing, "ToddCoxeterBase");
+        def_reduce<std::string>(thing, "ToddCoxeterBase");
+
+        def_generating_pairs(thing, "ToddCoxeterBase");
+    */
 
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
@@ -1190,7 +1191,7 @@ standardized with respect to the order ``val`` ; and ``False`` if not.
 :rtype: bool
 )pbdoc");
     thing.def("presentation",
-              &ToddCoxeterBase::presentation,
+              &ToddCoxeterBase::internal_presentation,
               R"pbdoc(
 Get the presentation used to define a ToddCoxeterBase instance (if any). If
 a :any:`ToddCoxeterBase` instance is constructed or initialised using a
@@ -1359,142 +1360,145 @@ calling this function.
 .. seealso::  :any:`word_graph.standardize` and :any:`current_spanning_tree`.
 )pbdoc");
 
-    thing.def(
-        "current_index_of",
-        [](ToddCoxeterBase const& self, word_type const& w) {
-          return todd_coxeter::current_index_of(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-)pbdoc");
-
-    thing.def(
-        "_current_index_of",
-        [](ToddCoxeterBase const& self, std::string const& w) {
-          return todd_coxeter::current_index_of(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-
-Returns the current index of the class containing a word.
-
-This function returns the current index of the class containing the word *w* No
-enumeration is triggered by calls to this function. Unless :any:`Runner.finished`
-returns ``True``, the index returned by this function is essentially arbitrary,
-and can only really be used to check whether or not two words are currently
-known to belong to the congruence. The returned index is obtained by following
-the path in :any:`current_word_graph` from node ``0`` labelled by the word *w*.
-If there is no such path, then :any:`UNDEFINED` is returned.
-
-:param w: the word.
-:type w: List[int] | str
-
-:returns: The current index of the class containing the word.
-:rtype: int | Undefined
-
-:raises LibsemigroupsError:
-  if any of the values in *w* is out of range, i.e. they do not belong to
-  ``presentation().alphabet()`` and ``PresentationStrings.validate_word``
-  raises.
-)pbdoc");
-
-    thing.def(
-        "index_of",
-        [](ToddCoxeterBase& self, word_type const& w) {
-          return todd_coxeter::index_of(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-:only-document-once:
-
-Returns the index of the class containing a word.
-
-This function returns the index of the class containing the word *w* A full
-enumeration is triggered by calls to this function. If the
-:any:`current_word_graph` has not already been standardized, then this function
-first standardizes it with respect to :any:`Order.shortlex`; otherwise the
-existing standardization order is used. The returned index is obtained by
-following the path in :any:`current_word_graph` from node ``0`` labelled by the
-word *w* Since a full enumeration is triggered by calls to this function, the
-word graph is complete, and so the return value is never :any:`UNDEFINED`.
-
-:param w: the word.
-:type w: List[int] | str
-
-:returns: The index of the class containing the word.
-:rtype: int
-
-:raises LibsemigroupsError:
-    if any of the values in *w*, i.e. they do not belong to
-    ``presentation().alphabet()`` and ``PresentationStrings.validate_word`` raises.
-)pbdoc");
-
-    thing.def(
-        "index_of",
-        [](ToddCoxeterBase& self, std::string const& w) {
-          return todd_coxeter::index_of(self, w);
-        },
-        py::arg("w"),
-        R"pbdoc(
-:sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-)pbdoc");
-
-    thing.def("_current_word_of", [](ToddCoxeterBase& self, size_t i) {
-      return todd_coxeter::current_word_of<word_type>(self, i);
-    });
-
-    thing.def("_current_str_of", [](ToddCoxeterBase& self, size_t i) {
-      return todd_coxeter::current_word_of<std::string>(self, i);
-    });
-
-    thing.def(
-        "_word_of",
-        [](ToddCoxeterBase& self, size_t i) {
-          return todd_coxeter::word_of(self, i);
-        },
-        py::arg("i"),
-        R"pbdoc(
-Returns a word representing a class with given index.
-
-This function returns the word representing the class with index *i*. A full
-enumeration is triggered by calls to this function. The output word is obtained
-by following a path in :any:`current_spanning_tree` from the node corresponding
-to index *i* back to the root of that tree.
-
-:returns: The word representing the *i*-th class.
-:rtype: List[int]
-
-:param i: the index of the class.
-:type i: int
-
-:raises LibsemigroupsError:  if *i* is out of bounds.
-)pbdoc");
-
-    thing.def(
-        "_str_of",
-        [](ToddCoxeterBase& self, size_t i) {
-          return todd_coxeter::word_of<std::string>(self, i);
-        },
-        py::arg("i"),
-        R"pbdoc(
-Returns a word representing a class with given index.
-
-This function returns the word representing the class with index *i*. A full
-enumeration is triggered by calls to this function. The output word is obtained
-by following a path in :any:`current_spanning_tree` from the node corresponding
-to index *i* back to the root of that tree.
-
-:returns: The word representing the *i*-th class.
-:rtype: str
-
-:param i: the index of the class.
-:type i: int
-
-:raises LibsemigroupsError: if *i* is out of bounds.
-)pbdoc");
+    //     thing.def(
+    //         "current_index_of",
+    //         [](ToddCoxeterBase const& self, word_type const& w) {
+    //           return todd_coxeter::current_index_of(self, w);
+    //         },
+    //         py::arg("w"),
+    //         R"pbdoc(
+    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
+    // )pbdoc");
+    //
+    //     thing.def(
+    //         "_current_index_of",
+    //         [](ToddCoxeterBase const& self, std::string const& w) {
+    //           return todd_coxeter::current_index_of(self, w);
+    //         },
+    //         py::arg("w"),
+    //         R"pbdoc(
+    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
+    //
+    // Returns the current index of the class containing a word.
+    //
+    // This function returns the current index of the class containing the word
+    // *w* No enumeration is triggered by calls to this function. Unless
+    // :any:`Runner.finished` returns ``True``, the index returned by this
+    // function is essentially arbitrary, and can only really be used to check
+    // whether or not two words are currently known to belong to the congruence.
+    // The returned index is obtained by following the path in
+    // :any:`current_word_graph` from node ``0`` labelled by the word *w*. If
+    // there is no such path, then :any:`UNDEFINED` is returned.
+    //
+    // :param w: the word.
+    // :type w: List[int] | str
+    //
+    // :returns: The current index of the class containing the word.
+    // :rtype: int | Undefined
+    //
+    // :raises LibsemigroupsError:
+    //   if any of the values in *w* is out of range, i.e. they do not belong to
+    //   ``presentation().alphabet()`` and ``PresentationStrings.validate_word``
+    //   raises.
+    // )pbdoc");
+    //
+    //     thing.def(
+    //         "index_of",
+    //         [](ToddCoxeterBase& self, word_type const& w) {
+    //           return todd_coxeter::index_of(self, w);
+    //         },
+    //         py::arg("w"),
+    //         R"pbdoc(
+    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
+    // :only-document-once:
+    //
+    // Returns the index of the class containing a word.
+    //
+    // This function returns the index of the class containing the word *w* A
+    // full enumeration is triggered by calls to this function. If the
+    // :any:`current_word_graph` has not already been standardized, then this
+    // function first standardizes it with respect to :any:`Order.shortlex`;
+    // otherwise the existing standardization order is used. The returned index
+    // is obtained by following the path in :any:`current_word_graph` from node
+    // ``0`` labelled by the word *w* Since a full enumeration is triggered by
+    // calls to this function, the word graph is complete, and so the return
+    // value is never :any:`UNDEFINED`.
+    //
+    // :param w: the word.
+    // :type w: List[int] | str
+    //
+    // :returns: The index of the class containing the word.
+    // :rtype: int
+    //
+    // :raises LibsemigroupsError:
+    //     if any of the values in *w*, i.e. they do not belong to
+    //     ``presentation().alphabet()`` and
+    //     ``PresentationStrings.validate_word`` raises.
+    // )pbdoc");
+    //
+    //     thing.def(
+    //         "index_of",
+    //         [](ToddCoxeterBase& self, std::string const& w) {
+    //           return todd_coxeter::index_of(self, w);
+    //         },
+    //         py::arg("w"),
+    //         R"pbdoc(
+    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
+    // )pbdoc");
+    //
+    //     thing.def("_current_word_of", [](ToddCoxeterBase& self, size_t i) {
+    //       return todd_coxeter::current_word_of<word_type>(self, i);
+    //     });
+    //
+    //     thing.def("_current_str_of", [](ToddCoxeterBase& self, size_t i) {
+    //       return todd_coxeter::current_word_of<std::string>(self, i);
+    //     });
+    //
+    //     thing.def(
+    //         "_word_of",
+    //         [](ToddCoxeterBase& self, size_t i) {
+    //           return todd_coxeter::word_of(self, i);
+    //         },
+    //         py::arg("i"),
+    //         R"pbdoc(
+    // Returns a word representing a class with given index.
+    //
+    // This function returns the word representing the class with index *i*. A
+    // full enumeration is triggered by calls to this function. The output word
+    // is obtained by following a path in :any:`current_spanning_tree` from the
+    // node corresponding to index *i* back to the root of that tree.
+    //
+    // :returns: The word representing the *i*-th class.
+    // :rtype: List[int]
+    //
+    // :param i: the index of the class.
+    // :type i: int
+    //
+    // :raises LibsemigroupsError:  if *i* is out of bounds.
+    // )pbdoc");
+    //
+    //     thing.def(
+    //         "_str_of",
+    //         [](ToddCoxeterBase& self, size_t i) {
+    //           return todd_coxeter::word_of<std::string>(self, i);
+    //         },
+    //         py::arg("i"),
+    //         R"pbdoc(
+    // Returns a word representing a class with given index.
+    //
+    // This function returns the word representing the class with index *i*. A
+    // full enumeration is triggered by calls to this function. The output word
+    // is obtained by following a path in :any:`current_spanning_tree` from the
+    // node corresponding to index *i* back to the root of that tree.
+    //
+    // :returns: The word representing the *i*-th class.
+    // :rtype: str
+    //
+    // :param i: the index of the class.
+    // :type i: int
+    //
+    // :raises LibsemigroupsError: if *i* is out of bounds.
+    // )pbdoc");
     /*
         ////////////////////////////////////////////////////////////////////////
         // Helpers from cong-intf.hpp . . .
