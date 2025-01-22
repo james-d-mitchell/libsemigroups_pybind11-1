@@ -238,19 +238,18 @@ definitions in the stack exceeds the value :any:`ToddCoxeterBase.def_max`.
     //////////////////////////////////////////////////////////////////////////
     // Things from cong-intf.hpp . . .
     //////////////////////////////////////////////////////////////////////////
+
+    def_construct_default(thing, "ToddCoxeterBase");
+    def_init_default(thing, "ToddCoxeterBase");
+    def_construct_kind_presentation<word_type>(thing, "ToddCoxeterBase");
+    def_init_kind_presentation<word_type>(thing, "ToddCoxeterBase");
     def_number_of_classes(thing, "ToddCoxeterBase");
+    def_copy(thing, "ToddCoxeterBase");
 
-    /*    def_construct_default(thing, "ToddCoxeterBase");
+    /*
 
-        def_init_default(thing, "ToddCoxeterBase");
 
-        def_construct_kind_presentation<word_type>(thing, "ToddCoxeterBase");
-        def_construct_kind_presentation<std::string>(thing, "ToddCoxeterBase");
 
-        def_init_kind_presentation<word_type>(thing, "ToddCoxeterBase");
-        def_init_kind_presentation<std::string>(thing, "ToddCoxeterBase");
-
-        def_copy(thing, "ToddCoxeterBase");
 
 
         def_add_generating_pair<word_type>(thing, "ToddCoxeterBase");
@@ -1190,7 +1189,7 @@ standardized with respect to the order ``val`` ; and ``False`` if not.
 :returns: Whether or not the current word graph is standardized with respect to a given order.
 :rtype: bool
 )pbdoc");
-    thing.def("presentation",
+    thing.def("internal_presentation",
               &ToddCoxeterBase::internal_presentation,
               R"pbdoc(
 Get the presentation used to define a ToddCoxeterBase instance (if any). If

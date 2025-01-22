@@ -34,19 +34,16 @@
 // libsemigroups_pybind11....
 #include "cong-intf-class.hpp"
 #include "main.hpp"  // for init_cong_intf
+#include "todd-coxeter-base.hpp"
 
 namespace py = pybind11;
 using namespace fmt::literals;
 
 namespace libsemigroups {
 
-#define EXPLICIT_INSTANTIATION1(FUNC, TYPE1, TYPE1BASE) \
-  template void FUNC<TYPE1, TYPE1BASE>(                 \
-      py::class_<TYPE1, TYPE1BASE>&, std::string_view, doc);
-
-#define EXPLICIT_INSTANTIATION2(FUNC, TYPE1, TYPE2) \
-  template void FUNC<TYPE1, TYPE2>(                 \
-      py::class_<TYPE2, CongruenceInterface>&, std::string_view, doc);
+  ////////////////////////////////////////////////////////////////////////
+  // Implementation helpers
+  ////////////////////////////////////////////////////////////////////////
 
   namespace {
 
@@ -60,6 +57,269 @@ namespace libsemigroups {
       return func_name;
     }
   }  // namespace
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Thing, typename ThingBase>
+  void def_construct_default(py::class_<Thing, ThingBase>& thing,
+                             std::string_view              name,
+                             doc                           extra_doc) {
+    thing.def(py::init<>(),
+              fmt::format(R"pbdoc(
+  :sig=() -> None:
+  :only-document-once:
+
+  Default def_construct_kind_presentation. This function default constructs an
+  uninitialised :any:`{}` instance.
+
+  {}
+  )pbdoc",
+                          name,
+                          extra_doc.detail)
+                  .c_str());
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void def_construct_default<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_construct_default<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void
+  def_construct_default<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Thing, typename ThingBase>
+  void def_init_default(py::class_<Thing, ThingBase>& thing,
+                        std::string_view              name,
+                        doc                           extra_doc) {
+    thing.def(
+        "init",
+        [](Thing& self) -> Thing& { return self.init(); },
+        fmt::format(R"pbdoc(
+  :sig=(self: {0}) -> {0}:
+  :only-document-once:
+
+  Re-initialize a :any:`{0}` instance.
+
+  This function puts a :any:`{0}` instance back into the state that it would
+  have been in if it had just been newly default constructed.
+
+  {1}
+
+  :returns:
+    ``self``.
+  :rtype:
+
+      {0})pbdoc",
+                    name,
+                    extra_doc.detail)
+            .c_str());
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void def_init_default<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_init_default<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_init_default<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_construct_kind_presentation(py::class_<Thing, ThingBase>& thing,
+                                       std::string_view              name,
+                                       doc extra_doc) {
+    thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
+              py::arg("knd"),
+              py::arg("p"),
+              fmt::format(R"pbdoc(
+  :sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> None:
+  :only-document-once:
+
+  Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
+
+  This function constructs a :any:`{0}` instance representing a congruence
+  of kind *knd* over the semigroup or monoid defined by the presentation *p*.
+
+  {1}
+
+  :param knd: the kind (onesided or twosided) of the congruence.
+  :type knd: congruence_kind
+
+  :param p: the presentation.
+  :type p: PresentationStrings
+
+  :raises LibsemigroupsError: if *p* is not valid.
+
+  {2}
+    )pbdoc",
+                          name,
+                          extra_doc.detail,
+                          extra_doc.raises)
+                  .c_str());
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void def_construct_kind_presentation<word_type,
+                                                ToddCoxeterBase,
+                                                CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_construct_kind_presentation<word_type,
+                                                ToddCoxeter<word_type>,
+                                                ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_construct_kind_presentation<std::string,
+                                                ToddCoxeter<std::string>,
+                                                ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_init_kind_presentation(py::class_<Thing, ThingBase>& thing,
+                                  std::string_view              name,
+                                  doc                           extra_doc) {
+    thing.def(
+        "init",
+        [](Thing&                    self,
+           congruence_kind           knd,
+           Presentation<Word> const& p) -> Thing& { return self.init(knd, p); },
+        py::arg("knd"),
+        py::arg("p"),
+        // TODO(0) adding only-document-once here means that the other
+        // overloads of init are suppressed also :(
+        // :only-document-once:
+        fmt::format(R"pbdoc(
+  :sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> {0}:
+  :only-document-once:
+
+  Re-initialize a :any:`{0}` instance.
+
+  This function re-initializes a :any:`{0}` instance as if it
+  had been newly constructed from *knd* and *p*.
+
+  {1}
+
+  :param knd: the kind (onesided or twosided) of the congruence.
+  :type knd: :any:`congruence_kind`
+
+  :param p: the presentation.
+  :type p: PresentationStrings
+
+  :returns:  ``self``.
+  :rtype: {0}
+
+  :raises LibsemigroupsError: if *p* is not valid.
+
+  {2}
+  )pbdoc",
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void
+  def_init_kind_presentation<word_type, ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_init_kind_presentation<word_type,
+                                           ToddCoxeter<word_type>,
+                                           ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_init_kind_presentation<std::string,
+                                           ToddCoxeter<std::string>,
+                                           ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Thing, typename ThingBase>
+  void def_copy(py::class_<Thing, ThingBase>& thing,
+                std::string_view              name,
+                doc                           extra_doc) {
+    thing.def(
+        "copy",
+        [](Thing const& self) { return Thing(self); },
+        fmt::format(R"pbdoc(
+  :sig=(self: {0}) -> {0}:
+
+  Copy a :any:`{0}` object.
+
+  {1}
+
+  :returns: A copy.
+  :rtype: {0})pbdoc",
+                    name,
+                    extra_doc.detail)
+            .c_str());
+
+    thing.def("__copy__", [](Thing const& self) { return Thing(self); });
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void def_copy<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_copy<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_copy<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
   template <typename Thing, typename ThingBase>
   void def_number_of_classes(py::class_<Thing, ThingBase>& thing,
@@ -93,267 +353,31 @@ namespace libsemigroups {
             .c_str());
   }
 
-  // EXPLICIT_INSTANTIATION1(def_number_of_classes, Congruence)
-  // EXPLICIT_INSTANTIATION1(def_number_of_classes, Kambites<>)
-  // EXPLICIT_INSTANTIATION1(def_number_of_classes, Kambites<word_type>)
-  // EXPLICIT_INSTANTIATION1(def_number_of_classes,
-  //                         KnuthBendix<detail::RewriteTrie>)
-  // EXPLICIT_INSTANTIATION1(def_number_of_classes,
-  // KnuthBendix<detail::RewriteFromLeft>)
-  EXPLICIT_INSTANTIATION1(def_number_of_classes,
-                          ToddCoxeterBase,
-                          CongruenceInterface)
-  /*
-    template <typename Thing>
-    void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
-                               std::string_view                        name,
-                               doc extra_doc) {
-      thing.def(py::init<>(),
-                fmt::format(R"pbdoc(
-  :sig=() -> None:
-  :only-document-once:
+  ////////////////////////////////////////////////////////////////////////
 
-  Default def_construct_kind_presentation. This function default constructs an
-  uninitialised :any:`{}` instance.
+  template void def_number_of_classes<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
 
-  {}
-  )pbdoc",
-                            name,
-                            extra_doc.detail)
-                    .c_str());
-    }
+  // Not required for ToddCoxeter<>
 
-    EXPLICIT_INSTANTIATION1(def_construct_default, Congruence)
-    EXPLICIT_INSTANTIATION1(def_construct_default, Kambites<>)
-    EXPLICIT_INSTANTIATION1(def_construct_default, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION1(def_construct_default,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION1(def_construct_default,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION1(def_construct_default, ToddCoxeter)
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    template <typename Word, typename Thing>
-    void
-    def_construct_kind_presentation(py::class_<Thing, CongruenceInterface>&
-  thing, std::string_view                        name, doc extra_doc) {
-      thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
-                py::arg("knd"),
-                py::arg("p"),
-                fmt::format(R"pbdoc(
-  :sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> None:
-  :only-document-once:
-
-  Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
-
-  This function constructs a :any:`{0}` instance representing a congruence
-  of kind *knd* over the semigroup or monoid defined by the presentation *p*.
-
-  {1}
-
-  :param knd: the kind (onesided or twosided) of the congruence.
-  :type knd: congruence_kind
-
-  :param p: the presentation.
-  :type p: PresentationStrings
-
-  :raises LibsemigroupsError: if *p* is not valid.
-
-  {2}
-    )pbdoc",
-                            name,
-                            extra_doc.detail,
-                            extra_doc.raises)
-                    .c_str());
-    }
-
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            Congruence)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            word_type,
-                            ToddCoxeter)
-
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            Congruence)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_construct_kind_presentation,
-                            std::string,
-                            ToddCoxeter)
-
-    template <typename Thing>
-    void def_init_default(py::class_<Thing, CongruenceInterface>& thing,
-                          std::string_view                        name,
-                          doc                                     extra_doc) {
-      thing.def(
-          "init",
-          [](Thing& self) -> Thing& { return self.init(); },
-          fmt::format(R"pbdoc(
-  :sig=(self: {0}) -> {0}:
-  :only-document-once:
-
-  Re-initialize a :any:`{0}` instance.
-
-  This function puts a :any:`{0}` instance back into the state that it would
-  have been in if it had just been newly default constructed.
-
-  {1}
-
-  :returns:
-    ``self``.
-  :rtype:
-
-      {0})pbdoc",
-                      name,
-                      extra_doc.detail)
-              .c_str());
-    }
-
-    EXPLICIT_INSTANTIATION1(def_init_default, Congruence)
-    EXPLICIT_INSTANTIATION1(def_init_default, Kambites<>)
-    EXPLICIT_INSTANTIATION1(def_init_default, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION1(def_init_default, KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION1(def_init_default,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION1(def_init_default, ToddCoxeter)
-
-    template <typename Word, typename Thing>
-    void def_init_kind_presentation(py::class_<Thing, CongruenceInterface>&
-  thing, std::string_view                        name, doc extra_doc) {
-      thing.def(
-          "init",
-          [](Thing&                    self,
-             congruence_kind           knd,
-             Presentation<Word> const& p) -> Thing& { return self.init(knd, p);
-  }, py::arg("knd"), py::arg("p"),
-          // TODO(0) adding only-document-once here means that the other
-          // overloads of init are suppressed also :(
-          // :only-document-once:
-          fmt::format(R"pbdoc(
-  :sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> {0}:
-  :only-document-once:
-
-  Re-initialize a :any:`{0}` instance.
-
-  This function re-initializes a :any:`{0}` instance as if it
-  had been newly constructed from *knd* and *p*.
-
-  {1}
-
-  :param knd: the kind (onesided or twosided) of the congruence.
-  :type knd: :any:`congruence_kind`
-
-  :param p: the presentation.
-  :type p: PresentationStrings
-
-  :returns:  ``self``.
-  :rtype: {0}
-
-  :raises LibsemigroupsError: if *p* is not valid.
-
-  {2}
-  )pbdoc",
-                      name,
-                      extra_doc.detail,
-                      extra_doc.raises)
-              .c_str());
-    }
-
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            word_type,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, word_type, ToddCoxeter)
-
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            std::string,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_init_kind_presentation, std::string,
-  ToddCoxeter)
-
-    template <typename Thing>
-    void def_copy(py::class_<Thing, CongruenceInterface>& thing,
-                  std::string_view                        name,
-                  doc                                     extra_doc) {
-      thing.def(
-          "copy",
-          [](Thing const& self) { return Thing(self); },
-          fmt::format(R"pbdoc(
-  :sig=(self: {0}) -> {0}:
-
-  Copy a :any:`{0}` object.
-
-  {1}
-
-  :returns: A copy.
-  :rtype: {0})pbdoc",
-                      name,
-                      extra_doc.detail)
-              .c_str());
-
-      thing.def("__copy__", [](Thing const& self) { return Thing(self); });
-    }
-
-    EXPLICIT_INSTANTIATION1(def_copy, Congruence)
-    EXPLICIT_INSTANTIATION1(def_copy, Kambites<>)
-    EXPLICIT_INSTANTIATION1(def_copy, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION1(def_copy, KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION1(def_copy, KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION1(def_copy, ToddCoxeter)
-
-
-
-    template <typename Word, typename Thing>
-    void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
-                                 std::string_view                        name,
-                                 doc extra_doc) {
-      thing.def(
-          "add_generating_pair",
-          [](Thing& self, Word const& u, Word const& v) -> Thing& {
-            return congruence_interface::add_generating_pair(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          fmt::format(
-              R"pbdoc(
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_add_generating_pair(py::class_<Thing, ThingBase>& thing,
+                               std::string_view              name,
+                               doc                           extra_doc) {
+    thing.def(
+        "add_generating_pair",
+        [](Thing& self, Word const& u, Word const& v) -> Thing& {
+          return congruence_interface::add_generating_pair(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(
+            R"pbdoc(
   :sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> {0}:
   :only-document-once:
 
@@ -382,50 +406,27 @@ namespace libsemigroups {
 
   {2}
   )pbdoc",
-              name,
-              extra_doc.detail,
-              extra_doc.raises)
-              .c_str());
-    }
+            name,
+            extra_doc.detail,
+            extra_doc.raises)
+            .c_str());
+  }
 
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            word_type,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, word_type, ToddCoxeter)
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            std::string,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_add_generating_pair, std::string, ToddCoxeter)
-
-    template <typename Word, typename Thing>
-    void def_currently_contains(py::class_<Thing, CongruenceInterface>& thing,
-                                std::string_view                        name,
-                                doc extra_doc) {
-      thing.def(
-          "currently_contains",
-          [](Thing const& self, Word const& u, Word const& v) {
-            return congruence_interface::currently_contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          fmt::format(R"pbdoc(
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_currently_contains(py::class_<Thing, ThingBase>& thing,
+                              std::string_view              name,
+                              doc                           extra_doc) {
+    thing.def(
+        "currently_contains",
+        [](Thing const& self, Word const& u, Word const& v) {
+          return congruence_interface::currently_contains(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(R"pbdoc(
   :sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> tril:
   :only-document-once:
 
@@ -456,49 +457,26 @@ namespace libsemigroups {
 
   {1}
   )pbdoc",
-                      name,
-                      extra_doc.raises)
-              .c_str());
-    }
+                    name,
+                    extra_doc.raises)
+            .c_str());
+  }
 
-    EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            word_type,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains, word_type, ToddCoxeter)
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            std::string,
-                            Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_currently_contains, std::string, ToddCoxeter)
-
-    template <typename Word, typename Thing>
-    void def_contains(py::class_<Thing, CongruenceInterface>& thing,
-                      std::string_view                        name,
-                      doc                                     extra_doc) {
-      thing.def(
-          "contains",
-          [](Thing& self, Word const& u, Word const& v) {
-            return congruence_interface::contains(self, u, v);
-          },
-          py::arg("u"),
-          py::arg("v"),
-          fmt::format(R"pbdoc(
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_contains(py::class_<Thing, ThingBase>& thing,
+                    std::string_view              name,
+                    doc                           extra_doc) {
+    thing.def(
+        "contains",
+        [](Thing& self, Word const& u, Word const& v) {
+          return congruence_interface::contains(self, u, v);
+        },
+        py::arg("u"),
+        py::arg("v"),
+        fmt::format(R"pbdoc(
   :sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
   :only-document-once:
 
@@ -523,44 +501,25 @@ namespace libsemigroups {
 
   {1}
   )pbdoc",
-                      name,
-                      extra_doc.raises)
-              .c_str());
-    }
+                    name,
+                    extra_doc.raises)
+            .c_str());
+  }
 
-    EXPLICIT_INSTANTIATION2(def_contains, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_contains, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_contains, word_type, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_contains,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_contains,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_contains, word_type, ToddCoxeter)
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    EXPLICIT_INSTANTIATION2(def_contains, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_contains, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_contains, std::string, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_contains,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_contains,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_contains, std::string, ToddCoxeter)
-
-    template <typename Word, typename Thing>
-    void def_reduce_no_run(py::class_<Thing, CongruenceInterface>& thing,
-                           std::string_view                        name,
-                           doc                                     extra_doc) {
-      thing.def(
-          "reduce_no_run",
-          [](Thing& self, Word const& w) {
-            return congruence_interface::reduce_no_run(self, w);
-          },
-          py::arg("w"),
-          fmt::format(R"pbdoc(
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_reduce_no_run(py::class_<Thing, ThingBase>& thing,
+                         std::string_view              name,
+                         doc                           extra_doc) {
+    thing.def(
+        "reduce_no_run",
+        [](Thing& self, Word const& w) {
+          return congruence_interface::reduce_no_run(self, w);
+        },
+        py::arg("w"),
+        fmt::format(R"pbdoc(
   :sig=(self: {0}, w: List[int] | str) -> List[int] | str:
   :only-document-once:
 
@@ -583,45 +542,26 @@ namespace libsemigroups {
     raises.
 
   {2})pbdoc",
-                      name,
-                      extra_doc.detail,
-                      extra_doc.raises)
-              .c_str());
-    }
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
 
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, word_type, ToddCoxeter)
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_reduce_no_run, std::string, ToddCoxeter)
-
-    template <typename Word, typename Thing>
-    void def_reduce(py::class_<Thing, CongruenceInterface>& thing,
-                    std::string_view                        name,
-                    doc                                     extra_doc) {
-      thing.def(
-          "reduce",
-          [](Thing& self, Word const& w) {
-            return congruence_interface::reduce(self, w);
-          },
-          py::arg("w"),
-          fmt::format(R"pbdoc(
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_reduce(py::class_<Thing, ThingBase>& thing,
+                  std::string_view              name,
+                  doc                           extra_doc) {
+    thing.def(
+        "reduce",
+        [](Thing& self, Word const& w) {
+          return congruence_interface::reduce(self, w);
+        },
+        py::arg("w"),
+        fmt::format(R"pbdoc(
   :sig=(self: {0}, w: List[int] | str) -> List[int] | str:
   :only-document-once:
 
@@ -646,40 +586,22 @@ namespace libsemigroups {
 
   {2}
   )pbdoc",
-                      name,
-                      extra_doc.detail,
-                      extra_doc.raises)
-              .c_str());
-    }
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    EXPLICIT_INSTANTIATION2(def_reduce, word_type, Congruence)
-    EXPLICIT_INSTANTIATION2(def_reduce, word_type, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_reduce, word_type, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_reduce,
-                            word_type,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_reduce,
-                            word_type,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_reduce, word_type, ToddCoxeter)
-
-    EXPLICIT_INSTANTIATION2(def_reduce, std::string, Congruence)
-    EXPLICIT_INSTANTIATION2(def_reduce, std::string, Kambites<>)
-    EXPLICIT_INSTANTIATION2(def_reduce, std::string, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION2(def_reduce,
-                            std::string,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION2(def_reduce,
-                            std::string,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION2(def_reduce, std::string, ToddCoxeter)
-
-    template <typename Thing>
-    void def_generating_pairs(py::class_<Thing, CongruenceInterface>& thing,
-                              std::string_view                        name,
-                              doc                                     extra_doc)
-  { thing.def("generating_pairs", &Thing::generating_pairs, fmt::format(
-                    R"pbdoc(
+  template <typename Thing, typename ThingBase>
+  void def_generating_pairs(py::class_<Thing, ThingBase>& thing,
+                            std::string_view              name,
+                            doc                           extra_doc) {
+    thing.def("generating_pairs",
+              &Thing::generating_pairs,
+              fmt::format(
+                  R"pbdoc(
   :sig=(self : {name}) -> List[List[int] | str]:
   {onlydoconce}
 
@@ -696,25 +618,17 @@ namespace libsemigroups {
   :rtype:
      List[List[int] | str]
   )pbdoc",
-                    "name"_a        = name,
-                    "onlydoconce"_a = extra_doc.only_document_once)
-                    .c_str());
-    }
+                  "name"_a        = name,
+                  "onlydoconce"_a = extra_doc.only_document_once)
+                  .c_str());
+  }
 
-    EXPLICIT_INSTANTIATION1(def_generating_pairs, Congruence)
-    EXPLICIT_INSTANTIATION1(def_generating_pairs, Kambites<>)
-    EXPLICIT_INSTANTIATION1(def_generating_pairs, Kambites<word_type>)
-    EXPLICIT_INSTANTIATION1(def_generating_pairs,
-                            KnuthBendix<detail::RewriteTrie>)
-    EXPLICIT_INSTANTIATION1(def_generating_pairs,
-                            KnuthBendix<detail::RewriteFromLeft>)
-    EXPLICIT_INSTANTIATION1(def_generating_pairs, ToddCoxeter)
-
+  /*
     ////////////////////////////////////////////////////////////////////////
     // Helpers
     ////////////////////////////////////////////////////////////////////////
 
-    template <typename Word, typename Thing>
+    template <typename Word, typename Thing, typename ThingBase>
     void def_partition(py::module& m, std::string_view name, doc extra_doc) {
       std::string func_name = add_prefix(name, "_partition");
       m.def(
@@ -726,28 +640,28 @@ namespace libsemigroups {
           py::arg(extra_doc.var.data()),
           py::arg("words"),
           fmt::format(R"pbdoc(
-  :sig=({0}: {1}, words: List[List[int] | str]) -> List[List[List[int]] |
-  List[str]]: :only-document-once:
+    :sig=({0}: {1}, words: List[List[int] | str]) -> List[List[List[int]] |
+    List[str]]: :only-document-once:
 
-  Partition a list of words.
+    Partition a list of words.
 
-  This function returns the classes in the partition of the words in the input
-  list *words* induced by the :any:`{1}` instance *{0}*. This function triggers
-  a full enumeration of *{0}*.
+    This function returns the classes in the partition of the words in the input
+    list *words* induced by the :any:`{1}` instance *{0}*. This function
+    triggers a full enumeration of *{0}*.
 
-  {2}
+    {2}
 
-  :param {0}: the :any:`{1}` instance.
-  :type {0}: {1}
+    :param {0}: the :any:`{1}` instance.
+    :type {0}: {1}
 
-  :param words: the input list of words.
-  :type words: List[List[int] | str]
+    :param words: the input list of words.
+    :type words: List[List[int] | str]
 
-  :returns: The partitioned list of words.
-  :rtype: List[List[List[int]] | List[str]]
+    :returns: The partitioned list of words.
+    :rtype: List[List[List[int]] | List[str]]
 
-  {3}
-  )pbdoc",
+    {3}
+    )pbdoc",
                       extra_doc.var,
                       name,
                       extra_doc.detail,
@@ -764,7 +678,7 @@ namespace libsemigroups {
                                                                doc);
 
     template void def_partition<word_type,
-  KnuthBendix<detail::RewriteFromLeft>>( py::module&, std::string_view, doc);
+    KnuthBendix<detail::RewriteFromLeft>>( py::module&, std::string_view, doc);
 
     template void def_partition<word_type, Kambites<word_type>>(py::module&,
                                                                 std::string_view,
@@ -804,7 +718,7 @@ namespace libsemigroups {
                                                           std::string_view,
                                                           doc);
 
-    template <typename Word, typename Thing>
+    template <typename Word, typename Thing, typename ThingBase>
     void def_non_trivial_classes(py::module&      m,
                                  std::string_view name,
                                  doc              extra_doc) {
@@ -820,27 +734,27 @@ namespace libsemigroups {
           // TODO(1) use doc.var instead of using ci here
           fmt::format(
               R"pbdoc(
-  :sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] |
-  List[str]]: :only-document-once:
+    :sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] |
+    List[str]]: :only-document-once:
 
-  Find the non-trivial classes in the partition of a list of words.
+    Find the non-trivial classes in the partition of a list of words.
 
-  This function returns the classes with size at least :math:`2` in the
-  partition of the words in the list *words* induced by the :any:`{0}` instance
-  *ci*.
+    This function returns the classes with size at least :math:`2` in the
+    partition of the words in the list *words* induced by the :any:`{0}`
+    instance *ci*.
 
-  {1}
+    {1}
 
-  :param ci: the :any:`{0}` instance.
-  :type ci: {0}
+    :param ci: the :any:`{0}` instance.
+    :type ci: {0}
 
-  :param words: the input list of words.
-  :type words: List[List[int] | str]
+    :param words: the input list of words.
+    :type words: List[List[int] | str]
 
-  :returns: The partition of the input list.
-  :rtype: List[List[List[int]] | List[str]]
+    :returns: The partition of the input list.
+    :rtype: List[List[List[int]] | List[str]]
 
-  {2})pbdoc",
+    {2})pbdoc",
               name,
               extra_doc.detail,
               extra_doc.raises)
@@ -906,7 +820,7 @@ namespace libsemigroups {
                                                       std::string_view,
                                                       doc);
 
-  */
+    */
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface
   ////////////////////////////////////////////////////////////////////////

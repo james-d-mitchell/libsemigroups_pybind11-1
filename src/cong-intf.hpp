@@ -44,75 +44,75 @@ namespace libsemigroups {
   ////////////////////////////////////////////////////////////////////////
 
   template <typename Thing, typename ThingBase>
+  void def_construct_default(py::class_<Thing, ThingBase>& thing,
+                             std::string_view              name,
+                             doc                           extra_doc = {});
+
+  template <typename Thing, typename ThingBase>
+  void def_init_default(py::class_<Thing, ThingBase>& thing,
+                        std::string_view              name,
+                        doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_construct_kind_presentation(py::class_<Thing, ThingBase>& thing,
+                                       std::string_view              name,
+                                       doc extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_init_kind_presentation(py::class_<Thing, ThingBase>& thing,
+                                  std::string_view              name,
+                                  doc                           extra_doc = {});
+
+  template <typename Thing, typename ThingBase>
   void def_number_of_classes(py::class_<Thing, ThingBase>& thing,
                              std::string_view              name,
                              doc                           extra_doc = {});
+
+  template <typename Thing, typename ThingBase>
+  void def_copy(py::class_<Thing, ThingBase>& thing,
+                std::string_view              name,
+                doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_add_generating_pair(py::class_<Thing, ThingBase>& thing,
+                               std::string_view              name,
+                               doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_currently_contains(py::class_<Thing, ThingBase>& thing,
+                              std::string_view              name,
+                              doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_contains(py::class_<Thing, ThingBase>& thing,
+                    std::string_view              name,
+                    doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_reduce_no_run(py::class_<Thing, ThingBase>& thing,
+                         std::string_view              name,
+                         doc                           extra_doc = {});
+
+  template <typename Word, typename Thing, typename ThingBase>
+  void def_reduce(py::class_<Thing, ThingBase>& thing,
+                  std::string_view              name,
+                  doc                           extra_doc = {});
+
+  template <typename Thing, typename ThingBase>
+  void def_generating_pairs(py::class_<Thing, ThingBase>& thing,
+                            std::string_view              name,
+                            doc                           extra_doc = {});
   /*
-    template <typename Thing>
-    void def_construct_default(py::class_<Thing, CongruenceInterface>& thing,
-                               std::string_view                        name,
-                               doc extra_doc = {});
-
-    template <typename Word, typename Thing>
-    void
-    def_construct_kind_presentation(py::class_<Thing, CongruenceInterface>&
-    thing, std::string_view                        name, doc extra_doc = {});
-
-    template <typename Thing>
-    void def_init_default(py::class_<Thing, CongruenceInterface>& thing,
-                          std::string_view                        name,
-                          doc                                     extra_doc =
-    {});
-
-    template <typename Word, typename Thing>
-    void def_init_kind_presentation(py::class_<Thing, CongruenceInterface>&
-    thing, std::string_view                        name, doc extra_doc = {});
-
-    template <typename Thing>
-    void def_copy(py::class_<Thing, CongruenceInterface>& thing,
-                  std::string_view                        name,
-                  doc                                     extra_doc = {});
-
-
-    template <typename Word, typename Thing>
-    void def_add_generating_pair(py::class_<Thing, CongruenceInterface>& thing,
-                                 std::string_view                        name,
-                                 doc extra_doc = {});
-
-    template <typename Word, typename Thing>
-    void def_currently_contains(py::class_<Thing, CongruenceInterface>& thing,
-                                std::string_view                        name,
-                                doc extra_doc = {});
-
-    template <typename Word, typename Thing>
-    void def_contains(py::class_<Thing, CongruenceInterface>& thing,
-                      std::string_view                        name,
-                      doc                                     extra_doc = {});
-
-    template <typename Word, typename Thing>
-    void def_reduce_no_run(py::class_<Thing, CongruenceInterface>& thing,
-                           std::string_view                        name,
-                           doc extra_doc = {});
-
-    template <typename Word, typename Thing>
-    void def_reduce(py::class_<Thing, CongruenceInterface>& thing,
-                    std::string_view                        name,
-                    doc                                     extra_doc = {});
-
-    template <typename Thing>
-    void def_generating_pairs(py::class_<Thing, CongruenceInterface>& thing,
-                              std::string_view                        name,
-                              doc extra_doc = {});
 
     ////////////////////////////////////////////////////////////////////////
     // Helpers
     ////////////////////////////////////////////////////////////////////////
 
-    template <typename Word, typename Thing>
+    template <typename Word, typename Thing, typename ThingBase>
     void def_partition(py::module& m, std::string_view name, doc extra_doc =
     {});
 
-    template <typename Word, typename Thing>
+    template <typename Word, typename Thing, typename ThingBase>
     void def_non_trivial_classes(py::module&      m,
                                  std::string_view name,
                                  doc              extra_doc = {});
