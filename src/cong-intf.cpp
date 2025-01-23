@@ -149,10 +149,11 @@ namespace libsemigroups {
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_construct_kind_presentation(py::class_<Thing, ThingBase>& thing,
                                        std::string_view              name,
                                        doc extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
               py::arg("knd"),
               py::arg("p"),
@@ -185,23 +186,20 @@ namespace libsemigroups {
 
   ////////////////////////////////////////////////////////////////////////
 
-  template void def_construct_kind_presentation<word_type,
-                                                ToddCoxeterBase,
-                                                CongruenceInterface>(
+  template void
+  def_construct_kind_presentation<ToddCoxeterBase, CongruenceInterface>(
       py::class_<ToddCoxeterBase, CongruenceInterface>&,
       std::string_view,
       doc);
 
-  template void def_construct_kind_presentation<word_type,
-                                                ToddCoxeter<word_type>,
-                                                ToddCoxeterBase>(
+  template void
+  def_construct_kind_presentation<ToddCoxeter<word_type>, ToddCoxeterBase>(
       py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
       std::string_view,
       doc);
 
-  template void def_construct_kind_presentation<std::string,
-                                                ToddCoxeter<std::string>,
-                                                ToddCoxeterBase>(
+  template void
+  def_construct_kind_presentation<ToddCoxeter<std::string>, ToddCoxeterBase>(
       py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
       std::string_view,
       doc);
@@ -209,10 +207,11 @@ namespace libsemigroups {
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_init_kind_presentation(py::class_<Thing, ThingBase>& thing,
                                   std::string_view              name,
                                   doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(
         "init",
         [](Thing&                    self,
@@ -256,21 +255,19 @@ namespace libsemigroups {
   ////////////////////////////////////////////////////////////////////////
 
   template void
-  def_init_kind_presentation<word_type, ToddCoxeterBase, CongruenceInterface>(
+  def_init_kind_presentation<ToddCoxeterBase, CongruenceInterface>(
       py::class_<ToddCoxeterBase, CongruenceInterface>&,
       std::string_view,
       doc);
 
-  template void def_init_kind_presentation<word_type,
-                                           ToddCoxeter<word_type>,
-                                           ToddCoxeterBase>(
+  template void
+  def_init_kind_presentation<ToddCoxeter<word_type>, ToddCoxeterBase>(
       py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
       std::string_view,
       doc);
 
-  template void def_init_kind_presentation<std::string,
-                                           ToddCoxeter<std::string>,
-                                           ToddCoxeterBase>(
+  template void
+  def_init_kind_presentation<ToddCoxeter<std::string>, ToddCoxeterBase>(
       py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
       std::string_view,
       doc);
@@ -365,10 +362,11 @@ namespace libsemigroups {
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_add_generating_pair(py::class_<Thing, ThingBase>& thing,
                                std::string_view              name,
                                doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(
         "add_generating_pair",
         [](Thing& self, Word const& u, Word const& v) -> Thing& {
@@ -413,12 +411,32 @@ namespace libsemigroups {
   }
 
   ////////////////////////////////////////////////////////////////////////
+
+  template void def_add_generating_pair<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void
+  def_add_generating_pair<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void
+  def_add_generating_pair<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_currently_contains(py::class_<Thing, ThingBase>& thing,
                               std::string_view              name,
                               doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(
         "currently_contains",
         [](Thing const& self, Word const& u, Word const& v) {
@@ -427,48 +445,68 @@ namespace libsemigroups {
         py::arg("u"),
         py::arg("v"),
         fmt::format(R"pbdoc(
-  :sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> tril:
-  :only-document-once:
+:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> tril:
+:only-document-once:
 
-  Check whether a pair of words is already known to belong to the congruence.
+Check whether a pair of words is already known to belong to the congruence.
 
-  This function checks whether or not the words *u* and *v* are already known to
-  be contained in the congruence represented by a :py:class:`{0}` instance.
-  This function performs no enumeration, so it is possible for the words to be
-  contained in the congruence, but that this is not currently known.
+This function checks whether or not the words *u* and *v* are already known to
+be contained in the congruence represented by a :py:class:`{0}` instance.
+This function performs no enumeration, so it is possible for the words to be
+contained in the congruence, but that this is not currently known.
 
-  :param u: the first word.
-  :type u: List[int] | str
+:param u: the first word.
+:type u: List[int] | str
 
-  :param v: the second word.
-  :type v: List[int] | str
+:param v: the second word.
+:type v: List[int] | str
 
-  :returns:
-      *  :any:`tril.true` if the words are known to belong to the congruence;
-      *  :any:`tril.false` if the words are known to not belong to the
-  congruence;
-      *  :any:`tril.unknown` otherwise.
-  :rtype: tril
+:returns:
+    *  :any:`tril.true` if the words are known to belong to the congruence;
+    *  :any:`tril.false` if the words are known to not belong to the
+congruence;
+    *  :any:`tril.unknown` otherwise.
+:rtype: tril
 
-  :raises LibsemigroupsError:
-    if any of the values in *u* or *v* is out of range, i.e. they do not belong
-    to ``presentation().alphabet()`` and
-  :any:`PresentationStrings.validate_word` raises.
+:raises LibsemigroupsError:
+  if any of the values in *u* or *v* is out of range, i.e. they do not belong
+  to ``presentation().alphabet()`` and
+:any:`PresentationStrings.validate_word` raises.
 
-  {1}
-  )pbdoc",
+{1}
+)pbdoc",
                     name,
                     extra_doc.raises)
             .c_str());
   }
 
   ////////////////////////////////////////////////////////////////////////
+
+  template void def_currently_contains<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_currently_contains<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void
+  def_currently_contains<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_contains(py::class_<Thing, ThingBase>& thing,
                     std::string_view              name,
                     doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
+
     thing.def(
         "contains",
         [](Thing& self, Word const& u, Word const& v) {
@@ -507,12 +545,30 @@ namespace libsemigroups {
   }
 
   ////////////////////////////////////////////////////////////////////////
+
+  template void def_contains<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_contains<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_contains<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_reduce_no_run(py::class_<Thing, ThingBase>& thing,
                          std::string_view              name,
                          doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(
         "reduce_no_run",
         [](Thing& self, Word const& w) {
@@ -549,12 +605,30 @@ namespace libsemigroups {
   }
 
   ////////////////////////////////////////////////////////////////////////
+
+  template void def_reduce_no_run<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_reduce_no_run<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_reduce_no_run<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
-  template <typename Word, typename Thing, typename ThingBase>
+  template <typename Thing, typename ThingBase>
   void def_reduce(py::class_<Thing, ThingBase>& thing,
                   std::string_view              name,
                   doc                           extra_doc) {
+    using Word = typename Thing::native_word_type;
     thing.def(
         "reduce",
         [](Thing& self, Word const& w) {
@@ -591,6 +665,24 @@ namespace libsemigroups {
                     extra_doc.raises)
             .c_str());
   }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void def_reduce<ToddCoxeterBase, CongruenceInterface>(
+      py::class_<ToddCoxeterBase, CongruenceInterface>&,
+      std::string_view,
+      doc);
+
+  template void def_reduce<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_reduce<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
   ////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////
 
@@ -623,23 +715,97 @@ namespace libsemigroups {
                   .c_str());
   }
 
-  /*
-    ////////////////////////////////////////////////////////////////////////
-    // Helpers
-    ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-    template <typename Word, typename Thing, typename ThingBase>
-    void def_partition(py::module& m, std::string_view name, doc extra_doc) {
-      std::string func_name = add_prefix(name, "_partition");
-      m.def(
-          func_name.c_str(),
-          [](Thing& ci, std::vector<Word> const& words) {
-            return congruence_interface::partition(
-                ci, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg(extra_doc.var.data()),
-          py::arg("words"),
-          fmt::format(R"pbdoc(
+  // Not required for ToddCoxeterBase, it's called internal_generating_pairs
+
+  template void def_generating_pairs<ToddCoxeter<word_type>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<word_type>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  template void def_generating_pairs<ToddCoxeter<std::string>, ToddCoxeterBase>(
+      py::class_<ToddCoxeter<std::string>, ToddCoxeterBase>&,
+      std::string_view,
+      doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  // Helpers
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Thing>
+  void def_non_trivial_classes(py::module&      m,
+                               std::string_view name,
+                               doc              extra_doc) {
+    using Word            = typename Thing::native_word_type;
+    std::string func_name = add_prefix(name, "_non_trivial_classes");
+    m.def(
+        func_name.c_str(),
+        [](Thing& ci, std::vector<Word> const& words) {
+          return congruence_interface::non_trivial_classes(
+              ci, rx::iterator_range(words.begin(), words.end()));
+        },
+        py::arg("ci"),
+        py::arg("words"),
+        // TODO(1) use doc.var instead of using ci here
+        fmt::format(
+            R"pbdoc(
+:sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
+:only-document-once:
+
+Find the non-trivial classes in the partition of a list of words.
+
+This function returns the classes with size at least :math:`2` in the
+partition of the words in the list *words* induced by the :any:`{0}`
+instance *ci*.
+
+{1}
+
+:param ci: the :any:`{0}` instance.
+:type ci: {0}
+
+:param words: the input list of words.
+:type words: List[List[int] | str]
+
+:returns: The partition of the input list.
+:rtype: List[List[List[int]] | List[str]]
+
+{2})pbdoc",
+            name,
+            extra_doc.detail,
+            extra_doc.raises)
+            .c_str());
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  template void
+  def_non_trivial_classes<ToddCoxeter<word_type>>(py::module&,
+                                                  std::string_view,
+                                                  doc);
+
+  template void
+  def_non_trivial_classes<ToddCoxeter<std::string>>(py::module&,
+                                                    std::string_view,
+                                                    doc);
+
+  ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
+
+  template <typename Thing>
+  void def_partition(py::module& m, std::string_view name, doc extra_doc) {
+    using Word = typename Thing::native_word_type;
+
+    std::string func_name = add_prefix(name, "_partition");
+    m.def(
+        func_name.c_str(),
+        [](Thing& ci, std::vector<Word> const& words) {
+          return congruence_interface::partition(
+              ci, rx::iterator_range(words.begin(), words.end()));
+        },
+        py::arg(extra_doc.var.data()),
+        py::arg("words"),
+        fmt::format(R"pbdoc(
     :sig=({0}: {1}, words: List[List[int] | str]) -> List[List[List[int]] |
     List[str]]: :only-document-once:
 
@@ -662,172 +828,29 @@ namespace libsemigroups {
 
     {3}
     )pbdoc",
-                      extra_doc.var,
-                      name,
-                      extra_doc.detail,
-                      extra_doc.raises)
-              .c_str());
-    }
+                    extra_doc.var,
+                    name,
+                    extra_doc.detail,
+                    extra_doc.raises)
+            .c_str());
+  }
 
-    template void def_partition<word_type, Congruence>(py::module&,
-                                                       std::string_view,
-                                                       doc);
-    template void
-    def_partition<word_type, KnuthBendix<detail::RewriteTrie>>(py::module&,
-                                                               std::string_view,
-                                                               doc);
-
-    template void def_partition<word_type,
-    KnuthBendix<detail::RewriteFromLeft>>( py::module&, std::string_view, doc);
-
-    template void def_partition<word_type, Kambites<word_type>>(py::module&,
-                                                                std::string_view,
-                                                                doc);
-
-    template void def_partition<word_type, Kambites<>>(py::module&,
-                                                       std::string_view,
-                                                       doc);
-    template void def_partition<word_type, ToddCoxeter>(py::module&,
-                                                        std::string_view,
-                                                        doc);
-
-    template void def_partition<std::string, Congruence>(py::module&,
-                                                         std::string_view,
-                                                         doc);
-
-    template void
-    def_partition<std::string, KnuthBendix<detail::RewriteTrie>>(py::module&,
-                                                                 std::string_view,
-                                                                 doc);
-
-    template void
-    def_partition<std::string, KnuthBendix<detail::RewriteFromLeft>>(
-        py::module&,
-        std::string_view,
-        doc);
-
-    template void
-                  def_partition<std::string, Kambites<word_type>>(py::module&,
-                                                    std::string_view,
-                                                    doc);
-    template void def_partition<std::string, Kambites<>>(py::module&,
-                                                         std::string_view,
-                                                         doc);
-
-    template void def_partition<std::string, ToddCoxeter>(py::module&,
-                                                          std::string_view,
-                                                          doc);
-
-    template <typename Word, typename Thing, typename ThingBase>
-    void def_non_trivial_classes(py::module&      m,
-                                 std::string_view name,
-                                 doc              extra_doc) {
-      std::string func_name = add_prefix(name, "_non_trivial_classes");
-      m.def(
-          func_name.c_str(),
-          [](Thing& ci, std::vector<Word> const& words) {
-            return congruence_interface::non_trivial_classes(
-                ci, rx::iterator_range(words.begin(), words.end()));
-          },
-          py::arg("ci"),
-          py::arg("words"),
-          // TODO(1) use doc.var instead of using ci here
-          fmt::format(
-              R"pbdoc(
-    :sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] |
-    List[str]]: :only-document-once:
-
-    Find the non-trivial classes in the partition of a list of words.
-
-    This function returns the classes with size at least :math:`2` in the
-    partition of the words in the list *words* induced by the :any:`{0}`
-    instance *ci*.
-
-    {1}
-
-    :param ci: the :any:`{0}` instance.
-    :type ci: {0}
-
-    :param words: the input list of words.
-    :type words: List[List[int] | str]
-
-    :returns: The partition of the input list.
-    :rtype: List[List[List[int]] | List[str]]
-
-    {2})pbdoc",
-              name,
-              extra_doc.detail,
-              extra_doc.raises)
-              .c_str());
-    }
-
-    template void def_non_trivial_classes<word_type, Congruence>(py::module&,
-                                                                 std::string_view,
-                                                                 doc);
-    template void
-    def_non_trivial_classes<word_type, KnuthBendix<detail::RewriteTrie>>(
-        py::module&,
-        std::string_view,
-        doc);
-
-    template void
-    def_non_trivial_classes<word_type, KnuthBendix<detail::RewriteFromLeft>>(
-        py::module&,
-        std::string_view,
-        doc);
-
-    template void
-    def_non_trivial_classes<word_type, Kambites<word_type>>(py::module&,
-                                                            std::string_view,
-                                                            doc);
-
-    template void def_non_trivial_classes<word_type, Kambites<>>(py::module&,
-                                                                 std::string_view,
-                                                                 doc);
-    template void
-    def_non_trivial_classes<word_type, ToddCoxeter>(py::module&,
-                                                    std::string_view,
-                                                    doc);
-
-    template void
-    def_non_trivial_classes<std::string, Congruence>(py::module&,
-                                                     std::string_view,
-                                                     doc);
-
-    template void
-    def_non_trivial_classes<std::string, KnuthBendix<detail::RewriteTrie>>(
-        py::module&,
-        std::string_view,
-        doc);
-
-    template void
-    def_non_trivial_classes<std::string, KnuthBendix<detail::RewriteFromLeft>>(
-        py::module&,
-        std::string_view,
-        doc);
-
-    template void
-    def_non_trivial_classes<std::string, Kambites<word_type>>(py::module&,
-                                                              std::string_view,
-                                                              doc);
-    template void
-    def_non_trivial_classes<std::string, Kambites<>>(py::module&,
-                                                     std::string_view,
-                                                     doc);
-
-    template void
-    def_non_trivial_classes<std::string, ToddCoxeter>(py::module&,
+  template void def_partition<ToddCoxeter<word_type>>(py::module&,
                                                       std::string_view,
                                                       doc);
 
-    */
+  template void def_partition<ToddCoxeter<std::string>>(py::module&,
+                                                        std::string_view,
+                                                        doc);
+
   ////////////////////////////////////////////////////////////////////////
   // The init function for CongruenceInterface
   ////////////////////////////////////////////////////////////////////////
 
   void init_cong_intf(py::module& m) {
     py::class_<CongruenceInterface, Runner> thing(m,
-                                                  "CongruenceInterface",
+                                                  "Congruence"
+                                                  "Interface",
                                                   R"pbdoc(
   Class collecting common aspects of classes representing congruences.
 
@@ -861,7 +884,9 @@ namespace libsemigroups {
      congruence_kind
   )pbdoc");
 
-    thing.def("internal_generating_pairs",
+    thing.def("internal_"
+              "generating_"
+              "pairs",
               &CongruenceInterface::internal_generating_pairs,
               R"pbdoc(
   :sig=(self: CongruenceInterface) -> List[List[int]]:
@@ -883,7 +908,9 @@ namespace libsemigroups {
      List[List[int]]
   )pbdoc");
 
-    thing.def("number_of_generating_pairs",
+    thing.def("number_of_"
+              "generating_"
+              "pairs",
               &CongruenceInterface::number_of_generating_pairs,
               R"pbdoc(
   Returns the number of generating pairs.

@@ -13,18 +13,22 @@ from typing import Union, List, Iterator, Self
 
 from _libsemigroups_pybind11 import (
     PositiveInfinity,
+    Undefined,
     PresentationStrings as _PresentationStrings,
     PresentationWords as _PresentationWords,
     ToddCoxeterString as _ToddCoxeterString,
     ToddCoxeterWord as _ToddCoxeterWord,
+    ToddCoxeterBase,
+    congruence_kind as _congruence_kind,
+    WordGraph as _WordGraph,
+    todd_coxeter_normal_forms as normal_forms,
+    todd_coxeter_non_trivial_classes as non_trivial_classes,
+    todd_coxeter_redundant_rule as redundant_rule,
     # _str_class_by_index,
     # _word_class_by_index,
     # class_of,
-    # todd_coxeter_is_non_trivial as is_non_trivial,
     # todd_coxeter_redundant_rule as redundant_rule,
     # todd_coxeter_str_normal_forms as _str_normal_forms,
-    # todd_coxeter_word_normal_forms as _word_normal_forms,
-    # toddcoxeter_non_trivial_classes as non_trivial_classes,
     # toddcoxeter_partition as partition,
 )
 
@@ -39,144 +43,74 @@ from .detail.cxx_wrapper import (
 )
 
 
-class ToddCoxeter(CxxWrapper):
-    _py_to_cxx_type_dict = {
-        (List[int],): _ToddCoxeterWord,
-        (str,): _ToddCoxeterString,
-    }
+def ToddCoxeter(*args, **kwargs):
+    """TODO(0) doc"""
+    if len(args) != 0 and len(kwargs) != 0:
+        raise TypeError(
+            f'expected positional arguments or 1 keyword arguments ("Word") but found {len(args)} and {len(kwargs)}'
+        )
+    if len(args) == 0:
+        if "Word" not in kwargs:
+            if len(kwargs) == 0:
+                msg = ""
+            else:
+                msg = 'but found "{next(iter(kwargs.keys()))}"'
+            raise TypeError(f'expected the keyword argument "Word" {msg}')
+        if kwargs["Word"] is str:
+            return _ToddCoxeterString()
+        if kwargs["Word"] is List[int]:
+            return _ToddCoxeterWord()
+        raise ValueError(
+            f'expected the keyword argument "Word" to be str or List[int] but found {kwargs["Word"]}'
+        )
 
-    def __init__(self: Self, *args, **kwargs):
-        # TODO handle wrong args, and Word = kwargs for default construction
-        if len(args) == 2:
-            if type(args[1]) is _PresentationStrings:
-                self._cxx_obj = _ToddCoxeterString(*args)
-            elif type(args[1]) is _PresentationWords:
-                self._cxx_obj = _ToddCoxeterWord(*args)
+    if len(args) == 2:
+        if not isinstance(args[0], _congruence_kind):
+            raise TypeError(
+                f"expected the 1st argument to be congruence_kind but found {type(args[0])}"
+            )
 
-    @_may_return_positive_infinity
-    def number_of_classes(self: Self) -> PositiveInfinity | int:
-        return self._cxx_obj._number_of_classes()
+        if type(args[1]) in (_PresentationStrings, _ToddCoxeterString):
+            return _ToddCoxeterString(*args)
+        elif type(args[1]) in (
+            _PresentationWords,
+            _ToddCoxeterWord,
+            _WordGraph,
+        ):
+            return _ToddCoxeterWord(*args)
+        else:
+            raise TypeError(
+                f"expected the 2nd argument to be Presentation, ToddCoxeter or WordGraph but found {type(args[1])}"
+            )
+    else:
+        raise TypeError(f"expected 0 or 2 positional arguments, found {len(args)}")
 
 
-# def noop():
-#     pass
-#
-#
-# ToddCoxeter.number_of_classes = _may_return_positive_infinity(
-#     ToddCoxeter._number_of_classes
-# )
-# ToddCoxeter.number_of_classes.__doc__ = "\n".join(
-#     ToddCoxeter._number_of_classes.__doc__.split("\n")[1:]
-# )
-#
-# ToddCoxeter.current_index_of = _may_return_undefined(ToddCoxeter._current_index_of)
-# ToddCoxeter.current_index_of.__doc__ = "\n".join(
-#     ToddCoxeter._current_index_of.__doc__.split("\n")[1:]
-# )
-#
-#
-# ToddCoxeter.current_word_of = _template_params_as_kwargs(
-#     Word={
-#         str: ToddCoxeter._current_str_of,
-#         List[int]: ToddCoxeter._current_word_of,
-#     }
-# )(noop)
-#
-#
-# ToddCoxeter.current_word_of.__doc__ = """
-# :sig=(i: int, **kwargs) -> List[int] | str:
-# Returns a current word representing a class with given index.
-#
-# This function returns the current word representing the class with index *i*.
-# No enumeration is triggered by calls to this function, but
-# :any:`current_word_graph` is standardized (using :any:`Order.shortlex`) if it
-# is not already standardized. The output word is obtained by following a path in
-# :any:`current_spanning_tree` from the node corresponding to index *i* back to
-# the root of that tree.
-#
-# :param i: the index of the class.
-# :type i: int
-#
-# :Keyword Arguments:
-#    * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-#
-# :returns: The word representing the *i*-th class.
-# :rtype: List[int] | str
-#
-# :raises LibsemigroupsError:  if *i* is out of bounds.
-#
-# :raises TypeError:
-#     if the keyword argument *Word* is not present, any other keyword
-#     argument is present, or is present but has value other than ``str`` or
-#     ``List[int]``.
-# """
-#
-# ToddCoxeter.word_of = _template_params_as_kwargs(
-#     Word={
-#         str: ToddCoxeter._str_of,
-#         List[int]: ToddCoxeter._word_of,
-#     }
-# )(noop)
-#
-# ToddCoxeter.word_of.__doc__ = """
-# :sig=(i: int, **kwargs) -> List[int] | str:
-# Returns a word representing a class with given index.
-#
-# This function returns the word representing the class with index *i*. A full
-# enumeration is triggered by calls to this function. The output word is obtained
-# by following a path in :any:`current_spanning_tree` from the node corresponding
-# to index *i* back to the root of that tree.
-#
-# :param i: the index of the class.
-# :type i: int
-#
-# :Keyword Arguments:
-#    * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-#
-# :returns: The word representing the *i*-th class.
-# :rtype: List[int]
-#
-# :raises LibsemigroupsError:  if *i* is out of bounds.
-#
-# :raises TypeError:
-#     if the keyword argument *Word* is not present, any other keyword
-#     argument is present, or is present but has value other than ``str`` or
-#     ``List[int]``.
-# """
-#
-#
+for _ToddCoxeter in [_ToddCoxeterWord, _ToddCoxeterString]:
+    _ToddCoxeter.number_of_classes = _may_return_positive_infinity(
+        _ToddCoxeter._number_of_classes
+    )
+    _ToddCoxeter.number_of_classes.__doc__ = "\n".join(
+        _ToddCoxeter._current_index_of.__doc__.split("\n")[1:]
+    )
+
+    _ToddCoxeter.current_index_of = _may_return_undefined(
+        _ToddCoxeter._current_index_of
+    )
+    _ToddCoxeter.current_index_of.__doc__ = "\n".join(
+        _ToddCoxeter._current_index_of.__doc__.split("\n")[1:]
+    )
+
+########################################################################
+# Helper functions
+########################################################################
+
+
 # # The next function (normal_forms) is documented here not in the cpp
 # # file because we add the additional kwarg Word.
 # @_template_params_as_kwargs(
 #     Word={str: _str_normal_forms, List[int]: _word_normal_forms}
 # )
-# def normal_forms(  # pylint: disable=unused-argument
-#     tc: ToddCoxeter,
-#     **kwargs,
-# ) -> Iterator[Union[str, List[int]]]:
-#     r"""
-#     Returns an iterator yielding normal forms.
-#
-#     This function returns an iterator yielding normal forms of the classes of
-#     the congruence represented by an instance of :any:`ToddCoxeter`. The order of
-#     the classes, and the normal forms, that are returned are controlled by
-#     :any:`ToddCoxeter.standardize`. This function triggers a full enumeration of
-#     ``tc``.
-#
-#     :param tc: the ToddCoxeter instance.
-#     :type tc: ToddCoxeter
-#
-#     :Keyword Arguments:
-#         * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-#
-#     :returns: An iterator yielding normal forms.
-#     :rtype: Iterator[str | List[int]]
-#
-#     :raises TypeError:
-#         if the keyword argument *Word* is not present, any other keyword
-#         argument is present, or is present but has value other than ``str`` or
-#         ``List[int]``.
-#     """
 #
 #
 # # The next function (class_by_index) is documented here not in the cpp

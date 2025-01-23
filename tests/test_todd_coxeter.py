@@ -20,6 +20,7 @@ from libsemigroups_pybind11 import (
     FroidurePin,
     ReportGuard,
     ToddCoxeter,
+    ToddCoxeterBase,
     todd_coxeter,
     Transf,
     congruence_kind,
@@ -30,9 +31,10 @@ from libsemigroups_pybind11 import (
     froidure_pin,
     WordRange,
     word_graph,
+    LibsemigroupsError,
 )
 
-strategy = ToddCoxeter.options.strategy
+strategy = ToddCoxeterBase.options.strategy
 
 
 def test_constructors():
@@ -56,7 +58,6 @@ def test_constructors():
         ToddCoxeter(S)
 
     with pytest.raises(TypeError):
-        ToddCoxeter(S)
         ToddCoxeter(congruence_kind.twosided, S)
 
     p = Presentation([0])
@@ -76,7 +77,7 @@ def test_attributes():
     assert not tc.contains([0, 0, 0], [0, 0])
     assert tc.currently_contains([0, 0, 0], [0, 0]) == tril.false
     assert tc.kind() == congruence_kind.onesided
-    assert tc.word_of(1, Word=List[int]) == [0, 0]
+    assert tc.word_of(1) == [0, 0]
     assert tc.index_of([0, 0]) == 1
     assert tc.number_of_generating_pairs() == 0
     assert tc.generating_pairs() == []
@@ -187,7 +188,7 @@ def test_000_iterators():
         [1, 0],
     ]
 
-    assert list(todd_coxeter.normal_forms(tc, Word=List[int])) == [
+    assert list(todd_coxeter.normal_forms(tc)) == [
         [0],
         [1],
         [0, 0],
@@ -204,6 +205,7 @@ def test_000_iterators():
         [0, 0, 1, 1, 1],
         [0, 0, 0, 1, 1, 1],
     ]
+
     S = FroidurePin(Transf([1, 3, 4, 2, 3]), Transf([3, 2, 1, 3, 3]))
     tc = ToddCoxeter(congruence_kind.onesided, S.right_cayley_graph())
     tc.add_generating_pair(
@@ -273,9 +275,10 @@ def test_036():
 
     p = Presentation("ab")
     p.rules = ["aaa", "a", "bbbb", "b", "abab", "aaaaaa"]
-    tc.init(congruence_kind.twosided, p)
-    tc.add_generating_pair("a", "b")
-    assert tc.generating_pairs() == [[97], [98]]
+    with pytest.raises(TypeError):
+        tc.init(congruence_kind.twosided, p)
+    with pytest.raises(TypeError):
+        tc.add_generating_pair("a", "b")
 
 
 def test_096():
@@ -292,7 +295,7 @@ def test_096():
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
     assert tc.number_of_classes() == 1
     tc.shrink_to_fit()
-    assert list(todd_coxeter.normal_forms(tc, Word=List[int])) == [[0]]
+    assert list(todd_coxeter.normal_forms(tc)) == [[0]]
     assert word_graph.is_complete(tc.current_word_graph())
     for lhs, rhs in ((p.rules[i], p.rules[i + 1]) for i in range(0, len(p.rules), 2)):
         assert word_graph.is_compatible(wg, 0, wg.number_of_nodes(), lhs, rhs)
@@ -340,9 +343,6 @@ def test_current_word_of():
     # (there's 1 more node than index), hence the -1 in the next line.
     # Be better if tc.current_word_graph() returned a view into the nodes 1 to
     # n - 1 so that the initial node is not present
-    assert (
-        tc.current_index_of(tc.current_word_of(nodes[-1] - 1, Word=str))
-        == nodes[-1] - 1
-    )
+    assert tc.current_index_of(tc.current_word_of(nodes[-1] - 1)) == nodes[-1] - 1
 
     assert not tc.finished()

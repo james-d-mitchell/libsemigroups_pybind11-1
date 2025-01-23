@@ -241,41 +241,20 @@ definitions in the stack exceeds the value :any:`ToddCoxeterBase.def_max`.
 
     def_construct_default(thing, "ToddCoxeterBase");
     def_init_default(thing, "ToddCoxeterBase");
-    def_construct_kind_presentation<word_type>(thing, "ToddCoxeterBase");
-    def_init_kind_presentation<word_type>(thing, "ToddCoxeterBase");
+    def_construct_kind_presentation(thing, "ToddCoxeterBase");
+    def_init_kind_presentation(thing, "ToddCoxeterBase");
     def_number_of_classes(thing, "ToddCoxeterBase");
     def_copy(thing, "ToddCoxeterBase");
-
-    /*
-
-
-
-
-
-        def_add_generating_pair<word_type>(thing, "ToddCoxeterBase");
-        def_add_generating_pair<std::string>(thing, "ToddCoxeterBase");
-
-        def_currently_contains<word_type>(thing, "ToddCoxeterBase");
-        def_currently_contains<std::string>(thing, "ToddCoxeterBase");
-
-        def_contains<word_type>(thing, "ToddCoxeterBase");
-        def_contains<std::string>(thing, "ToddCoxeterBase");
-
-        auto extra_detail = R"pbdoc(
-         If the  :any:`ToddCoxeterBase` instance is not :any:`Runner.finished`,
-       then it might be that equivalent input words produce different output
-       words. This function triggers no congruence enumeration.)pbdoc"sv;
-
-        def_reduce_no_run<word_type>(
-            thing, "ToddCoxeterBase", doc{.detail = extra_detail});
-        def_reduce_no_run<std::string>(
-            thing, "ToddCoxeterBase", doc{.detail = extra_detail});
-
-        def_reduce<word_type>(thing, "ToddCoxeterBase");
-        def_reduce<std::string>(thing, "ToddCoxeterBase");
-
-        def_generating_pairs(thing, "ToddCoxeterBase");
-    */
+    def_add_generating_pair(thing, "ToddCoxeterBase");
+    def_currently_contains(thing, "ToddCoxeterBase");
+    def_contains(thing, "ToddCoxeterBase");
+    def_reduce_no_run(thing, "ToddCoxeterBase", doc{.detail = R"pbdoc(
+If the  :any:`ToddCoxeterBase` instance is not :any:`Runner.finished`,
+then it might be that equivalent input words produce different output
+words. This function triggers no congruence enumeration.)pbdoc"sv});
+    def_reduce(thing, "ToddCoxeterBase");
+    // There's no generating_pairs for ToddCoxeterBase only
+    // internal_generating_pairs
 
     ////////////////////////////////////////////////////////////////////////
     // Constructors + Initializers
@@ -1189,6 +1168,7 @@ standardized with respect to the order ``val`` ; and ``False`` if not.
 :returns: Whether or not the current word graph is standardized with respect to a given order.
 :rtype: bool
 )pbdoc");
+    // TODO(0) internal_generating_pairs
     thing.def("internal_presentation",
               &ToddCoxeterBase::internal_presentation,
               R"pbdoc(
@@ -1359,168 +1339,24 @@ calling this function.
 .. seealso::  :any:`word_graph.standardize` and :any:`current_spanning_tree`.
 )pbdoc");
 
-    //     thing.def(
-    //         "current_index_of",
-    //         [](ToddCoxeterBase const& self, word_type const& w) {
-    //           return todd_coxeter::current_index_of(self, w);
-    //         },
-    //         py::arg("w"),
-    //         R"pbdoc(
-    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-    // )pbdoc");
-    //
-    //     thing.def(
-    //         "_current_index_of",
-    //         [](ToddCoxeterBase const& self, std::string const& w) {
-    //           return todd_coxeter::current_index_of(self, w);
-    //         },
-    //         py::arg("w"),
-    //         R"pbdoc(
-    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-    //
-    // Returns the current index of the class containing a word.
-    //
-    // This function returns the current index of the class containing the word
-    // *w* No enumeration is triggered by calls to this function. Unless
-    // :any:`Runner.finished` returns ``True``, the index returned by this
-    // function is essentially arbitrary, and can only really be used to check
-    // whether or not two words are currently known to belong to the congruence.
-    // The returned index is obtained by following the path in
-    // :any:`current_word_graph` from node ``0`` labelled by the word *w*. If
-    // there is no such path, then :any:`UNDEFINED` is returned.
-    //
-    // :param w: the word.
-    // :type w: List[int] | str
-    //
-    // :returns: The current index of the class containing the word.
-    // :rtype: int | Undefined
-    //
-    // :raises LibsemigroupsError:
-    //   if any of the values in *w* is out of range, i.e. they do not belong to
-    //   ``presentation().alphabet()`` and ``PresentationStrings.validate_word``
-    //   raises.
-    // )pbdoc");
-    //
-    //     thing.def(
-    //         "index_of",
-    //         [](ToddCoxeterBase& self, word_type const& w) {
-    //           return todd_coxeter::index_of(self, w);
-    //         },
-    //         py::arg("w"),
-    //         R"pbdoc(
-    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-    // :only-document-once:
-    //
-    // Returns the index of the class containing a word.
-    //
-    // This function returns the index of the class containing the word *w* A
-    // full enumeration is triggered by calls to this function. If the
-    // :any:`current_word_graph` has not already been standardized, then this
-    // function first standardizes it with respect to :any:`Order.shortlex`;
-    // otherwise the existing standardization order is used. The returned index
-    // is obtained by following the path in :any:`current_word_graph` from node
-    // ``0`` labelled by the word *w* Since a full enumeration is triggered by
-    // calls to this function, the word graph is complete, and so the return
-    // value is never :any:`UNDEFINED`.
-    //
-    // :param w: the word.
-    // :type w: List[int] | str
-    //
-    // :returns: The index of the class containing the word.
-    // :rtype: int
-    //
-    // :raises LibsemigroupsError:
-    //     if any of the values in *w*, i.e. they do not belong to
-    //     ``presentation().alphabet()`` and
-    //     ``PresentationStrings.validate_word`` raises.
-    // )pbdoc");
-    //
-    //     thing.def(
-    //         "index_of",
-    //         [](ToddCoxeterBase& self, std::string const& w) {
-    //           return todd_coxeter::index_of(self, w);
-    //         },
-    //         py::arg("w"),
-    //         R"pbdoc(
-    // :sig=(self: ToddCoxeterBase, w: List[int] | str) -> int:
-    // )pbdoc");
-    //
-    //     thing.def("_current_word_of", [](ToddCoxeterBase& self, size_t i) {
-    //       return todd_coxeter::current_word_of<word_type>(self, i);
-    //     });
-    //
-    //     thing.def("_current_str_of", [](ToddCoxeterBase& self, size_t i) {
-    //       return todd_coxeter::current_word_of<std::string>(self, i);
-    //     });
-    //
-    //     thing.def(
-    //         "_word_of",
-    //         [](ToddCoxeterBase& self, size_t i) {
-    //           return todd_coxeter::word_of(self, i);
-    //         },
-    //         py::arg("i"),
-    //         R"pbdoc(
-    // Returns a word representing a class with given index.
-    //
-    // This function returns the word representing the class with index *i*. A
-    // full enumeration is triggered by calls to this function. The output word
-    // is obtained by following a path in :any:`current_spanning_tree` from the
-    // node corresponding to index *i* back to the root of that tree.
-    //
-    // :returns: The word representing the *i*-th class.
-    // :rtype: List[int]
-    //
-    // :param i: the index of the class.
-    // :type i: int
-    //
-    // :raises LibsemigroupsError:  if *i* is out of bounds.
-    // )pbdoc");
-    //
-    //     thing.def(
-    //         "_str_of",
-    //         [](ToddCoxeterBase& self, size_t i) {
-    //           return todd_coxeter::word_of<std::string>(self, i);
-    //         },
-    //         py::arg("i"),
-    //         R"pbdoc(
-    // Returns a word representing a class with given index.
-    //
-    // This function returns the word representing the class with index *i*. A
-    // full enumeration is triggered by calls to this function. The output word
-    // is obtained by following a path in :any:`current_spanning_tree` from the
-    // node corresponding to index *i* back to the root of that tree.
-    //
-    // :returns: The word representing the *i*-th class.
-    // :rtype: str
-    //
-    // :param i: the index of the class.
-    // :type i: int
-    //
-    // :raises LibsemigroupsError: if *i* is out of bounds.
-    // )pbdoc");
-    /*
-        ////////////////////////////////////////////////////////////////////////
-        // Helpers from cong-intf.hpp . . .
-        ////////////////////////////////////////////////////////////////////////
+    /* TODO(0) incorporate
+    ////////////////////////////////////////////////////////////////////////
+    // Helpers from cong-intf.hpp . . .
+    ////////////////////////////////////////////////////////////////////////
 
-        auto raises = R"pbdoc(
+    auto raises = R"pbdoc(
     :raises LibsemigroupsError:
       if the number of classes in *tc* is infinite. In this case, the
       enumeration of *tc* will not terminate successfully.)pbdoc"sv;
 
-        def_partition<word_type, ToddCoxeterBase>(
-            m, "ToddCoxeterBase", doc{.raises = raises, .var = "tc"});
-        def_partition<std::string, ToddCoxeterBase>(
-            m, "ToddCoxeterBase", doc{.raises = raises, .var = "tc"});
+    def_partition<word_type, ToddCoxeterBase>(
+        m, "ToddCoxeterBase", doc{.raises = raises, .var = "tc"});
+    def_partition<std::string, ToddCoxeterBase>(
+        m, "ToddCoxeterBase", doc{.raises = raises, .var = "tc"});
 
-        def_non_trivial_classes<word_type, ToddCoxeterBase>(m,
-    "ToddCoxeterBase"); def_non_trivial_classes<std::string, ToddCoxeterBase>(m,
-    "ToddCoxeterBase");
-
-        ////////////////////////////////////////////////////////////////////////
-        // ToddCoxeterBase specific helpers
-        ////////////////////////////////////////////////////////////////////////
-
+    ////////////////////////////////////////////////////////////////////////
+    // ToddCoxeterBase specific helpers
+    ////////////////////////////////////////////////////////////////////////
         // The next 2 functions are documented in the wrapper in
         // libsemigroups_pybind11/todd_coxeter.py, because they have the
         // additional kwarg Word to specify the output type.
@@ -1546,30 +1382,31 @@ calling this function.
             py::arg("tc"),
             py::arg("w"),
             R"pbdoc(
-    :sig=(tc: ToddCoxeterBase, w: List[int] | str) -> Iterator[List[int] | str]:
-    :only-document-once:
+        :sig=(tc: ToddCoxeterBase, w: List[int] | str) -> Iterator[List[int] |
+       str]: :only-document-once:
 
-    Returns an iterator yielding every word (of the same type as *w*) in
-    the congruence class of the given word *w*.
+        Returns an iterator yielding every word (of the same type as *w*) in
+        the congruence class of the given word *w*.
 
-    This function returns an iterator yielding every word in belonging to the
-    same class as the input word *w* in the congruence represented by the
-    :any:`ToddCoxeterBase` instance *tc*. Calls to this function trigger a full
-    enumeration of *tc*.
+        This function returns an iterator yielding every word in belonging to
+       the same class as the input word *w* in the congruence represented by the
+        :any:`ToddCoxeterBase` instance *tc*. Calls to this function trigger a
+       full enumeration of *tc*.
 
-    :param tc: the ToddCoxeterBase instance.
-    :type tc: ToddCoxeterBase
+        :param tc: the ToddCoxeterBase instance.
+        :type tc: ToddCoxeterBase
 
-    :param w: the input word.
-    :type w: List[int] | str
+        :param w: the input word.
+        :type w: List[int] | str
 
-    :returns: An iterator yielding words in the class of the input word.
-    :rtype: Iterator[List[int] | str]
+        :returns: An iterator yielding words in the class of the input word.
+        :rtype: Iterator[List[int] | str]
 
-    :raises LibsemigroupsError:
-      if any of the values in *w* is out of range, i.e. they do not belong to
-      ``presentation().alphabet()`` and ``PresentationStrings.validate_word``
-      raises.)pbdoc");
+        :raises LibsemigroupsError:
+          if any of the values in *w* is out of range, i.e. they do not belong
+       to
+          ``presentation().alphabet()`` and
+       ``PresentationStrings.validate_word`` raises.)pbdoc");
 
         m.def(
             "class_of",
@@ -1581,16 +1418,12 @@ calling this function.
             py::arg("tc"),
             py::arg("w"),
             R"pbdoc(
-    :sig=(tc: ToddCoxeterBase, w: List[int] | str) -> Iterator[List[int] |
-    str]:)pbdoc");
+        :sig=(tc: ToddCoxeterBase, w: List[int] | str) -> Iterator[List[int] |
+        str]:)pbdoc");
 
         // The next 2 functions are documented in the wrapper in
         // libsemigroups_pybind11/todd_coxeter.py, because they have the
         // additional kwarg Word to specify the output type.
-        m.def("todd_coxeter_word_normal_forms", [](ToddCoxeterBase& tc) {
-          auto nf = todd_coxeter::normal_forms<word_type>(tc);
-          return py::make_iterator(rx::begin(nf), rx::end(nf));
-        });
 
         m.def("todd_coxeter_str_normal_forms", [](ToddCoxeterBase& tc) {
           auto nf = todd_coxeter::normal_forms<std::string>(tc);
@@ -1604,88 +1437,39 @@ calling this function.
               py::arg("try_for")   = std::chrono::milliseconds(100),
               py::arg("threshold") = 0.99,
               R"pbdoc(
-    :sig=(tc: ToddCoxeterBase, tries: int, try_for: timedelta, threshold: float)
-    -> tril:
+        :sig=(tc: ToddCoxeterBase, tries: int, try_for: timedelta, threshold:
+       float)
+        -> tril:
 
-    Check if the congruence has more than one class.
+        Check if the congruence has more than one class.
 
-    Returns :any:`tril.true` if it is possible to show that the congruence is
-    non-trivial; :any:`tril.false` if the congruence is already known to be
-    trivial; and :any:`tril.unknown` if it is not possible to show that the
-    congruence is non-trivial. This function attempts to find a non-trivial
-    congruence containing the congruence represented by a :any:`ToddCoxeterBase`
-    instance.
+        Returns :any:`tril.true` if it is possible to show that the congruence
+       is non-trivial; :any:`tril.false` if the congruence is already known to
+       be trivial; and :any:`tril.unknown` if it is not possible to show that
+       the congruence is non-trivial. This function attempts to find a
+       non-trivial congruence containing the congruence represented by a
+       :any:`ToddCoxeterBase` instance.
 
-    :param tc: the ToddCoxeterBase instance.
-    :type tc: ToddCoxeterBase
+        :param tc: the ToddCoxeterBase instance.
+        :type tc: ToddCoxeterBase
 
-    :param tries:
-      the number of attempts to find a non-trivial super-congruence
-      (default: ``10``).
-    :type tries: int
+        :param tries:
+          the number of attempts to find a non-trivial super-congruence
+          (default: ``10``).
+        :type tries: int
 
-    :param try_for:
-      the amount of time to enumerate the congruence after choosing a random
-    pair of representatives and identifying them (default: 100 milliseconds).
-    :type try_for: datetime.timedelta
+        :param try_for:
+          the amount of time to enumerate the congruence after choosing a random
+        pair of representatives and identifying them (default: 100
+       milliseconds). :type try_for: datetime.timedelta
 
-    :param threshold: the threshold (default: ``0.99``).
-    :type threshold: float
+        :param threshold: the threshold (default: ``0.99``).
+        :type threshold: float
 
-    :returns: Whether or not a non-trivial quotient was found.
-    :rtype: tril
-    )pbdoc");
+        :returns: Whether or not a non-trivial quotient was found.
+        :rtype: tril
+        )pbdoc");
 
-        m.def(
-            "todd_coxeter_redundant_rule",
-            [](Presentation<word_type> const& p, std::chrono::milliseconds t)
-                -> std::optional<std::pair<word_type, word_type>> {
-              auto it = todd_coxeter::redundant_rule(p, t);
-              if (it != p.rules.cend()) {
-                return std::make_pair(*it, *(it + 1));
-              }
-              return {};
-            },
-            py::arg("p"),
-            py::arg("t"),
-            R"pbdoc(
-    :sig=(p: PresentationStrings, t: timedelta) -> Tuple[List[int], List[int]] |
-    Tuple[str, str] | None: :only-document-once:
-
-    Return a redundant rule or ``None``.
-
-    Starting with the last rule in the presentation, this function attempts to
-    run the Todd-Coxeter algorithm on the rules of the presentation except for a
-    given omitted rule. For every such omitted rule, Todd-Coxeter is run for the
-    length of time indicated by the second parameter *t*, and then it is checked
-    if the omitted rule can be shown to be redundant. If the omitted rule can be
-    shown to be redundant in this way, then this rule is returned If no rule can
-    be shown to be redundant in this way, then ``None`` is returned.
-
-    :param p: the presentation.
-    :type p: PresentationStrings
-
-    :param t: time to run Todd-Coxeter for every omitted rule.
-    :type t: timedelta
-
-    :returns: A redundant rule or ``None``.
-    :rtype: Tuple[List[int], List[int]] | Tuple[str, str] | None
-    )pbdoc");
-
-        m.def(
-            "todd_coxeter_redundant_rule",
-            [](Presentation<std::string> const& p, std::chrono::milliseconds t)
-                -> std::optional<std::pair<std::string, std::string>> {
-              auto it = todd_coxeter::redundant_rule(p, t);
-              if (it != p.rules.cend()) {
-                return std::make_pair(*it, *(it + 1));
-              }
-              return {};
-            },
-            py::arg("p"),
-            py::arg("t"),
-            R"pbdoc(
-    :sig=(p: PresentationStrings, t: timedelta) -> Tuple[List[int], List[int]] |
-    Tuple[str, str] | None: )pbdoc"); */
+        */
   }  // init_todd_coxeter
 }  // namespace libsemigroups
