@@ -13,23 +13,20 @@ from typing import Union, List, Iterator, Self
 
 from _libsemigroups_pybind11 import (
     PositiveInfinity,
-    Undefined,
     PresentationStrings as _PresentationStrings,
     PresentationWords as _PresentationWords,
+    ToddCoxeterBase,
     ToddCoxeterString as _ToddCoxeterString,
     ToddCoxeterWord as _ToddCoxeterWord,
-    ToddCoxeterBase,
-    congruence_kind as _congruence_kind,
+    Undefined,
     WordGraph as _WordGraph,
-    todd_coxeter_normal_forms as normal_forms,
+    class_by_index,
+    class_of,
+    congruence_kind as _congruence_kind,
     todd_coxeter_non_trivial_classes as non_trivial_classes,
+    todd_coxeter_normal_forms as normal_forms,
+    todd_coxeter_partition as partition,
     todd_coxeter_redundant_rule as redundant_rule,
-    # _str_class_by_index,
-    # _word_class_by_index,
-    # class_of,
-    # todd_coxeter_redundant_rule as redundant_rule,
-    # todd_coxeter_str_normal_forms as _str_normal_forms,
-    # toddcoxeter_partition as partition,
 )
 
 from .detail.decorators import (
@@ -105,65 +102,21 @@ for _ToddCoxeter in [_ToddCoxeterWord, _ToddCoxeterString]:
 # Helper functions
 ########################################################################
 
-
-# # The next function (normal_forms) is documented here not in the cpp
-# # file because we add the additional kwarg Word.
-# @_template_params_as_kwargs(
-#     Word={str: _str_normal_forms, List[int]: _word_normal_forms}
-# )
+# def fancy_dot(tc: ToddCoxeter) -> _Dot:
+#    dot = word_graph.dot(tc.word_graph())
+#    offset = 0 if tc.presentation().contains_empty_word() else 1
+#    dot.node("0").add_attr("label", "ε")
+#    tree = tc.spanning_tree()
+#    for i in range(1, tc.number_of_classes() + offset):
+#        w = tc.word_of(i - offset)
+#        dot.node(str(i)).add_attr("label", "".join([chr(x) for x in w]))
+#        if len(w) == 1:
+#            dot.node(str(i)).add_attr(
+#                "color", dot.edge("0", str(i)).attrs["color"]
+#            ).add_attr("style", "filled")
+#        if tree.parent(i) != 18446744073709551615:
+#            dot.edge(str(tree.parent(i)), str(i)).add_attr(
+#                "style", "dashed,bold"
+#            )
 #
-#
-# # The next function (class_by_index) is documented here not in the cpp
-# # file because we add the additional kwarg Word.
-# @_template_params_as_kwargs(
-#     Word={str: _str_class_by_index, List[int]: _word_class_by_index}
-# )
-# def class_by_index(kb: ToddCoxeter, **kwargs) -> Iterator[Union[str, List[int]]]:  # pylint: disable=unused-argument
-#     """
-#     Returns an iterator yielding every word ``List[int]`` or ``str`` in the
-#     congruence class with given index.
-#
-#     This function returns an iterator yielding every word belonging to the
-#     class with index *n* in the congruence represented by the :any:`ToddCoxeter`
-#     instance *tc*. Calls to this function trigger a full enumeration of *tc*.
-#
-#     :param tc: the ToddCoxeter instance.
-#     :type tc: ToddCoxeter
-#
-#     :param n: the index of the class.
-#     :type n: int
-#
-#     :Keyword Arguments:
-#         * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-#
-#     :returns: A iterator yielding the class with index *n*.
-#     :rtype: Iterator[List[int]]
-#
-#     :raises LibsemigroupsError:
-#         if *n* is greater than or equal to ``tc.number_of_classes()``.
-#
-#     :raises TypeError:
-#         if the keyword argument *Word* is not present, any other keyword
-#         argument is present, or is present but has value other than ``str`` or
-#         ``List[int]``.
-#     """
-#
-#
-# # def fancy_dot(tc: ToddCoxeter) -> _Dot:
-# #    dot = word_graph.dot(tc.word_graph())
-# #    offset = 0 if tc.presentation().contains_empty_word() else 1
-# #    dot.node("0").add_attr("label", "ε")
-# #    tree = tc.spanning_tree()
-# #    for i in range(1, tc.number_of_classes() + offset):
-# #        w = tc.word_of(i - offset)
-# #        dot.node(str(i)).add_attr("label", "".join([chr(x) for x in w]))
-# #        if len(w) == 1:
-# #            dot.node(str(i)).add_attr(
-# #                "color", dot.edge("0", str(i)).attrs["color"]
-# #            ).add_attr("style", "filled")
-# #        if tree.parent(i) != 18446744073709551615:
-# #            dot.edge(str(tree.parent(i)), str(i)).add_attr(
-# #                "style", "dashed,bold"
-# #            )
-# #
-# #    return dot
+#    return dot
