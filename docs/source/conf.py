@@ -301,8 +301,9 @@ def make_only_doc(lines):
 
     if not called_correctly:
         print(
-            ":only-document-once: has been invoked in a function where "
-            "documentation has not been repeated. Invoked in:\n" + "\n".join(lines)
+            "\033[93m:only-document-once: has been invoked in a function where "
+            "documentation has not been repeated. Invoked in:\n"
+            + "\n\033[0m".join(lines)
         )
         return
 
@@ -400,8 +401,7 @@ docstring_replacements = {
     r"todd_coxeter_non_trivial_class.*$": "",
     r"todd_coxeter_partition.*$": "",
     r"todd_coxeter_redundant_rule.*$": "",
-    r"todd_coxeter_str_normal_forms.*$": "",
-    r"todd_coxeter_word_normal_forms.*$": "",
+    r"todd_coxeter_normal_forms.*$": "",
     r"kambites_normal_forms.*$": "",
 }
 

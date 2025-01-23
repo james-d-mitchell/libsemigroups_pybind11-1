@@ -53,6 +53,8 @@ replacements = {
     "_libsemigroups_pybind11.FroidurePinBase": "FroidurePinBase",
     "FroidurePinPBR": "FroidurePin",
     "SchreierSimsPerm1": "SchreierSims",
+    "ToddCoxeterWord": "ToddCoxeter",
+    "ToddCoxeterBase": "ToddCoxeter",
 }
 files = all_html_files(html_path)
 

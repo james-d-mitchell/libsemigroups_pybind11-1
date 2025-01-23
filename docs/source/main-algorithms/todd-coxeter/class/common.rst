@@ -9,14 +9,14 @@
 Common methods
 ==============
 
-This page contains documentation of the methods of :any:`ToddCoxeter`
+This page contains documentation of the methods of :any:`ToddCoxeterWord`
 that are implemented in all of the classes :any:`Congruence`, :any:`Kambites`,
-:any:`KnuthBendixRewriteTrie`, and :any:`ToddCoxeter`.
+:any:`KnuthBendixRewriteTrie`, and :any:`ToddCoxeterWord`.
 
-.. automethod:: ToddCoxeter.add_generating_pair
-.. automethod:: ToddCoxeter.contains
-.. automethod:: ToddCoxeter.currently_contains
-.. automethod:: ToddCoxeter.generating_pairs
-.. automethod:: ToddCoxeter.number_of_classes
-.. automethod:: ToddCoxeter.reduce
-.. automethod:: ToddCoxeter.reduce_no_run
+.. automethod:: ToddCoxeterWord.add_generating_pair
+.. automethod:: ToddCoxeterWord.contains
+.. automethod:: ToddCoxeterWord.currently_contains
+.. automethod:: ToddCoxeterWord.generating_pairs
+.. automethod:: ToddCoxeterWord.number_of_classes
+.. automethod:: ToddCoxeterWord.reduce
+.. automethod:: ToddCoxeterWord.reduce_no_run

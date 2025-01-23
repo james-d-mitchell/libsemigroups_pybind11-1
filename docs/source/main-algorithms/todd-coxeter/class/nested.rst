@@ -4,15 +4,15 @@
 
    The full license is in the file LICENSE, distributed with this software.
 
-.. currentmodule:: libsemigroups_pybind11
+.. currentmodule:: _libsemigroups_pybind11
 
 The options nested class
 ========================
 
 This page contains documentation for the nested class
-:any:`ToddCoxeter.options` which holds various values that can be used
+:any:`ToddCoxeterBase.options` which holds various values that can be used
 to control the behaviour of Todd-Coxeter.
 
-.. autoclass:: libsemigroups_pybind11::ToddCoxeter.options
+.. autoclass:: _libsemigroups_pybind11::ToddCoxeterBase.options
    :members:
    :exclude-members: name

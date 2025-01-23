@@ -40,7 +40,65 @@ namespace libsemigroups {
       py::class_<ToddCoxeter_, ToddCoxeterBase> thing(m,
                                                       name.c_str(),
                                                       R"pbdoc(
-TODO(0)
+Class containing an implementation of the Todd-Coxeter Algorithm.
+
+This class contains an implementation of the Todd-Coxeter algorithm for
+computing 1-sided (right), and 2-sided congruences on a semigroup or monoid.
+
+In this documentation we use the term "congruence enumeration" to mean the
+execution of (any version of) the Todd-Coxeter algorithm.
+
+.. seealso :any:`congruence_kind` and :any:`tril`.
+
+.. doctest::
+
+   >>> from libsemigroups_pybind11 import (presentation, Presentation, ToddCoxeter,
+   ... congruence_kind, word_graph, Order, todd_coxeter)
+   >>> p = Presentation("ab")
+   >>> p.contains_empty_word(True)
+   <monoid presentation with 2 letters, 0 rules, and length 0>
+   >>> presentation.add_rule(p, "aa", "")
+   >>> presentation.add_rule(p, "a", "b")
+   >>> tc = ToddCoxeter(congruence_kind.onesided, p)
+   >>> tc.strategy(ToddCoxeter.options.strategy.felsch)
+   <ToddCoxeter over <monoid presentation with 2 letters, 2 rules, and length 4> with 1/1 active/nodes>
+   >>> tc.number_of_classes()
+   2
+   >>> tc.contains("aaaa", "aa")
+   True
+   >>> tc.index_of("aaaa")
+   0
+   >>> options = ToddCoxeter.options
+   >>> p = Presentation("abcd")
+   >>> presentation.add_rule(p, "aa", "a");
+   >>> presentation.add_rule(p, "ba", "b");
+   >>> presentation.add_rule(p, "ab", "b");
+   >>> presentation.add_rule(p, "ca", "c");
+   >>> presentation.add_rule(p, "ac", "c");
+   >>> presentation.add_rule(p, "da", "d");
+   >>> presentation.add_rule(p, "ad", "d");
+   >>> presentation.add_rule(p, "bb", "a");
+   >>> presentation.add_rule(p, "cd", "a");
+   >>> presentation.add_rule(p, "ccc", "a");
+   >>> presentation.add_rule(p, "bcbcbcbcbcbcbc", "a");
+   >>> presentation.add_rule(p, "bcbdbcbdbcbdbcbdbcbdbcbdbcbdbcbd", "a");
+   >>> tc = ToddCoxeter(congruence_kind.twosided, p)
+   >>> tc.strategy(options.strategy.hlt).lookahead_extent(options.lookahead_extent.partial).save(False)
+   <ToddCoxeter over <semigroup presentation with 4 letters, 12 rules, and length 79> with 1/2 active/nodes>
+   >>> tc.number_of_classes()
+   10752
+   >>> tc
+   <ToddCoxeter over <semigroup presentation with 4 letters, 12 rules, and length 79> with 10753/2097153 active/nodes>
+   >>> tc.word_graph()
+   <WordGraph with 10753 nodes, 43012 edges, & out-degree 4>
+   >>> it = todd_coxeter.normal_forms(tc, Word=str)
+   >>> [next(it) for _ in range(10)]
+   ['a', 'b', 'c', 'd', 'bc', 'bd', 'cb', 'db', 'bcb', 'bdb']
+   >>> tc.standardize(Order.lex)
+   True
+   >>> it = todd_coxeter.normal_forms(tc, Word=str)
+   >>> [next(it) for _ in range(10)]
+   ['a', 'ab', 'abc', 'abcb', 'abcbc', 'abcbcb', 'abcbcbc', 'abcbcbcb', 'abcbcbcbc', 'abcbcbcbcb']
 )pbdoc");
 
       // __repr__ is implemented in ToddCoxeterBase
@@ -70,31 +128,101 @@ words. This function triggers no congruence enumeration.)pbdoc",
       thing.def("presentation",
                 &ToddCoxeter_::presentation,
                 R"pbdoc(
-Get the presentation used to define a ToddCoxeter instance (if any). If
-a :any:`ToddCoxeter` instance is constructed or initialised using a
-presentation, then a const reference to the
-:any:`native_presentation_type` version of this presentation is returned
-by this function.If the :any:`ToddCoxeter` instance was constructed
-or initialised from a :any:`WordGraph` , then this presentation will be
-empty.
+:sig=(self: ToddCoxeterWord) -> PresentationString:
 
-:exceptions:
-   This function is ``noexcept`` and is guaranteed never to throw.
+Get the presentation used to define a :any:`ToddCoxeterWord` instance (if any).
+If a :any:`ToddCoxeterWord` instance is constructed or initialised using a
+presentation, then this presentation is returned by this function. If the
+:any:`ToddCoxeterWord` instance was constructed or initialised from a
+:any:`WordGraph`, then this presentation will be empty.
 
 :returns:
-   A const reference to the presentation.
-
+   The presentation used to construct or initialise a :any:`ToddCoxeterWord`
+   instance.
 :rtype:
-   Presentation
+   PresentationStrings
 )pbdoc");
 
       ////////////////////////////////////////////////////////////////////////
 
-      thing.def(py::init<congruence_kind, ToddCoxeter_ const&>(), R"pbdoc(
+      thing.def(py::init<congruence_kind, ToddCoxeter_ const&>(),
+                py::arg("knd"),
+                py::arg("tc"),
+                R"pbdoc(
+:sig=(self: ToddCoxeterWord, knd: congruence_kind, tc: ToddCoxeterWord) -> None:
+
+Construct from :any:`congruence_kind` and :any:`ToddCoxeterWord`.
+
+This function constructs a :any:`ToddCoxeterWord` instance representing a
+congruence of kind *knd* over the :any:`ToddCoxeterWord` instance *tc*. The
+:any:`ToddCoxeterWord` instance constructed in this way represents a quotient of
+the word graph represented by *tc*.
+
+:param knd: the kind (onesided, or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param tc: the ToddCoxeterWord instance.
+:type tc: ToddCoxeterWord
+
+:raises LibsemigroupsError:
+  if the arguments *knd* and *tc* are not compatible. If the first item is
+  ``tc.kind()`` and the second is the parameter *knd*, then compatible
+  arguments are (one-sided, one-sided), (two-sided, one-sided), and (two-sided,
+  two-sided).)pbdoc");
+
+      thing.def(
+          "init",
+          [](ToddCoxeter_& self, congruence_kind knd, ToddCoxeter_ const& tc) {
+            return self.init(knd, tc);
+          },
+          py::arg("knd"),
+          py::arg("tc"),
+          R"pbdoc(
+:sig=(self: ToddCoxeterWord, knd: congruence_kind, tc: ToddCoxeterWord) -> ToddCoxeterWord:
+
+Re-initialize a ToddCoxeterWord instance.
+
+This function puts a :any:`ToddCoxeterWord` instance back into the state
+that it would have been in if it had just been newly constructed from
+*knd* and *tc*.
+
+:param knd: the kind (onesided, or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param tc: the ToddCoxeterWord instance.
+:type tc: ToddCoxeterWord
+
+:returns: ``self``.
+:rtype: ToddCoxeterWord
+
+:raises LibsemigroupsError:
+  if the arguments *knd* and *tc* are not compatible. If the first item is
+  ``tc.kind()`` and the second is the parameter *knd*, then compatible
+  arguments are (one-sided, one-sided), (two-sided, one-sided), and (two-sided,
+  two-sided).
 )pbdoc");
 
       thing.def(py::init<congruence_kind, WordGraph<uint32_t> const&>(),
+                py::arg("knd"),
+                py::arg("wg"),
                 R"pbdoc(
+:sig=(self: ToddCoxeterWord, knd: congruence_kind, wg: WordGraph) -> None:
+
+Construct from :any:`congruence_kind` and :any:`WordGraph`.
+
+This function constructs a :any:`ToddCoxeterWord` instance representing a
+congruence of kind *knd* over the :any:`WordGraph` *wg*. The
+:any:`ToddCoxeterWord` instance constructed in this way represents a
+quotient of the word graph *wg*. If *wg* happens to be the left
+or right Cayley graph of a semigroup or monoid, then the
+:any:`ToddCoxeterWord` instance will represent a quotient of that
+semigroup.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param wg: the word graph.
+:type wg: WordGraph
 )pbdoc");
 
       thing.def(
@@ -105,6 +233,23 @@ empty.
           py::arg("knd"),
           py::arg("wg"),
           R"pbdoc(
+:sig=(self: ToddCoxeterWord, knd: congruence_kind, wg: WordGraph) -> None:
+
+Construct from :any:`congruence_kind` and :any:`WordGraph`.
+
+This function constructs a :any:`ToddCoxeterWord` instance representing a
+congruence of kind *knd* over the :any:`WordGraph` *wg*. The
+:any:`ToddCoxeterWord` instance constructed in this way represents a
+quotient of the word graph *wg*. If *wg* happens to be the left
+or right Cayley graph of a semigroup or monoid, then the
+:any:`ToddCoxeterWord` instance will represent a quotient of that
+semigroup.
+
+:param knd: the kind (onesided or twosided) of the congruence.
+:type knd: congruence_kind
+
+:param wg: the word graph.
+:type wg: WordGraph
 )pbdoc");
 
       thing.def(
@@ -114,7 +259,7 @@ empty.
           },
           py::arg("w"),
           R"pbdoc(
-:sig=(self: ToddCoxeterWord, w: List[int] | str) -> int:
+:sig=(self: ToddCoxeterWord, w: List[int] | str) -> int | Undefined:
 
 Returns the current index of the class containing a word.
 
@@ -146,8 +291,7 @@ there is no such path, then :any:`UNDEFINED` is returned.
           },
           py::arg("w"),
           R"pbdoc(
-:sig=(self: ToddCoxeter, w: List[int] | str) -> int:
-:only-document-once:
+:sig=(self: ToddCoxeterWord, w: List[int] | str) -> int:
 
 Returns the index of the class containing a word.
 
@@ -196,11 +340,6 @@ the root of that tree.
 :rtype: List[int] | str
 
 :raises LibsemigroupsError:  if *i* is out of bounds.
-
-:raises TypeError:
-    if the keyword argument *Word* is not present, any other keyword
-    argument is present, or is present but has value other than ``str`` or
-    ``List[int]``.
 )pbdoc");
 
       thing.def(
@@ -231,12 +370,18 @@ node corresponding to index *i* back to the root of that tree.
       ////////////////////////////////////////////////////////////////////////
 
       auto raises = R"pbdoc(
-    :raises LibsemigroupsError:
-      if the number of classes in *tc* is infinite. In this case, the
-      enumeration of *tc* will not terminate successfully.)pbdoc"sv;
+:raises LibsemigroupsError:
+  if the number of classes in *tc* is infinite. In this case, the
+  enumeration of *tc* will not terminate successfully.)pbdoc"sv;
 
       def_partition<ToddCoxeter<Word>>(
-          m, "todd_coxeter", doc{.raises = raises, .var = "tc"});
+          m,
+          "ToddCoxeterWord",
+          "todd_coxeter",
+          doc{.only_document_once = ":only-document-once:",
+              .raises             = raises,
+              .var                = "tc"});
+
       def_non_trivial_classes<ToddCoxeter<Word>>(
           m, "todd_coxeter", doc{.raises = raises, .var = "tc"});
 
@@ -311,32 +456,26 @@ be shown to be redundant in this way, then ``None`` is returned.
           py::arg("tc"),
           py::arg("n"),
           R"pbdoc(
+:sig=(tc: ToddCoxeterWord, n: int) -> Iterator[List[int] | str]
+
 Returns an iterator yielding every word ``List[int]`` or ``str`` in the
 congruence class with given index.
 
 This function returns an iterator yielding every word belonging to the
-class with index *n* in the congruence represented by the :any:`ToddCoxeter`
+class with index *n* in the congruence represented by the :any:`ToddCoxeterWord`
 instance *tc*. Calls to this function trigger a full enumeration of *tc*.
 
-:param tc: the ToddCoxeter instance.
-:type tc: ToddCoxeter
+:param tc: the ToddCoxeterWord instance.
+:type tc: ToddCoxeterWord
 
 :param n: the index of the class.
 :type n: int
 
-:Keyword Arguments:
-    * *Word* (``type``) -- type of the output words (must be ``str`` or ``List[int]``).
-
 :returns: A iterator yielding the class with index *n*.
-:rtype: Iterator[List[int]]
+:rtype: Iterator[List[int] | str]
 
 :raises LibsemigroupsError:
     if *n* is greater than or equal to ``tc.number_of_classes()``.
-
-:raises TypeError:
-    if the keyword argument *Word* is not present, any other keyword
-    argument is present, or is present but has value other than ``str`` or
-    ``List[int]``.
 )pbdoc");
 
       m.def(
@@ -349,7 +488,7 @@ instance *tc*. Calls to this function trigger a full enumeration of *tc*.
           py::arg("tc"),
           py::arg("w"),
           R"pbdoc(
-:sig=(tc: ToddCoxeter, w: List[int] | str) -> Iterator[List[int] | str]:
+:sig=(tc: ToddCoxeterWord, w: List[int] | str) -> Iterator[List[int] | str]:
 :only-document-once:
 
 Returns an iterator yielding every word (of the same type as *w*) in
@@ -357,11 +496,11 @@ the congruence class of the given word *w*.
 
 This function returns an iterator yielding every word in belonging to
 the same class as the input word *w* in the congruence represented by the
-:any:`ToddCoxeter` instance *tc*. Calls to this function trigger a
+:any:`ToddCoxeterWord` instance *tc*. Calls to this function trigger a
 full enumeration of *tc*.
 
-:param tc: the ToddCoxeter instance.
-:type tc: ToddCoxeter
+:param tc: the ToddCoxeterWord instance.
+:type tc: ToddCoxeterWord
 
 :param w: the input word.
 :type w: List[int] | str
@@ -381,7 +520,7 @@ full enumeration of *tc*.
             py::arg("try_for")   = std::chrono::milliseconds(100),
             py::arg("threshold") = 0.99,
             R"pbdoc(
-:sig=(tc: ToddCoxeterBase, tries: int, try_for: timedelta, threshold: float) -> tril:
+:sig=(tc: ToddCoxeterWord, tries: int, try_for: timedelta, threshold: float) -> tril:
 
 Check if the congruence has more than one class.
 
@@ -390,10 +529,10 @@ is non-trivial; :any:`tril.false` if the congruence is already known to
 be trivial; and :any:`tril.unknown` if it is not possible to show that
 the congruence is non-trivial. This function attempts to find a
 non-trivial congruence containing the congruence represented by a
-:any:`ToddCoxeterBase` instance.
+:any:`ToddCoxeterWord` instance.
 
-:param tc: the ToddCoxeterBase instance.
-:type tc: ToddCoxeterBase
+:param tc: the ToddCoxeterWord instance.
+:type tc: ToddCoxeterWord
 
 :param tries:
    the number of attempts to find a non-trivial super-congruence

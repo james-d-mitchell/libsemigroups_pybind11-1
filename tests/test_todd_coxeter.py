@@ -20,7 +20,6 @@ from libsemigroups_pybind11 import (
     FroidurePin,
     ReportGuard,
     ToddCoxeter,
-    ToddCoxeterBase,
     todd_coxeter,
     Transf,
     congruence_kind,
@@ -34,7 +33,7 @@ from libsemigroups_pybind11 import (
     LibsemigroupsError,
 )
 
-strategy = ToddCoxeterBase.options.strategy
+strategy = ToddCoxeter(Word=str).options.strategy
 
 
 def test_constructors():

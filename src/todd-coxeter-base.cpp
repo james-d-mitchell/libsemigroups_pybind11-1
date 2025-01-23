@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// TODO(0.5): remove the doc that isn't actually used
+
 // libsemigroups headers
 #include <chrono>
 #include <libsemigroups/cong-intf.hpp>
@@ -36,68 +38,8 @@ using std::literals::operator""sv;
 namespace libsemigroups {
 
   void init_todd_coxeter_base(py::module& m) {
-    py::class_<ToddCoxeterBase, CongruenceInterface> thing(
-        m, "ToddCoxeterBase", R"pbdoc(
-Class containing an implementation of the Todd-Coxeter Algorithm.
-
-This class contains an implementation of the Todd-Coxeter algorithm for
-computing 1-sided (right), and 2-sided congruences on a semigroup or monoid.
-
-In this documentation we use the term "congruence enumeration" to mean the
-execution of (any version of) the Todd-Coxeter algorithm.
-
-.. seealso :any:`congruence_kind` and :any:`tril`.
-
-.. doctest::
-
-   >>> from libsemigroups_pybind11 import (presentation, Presentation, ToddCoxeterBase,
-   ... congruence_kind, word_graph, Order, todd_coxeter)
-   >>> p = Presentation("ab")
-   >>> p.contains_empty_word(True)
-   <monoid presentation with 2 letters, 0 rules, and length 0>
-   >>> presentation.add_rule(p, "aa", "")
-   >>> presentation.add_rule(p, "a", "b")
-   >>> tc = ToddCoxeterBase(congruence_kind.onesided, p)
-   >>> tc.strategy(ToddCoxeterBase.options.strategy.felsch)
-   <ToddCoxeterBase over <monoid presentation with 2 letters, 2 rules, and length 4> with 1/1 active/nodes>
-   >>> tc.number_of_classes()
-   2
-   >>> tc.contains("aaaa", "aa")
-   True
-   >>> tc.index_of("aaaa")
-   0
-   >>> options = ToddCoxeterBase.options
-   >>> p = Presentation("abcd")
-   >>> presentation.add_rule(p, "aa", "a");
-   >>> presentation.add_rule(p, "ba", "b");
-   >>> presentation.add_rule(p, "ab", "b");
-   >>> presentation.add_rule(p, "ca", "c");
-   >>> presentation.add_rule(p, "ac", "c");
-   >>> presentation.add_rule(p, "da", "d");
-   >>> presentation.add_rule(p, "ad", "d");
-   >>> presentation.add_rule(p, "bb", "a");
-   >>> presentation.add_rule(p, "cd", "a");
-   >>> presentation.add_rule(p, "ccc", "a");
-   >>> presentation.add_rule(p, "bcbcbcbcbcbcbc", "a");
-   >>> presentation.add_rule(p, "bcbdbcbdbcbdbcbdbcbdbcbdbcbdbcbd", "a");
-   >>> tc = ToddCoxeterBase(congruence_kind.twosided, p)
-   >>> tc.strategy(options.strategy.hlt).lookahead_extent(options.lookahead_extent.partial).save(False)
-   <ToddCoxeterBase over <semigroup presentation with 4 letters, 12 rules, and length 79> with 1/2 active/nodes>
-   >>> tc.number_of_classes()
-   10752
-   >>> tc
-   <ToddCoxeterBase over <semigroup presentation with 4 letters, 12 rules, and length 79> with 10753/2097153 active/nodes>
-   >>> tc.word_graph()
-   <WordGraph with 10753 nodes, 43012 edges, & out-degree 4>
-   >>> it = todd_coxeter.normal_forms(tc, Word=str)
-   >>> [next(it) for _ in range(10)]
-   ['a', 'b', 'c', 'd', 'bc', 'bd', 'cb', 'db', 'bcb', 'bdb']
-   >>> tc.standardize(Order.lex)
-   True
-   >>> it = todd_coxeter.normal_forms(tc, Word=str)
-   >>> [next(it) for _ in range(10)]
-   ['a', 'ab', 'abc', 'abcb', 'abcbc', 'abcbcb', 'abcbcbc', 'abcbcbcb', 'abcbcbcbc', 'abcbcbcbcb']
-   )pbdoc");
+    py::class_<ToddCoxeterBase, CongruenceInterface> thing(m,
+                                                           "ToddCoxeterBase");
 
     py::class_<ToddCoxeterBase::options> options(thing,
                                                  "options",
@@ -111,7 +53,7 @@ behaviour of Todd-Coxeter.)pbdoc");
           Values for defining the strategy.
 
           The values in this enum can be used as the argument for the method
-          :py:meth:`ToddCoxeterBase.strategy` to specify which strategy should be
+          :py:meth:`ToddCoxeterWord.strategy` to specify which strategy should be
           used when performing a coset enumeration.
         )pbdoc");
     strategy
@@ -147,7 +89,7 @@ behaviour of Todd-Coxeter.)pbdoc");
 Enum for specifying the extent of any lookahead performed.
 
 The values in this enum can be used as the argument for
-:any:`ToddCoxeterBase.lookahead_extent` to specify the extent of any lookahead that
+:any:`ToddCoxeterWord.lookahead_extent` to specify the extent of any lookahead that
 should be performed.)pbdoc")
         .value(
             "full",
@@ -166,7 +108,7 @@ should be performed.)pbdoc")
 performed.
 
 The values in this enum can be used as the argument for
-:any:`ToddCoxeterBase.lookahead_style` to specify the style of any lookahead that
+:any:`ToddCoxeterWord.lookahead_style` to specify the style of any lookahead that
 should be performed.)pbdoc")
         .value(
             "hlt",
@@ -185,11 +127,11 @@ Enum class containing values for specifying how to handle edge
 definitions.
 
 The values in this enum can be used as the argument for
-:any:`ToddCoxeterBase.def_policy`.
+:any:`ToddCoxeterWord.def_policy`.
 
 For our purposes, a *definition* is a recently defined edge in the
 word graph that we are attempting to construct in an instance of
-:any:`ToddCoxeterBase`. The values in this enum influence how these
+:any:`ToddCoxeterWord`. The values in this enum influence how these
 definitions are stored and processed.
 
 For every definition held in the definition stack, a depth first
@@ -199,7 +141,7 @@ graph labelled by generating pairs that actually pass through the
 edge described by a definition.
 
 The values in this enum represent what to do if the number of
-definitions in the stack exceeds the value :any:`ToddCoxeterBase.def_max`.
+definitions in the stack exceeds the value :any:`ToddCoxeterWord.def_max`.
 )pbdoc")
         .value(
             "no_stack_if_no_space",
@@ -243,7 +185,7 @@ definitions in the stack exceeds the value :any:`ToddCoxeterBase.def_max`.
     def_init_default(thing, "ToddCoxeterBase");
     def_construct_kind_presentation(thing, "ToddCoxeterBase");
     def_init_kind_presentation(thing, "ToddCoxeterBase");
-    def_number_of_classes(thing, "ToddCoxeterBase");
+    def_number_of_classes(thing, "ToddCoxeterWord");
     def_copy(thing, "ToddCoxeterBase");
     def_add_generating_pair(thing, "ToddCoxeterBase");
     def_currently_contains(thing, "ToddCoxeterBase");
@@ -382,6 +324,7 @@ that it would have been in if it had just been newly constructed from
         "def_max",
         [](ToddCoxeterBase const& self) { return self.def_max(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
 Get the current value of the setting for the maximum number of
 definitions.
 
@@ -398,6 +341,7 @@ definitions.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
 Set the maximum number of definitions in the stack.
 
 This setting specifies the maximum number of definitions that can be in the
@@ -417,6 +361,8 @@ The default value of this setting is ``2000``.
         "def_policy",
         [](ToddCoxeterBase const& self) { return self.def_policy(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.def_policy:
+
 Get the current value of the definition policy. This function returns
 the current value of the definition policy which specifies how to handle
 definitions. For details see :any:`options.def_policy`.
@@ -435,6 +381,8 @@ definitions. For details see :any:`options.def_policy`.
             -> ToddCoxeterBase& { return self.def_policy(val); },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: ToddCoxeterBase.options.def_policy) -> ToddCoxeterWord:
+
 Set the definition policy.
 
 This function can be used to specify how to handle definitions. For details see
@@ -452,6 +400,8 @@ This function can be used to specify how to handle definitions. For details see
         "def_version",
         [](ToddCoxeterBase& self) { return self.def_version(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.def_version:
+
 The current value of the definition policy setting.
 
 :returns:
@@ -466,6 +416,8 @@ The current value of the definition policy setting.
             -> ToddCoxeterBase& { return self.def_version(val); },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: ToddCoxeterBase.options.def_version) -> ToddCoxeterWord:
+
 This function can be used to specify how which version of definition handling
 to use. For details see :any:`options.def_version`.
 
@@ -476,6 +428,8 @@ The default value of this setting is ``options.def_version.two``.
         "f_defs",
         [](ToddCoxeterBase const& self) { return self.f_defs(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the number of Felsch style definitions in ACE strategies. This
 function returns the approx number of Felsch style definitions in each
 phase of the `ACE <https://staff.itee.uq.edu.au/havas/>`_ style
@@ -505,6 +459,8 @@ The default value of this setting is ``100000``.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the number of Felsch style definitions in ACE strategies.
 
 This function can be used to set the approx number of Felsch style definitions
@@ -535,6 +491,8 @@ The default value of this setting is ``100'000``.
         "hlt_defs",
         [](ToddCoxeterBase const& self) { return self.hlt_defs(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the number of HLT style definitions in ACE strategies. This function
 returns the approx number of HLT style definitions in each phase of
 the `ACE <https://staff.itee.uq.edu.au/havas/>`_ style strategies:
@@ -563,6 +521,8 @@ The default value of this setting is ``100000``.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the number of HLT style definitions in ACE strategies.
 
 This function can be used to set the approx number of HLT style definitions in
@@ -593,6 +553,8 @@ The default value of this setting is ``200000``.
         "large_collapse",
         [](ToddCoxeterBase const& self) { return self.large_collapse(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the current size of a large collapse. This function can be used to
 get what is currently considered a "large" collapse. See
 :any:`large_collapse` for the meaning of this setting.
@@ -611,6 +573,8 @@ The default value of this setting is ``100'000``.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the size of a large collapse.
 
 This function can be used to set what should be considered a "large"
@@ -643,6 +607,8 @@ The default value of this setting is ``100000``.
         "lookahead_extent",
         [](ToddCoxeterBase const& self) { return self.lookahead_extent(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.lookahead_extent:
+
 Get the current value of the lookahead extent. This function returns the
 current value of the lookahead extent setting. The default value of this
 setting is ``options.lookahead_extent.partial``.
@@ -660,6 +626,8 @@ setting is ``options.lookahead_extent.partial``.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: ToddCoxeterBase.options.lookahead_extent) -> ToddCoxeterWord:
+
 Set the lookahead extent.
 
 This function can be used to specify the extent of any lookaheads that might
@@ -679,6 +647,8 @@ default value of this setting is ``options.lookahead_extent.partial``.
           return self.lookahead_growth_factor();
         },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> float:
+
 Get the current value of the lookahead growth factor. This function
 returns the current value of the lookahead growth factor. See
 :any:`lookahead_growth_factor` for a full explanation of this
@@ -696,6 +666,8 @@ setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: float) -> ToddCoxeterWord:
+
 Set the lookahead growth factor.
 
 This setting determines by what factor the number of nodes required to trigger
@@ -720,6 +692,8 @@ is of this setting is ``2.0``.
           return self.lookahead_growth_threshold();
         },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the current value of the lookahead growth threshold. This function returns
 the current value of the lookahead growth threshold. See
 :any:`lookahead_growth_threshold` for a full description of this setting.
@@ -736,6 +710,8 @@ the current value of the lookahead growth threshold. See
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the lookahead growth threshold.
 
 This setting determines the threshold for the number of nodes required to
@@ -755,6 +731,8 @@ active nodes divided by :any:`lookahead_growth_threshold`, then the value of
         "lookahead_min",
         [](ToddCoxeterBase const& self) { return self.lookahead_min(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the current value of the minimum lookahead setting. This function
 returns the current value of the minimum lookahead. See
 :any:`lookahead_min` for a full description of this setting.  The
@@ -772,6 +750,8 @@ default value is ``10000``.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the minimum value of lookahead_next.
 
 After a lookahead is performed the value of :any:`lookahead_next` is modified
@@ -791,6 +771,8 @@ value for :any:`lookahead_next()`. The default value is ``10000``.
         "lookahead_next",
         [](ToddCoxeterBase const& self) { return self.lookahead_next(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the current value of the lookahead next setting. This function returns the
 current value of the lookahead next setting. See the other overload of this
 function for a full description of this setting.
@@ -808,6 +790,8 @@ function for a full description of this setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Set the threshold that will trigger a lookahead.
 
 If the number of active nodes exceeds the value set by this function, then a
@@ -827,6 +811,8 @@ million.
           return self.lookahead_stop_early_interval();
         },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> datetime.timedelta:
+
 Get the current value of the lookahead stop early interval. This
 function returns the current value of the lookahead stop early interval.
 See :any:`lookahead_stop_early_interval` for a
@@ -845,6 +831,8 @@ full description of this setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: datetime.timedelta) -> ToddCoxeterWord:
+
 Set the lookahead stop early interval.
 
 During any lookaheads that are performed, it is periodically checked what
@@ -870,6 +858,8 @@ The default value is 1 second.
           return self.lookahead_stop_early_ratio();
         },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> float:
+
 Get the current value of the lookahead stop early ratio. This function
 returns the current value of the lookahead stop early ratio. See
 :any:`lookahead_stop_early_ratio` for a full description of this
@@ -887,6 +877,8 @@ setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: float) -> ToddCoxeterWord:
+
 Set the lookahead stop early ratio.
 
 During any lookaheads that are performed, it is periodically checked what
@@ -912,9 +904,11 @@ result in many nodes being killed).
         "lookahead_style",
         [](ToddCoxeterBase const& self) { return self.lookahead_style(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.lookahead_style:
+
 Get the current value of the lookahead style. This function returns the current
-value of the lookahead style. See :any:`ToddCoxeterBase.lookahead_style` for a full description
-of this setting.
+value of the lookahead style. See :any:`ToddCoxeterBase.lookahead_style`
+for a full description of this setting.
 
 :returns:
    The current lookahead style.
@@ -927,6 +921,8 @@ of this setting.
             -> ToddCoxeterBase& { return self.lookahead_style(val); },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: ToddCoxeterBase.options.lookahead_style) -> ToddCoxeterWord:
+
 Set the style of lookahead.
 
 This function can be used to set the style of any lookaheads that are performed
@@ -945,6 +941,8 @@ The default value of this setting is ``options.lookahead_style.hlt``.
         "lower_bound",
         [](ToddCoxeterBase const& self) { return self.lower_bound(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> int:
+
 Get the current value of the lower bound. This function returns the
 current value of the lower bound. See :any:`lower_bound` for a
 full description of this setting.
@@ -961,6 +959,8 @@ full description of this setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: int) -> ToddCoxeterWord:
+
 Specify the minimum number of classes that may permit any enumeration early
 stop.
 
@@ -983,6 +983,8 @@ nodes when there is no possibility of finding coincidences.The default value is
         "save",
         [](ToddCoxeterBase const& self) { return self.save(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> bool:
+
 Get the current value of the save setting. This function returns the
 current value of the save setting. See :any:`save` for a full
 description of this setting.
@@ -999,6 +1001,8 @@ description of this setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: bool) -> ToddCoxeterWord:
+
 Set whether or not to process definitions during HLT.
 
 If the argument of this function is ``True`` and the HLT strategy is being
@@ -1015,6 +1019,8 @@ is ``False``.
         "strategy",
         [](ToddCoxeterBase const& self) { return self.strategy(); },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.strategy:
+
 Get the current value of the strategy setting. This function returns the
 current value of the strategy setting. See :any:`options.strategy` for a full
 description of this setting.
@@ -1030,6 +1036,8 @@ description of this setting.
             -> ToddCoxeterBase& { return self.strategy(val); },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: ToddCoxeterBase.options.strategy) -> ToddCoxeterWord:
+
 Specify the congruence enumeration strategy.
 
 The strategy used during the enumeration can be specified using this function.
@@ -1047,6 +1055,8 @@ The default value is :any:`options.strategy`.
           return self.use_relations_in_extra();
         },
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord) -> bool:
+
 Get the current value of the "use relations in extra" setting. This function
 returns the current value of the "use relations in extra" setting. See the
 other overload of :any:`use_relations_in_extra` for a fuller description of
@@ -1064,6 +1074,8 @@ this setting.
         },
         py::arg("val"),
         R"pbdoc(
+:sig=(tc: ToddCoxeterWord, val: bool) -> ToddCoxeterWord:
+
 Set whether or not to perform an HLT-style push of the defining relations at the identity.
 
 If a :any:`ToddCoxeterBase` instance is defined over a finitely presented semigroup
@@ -1105,6 +1117,7 @@ valid spanning tree for the :any:`WordGraph` returned by
 :rtype:
    Forest
 )pbdoc");
+
     thing.def(
         "current_word_graph",
         [](ToddCoxeterBase const& self) -> WordGraph<uint32_t> const& {

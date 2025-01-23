@@ -56,6 +56,24 @@ namespace libsemigroups {
       func_name += suffix;
       return func_name;
     }
+
+    // 100% thread unsafe!!
+    char const* make_doc(char const*      fmt_string,
+                         std::string_view name,
+                         doc              extra_doc) {
+      static std::string result;
+      result.clear();
+
+      fmt::format_to(std::back_inserter(result),
+                     fmt_string,
+                     "detail"_a             = extra_doc.detail,
+                     "example"_a            = extra_doc.example,
+                     "name"_a               = name,
+                     "only_document_once"_a = extra_doc.only_document_once,
+                     "raises"_a             = extra_doc.raises,
+                     "var"_a                = extra_doc.var);
+      return result.c_str();
+    }
   }  // namespace
 
   ////////////////////////////////////////////////////////////////////////
@@ -66,18 +84,17 @@ namespace libsemigroups {
                              std::string_view              name,
                              doc                           extra_doc) {
     thing.def(py::init<>(),
-              fmt::format(R"pbdoc(
-  :sig=() -> None:
-  :only-document-once:
+              make_doc(R"pbdoc(
+:sig=() -> None:
+{only_document_once}
 
-  Default def_construct_kind_presentation. This function default constructs an
-  uninitialised :any:`{}` instance.
+Default constructor. This function default constructs an
+uninitialised :any:`{name}` instance.
 
-  {}
-  )pbdoc",
-                          name,
-                          extra_doc.detail)
-                  .c_str());
+{detail}
+)pbdoc",
+                       name,
+                       extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -108,24 +125,23 @@ namespace libsemigroups {
     thing.def(
         "init",
         [](Thing& self) -> Thing& { return self.init(); },
-        fmt::format(R"pbdoc(
-:sig=(self: {0}) -> {0}:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}) -> {name}:
+{only_document_once}
 
-Re-initialize a :any:`{0}` instance.
+Re-initialize a :any:`{name}` instance.
 
-This function puts a :any:`{0}` instance back into the state that it would
+This function puts a :any:`{name}` instance back into the state that it would
 have been in if it had just been newly default constructed.
 
-{1}
+{detail}
 
 :returns:
   ``self``.
 :rtype:
-    {0})pbdoc",
-                    name,
-                    extra_doc.detail)
-            .c_str());
+    {name})pbdoc",
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -156,16 +172,16 @@ have been in if it had just been newly default constructed.
     thing.def(py::init<congruence_kind, Presentation<Word> const&>(),
               py::arg("knd"),
               py::arg("p"),
-              fmt::format(R"pbdoc(
-:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> None:
-:only-document-once:
+              make_doc(R"pbdoc(
+:sig=(self: {name}, knd: congruence_kind, p: PresentationStrings) -> None:
+{only_document_once}
 
 Construct from :any:`congruence_kind` and :any:`PresentationStrings`.
 
-This function constructs a :any:`{0}` instance representing a congruence
+This function constructs a :any:`{name}` instance representing a congruence
 of kind *knd* over the semigroup or monoid defined by the presentation *p*.
 
-{1}
+{detail}
 
 :param knd: the kind (onesided or twosided) of the congruence.
 :type knd: congruence_kind
@@ -175,12 +191,10 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
 
 :raises LibsemigroupsError: if *p* is not valid.
 
-{2}
+{raises}
 )pbdoc",
-                          name,
-                          extra_doc.detail,
-                          extra_doc.raises)
-                  .c_str());
+                       name,
+                       extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -220,17 +234,16 @@ of kind *knd* over the semigroup or monoid defined by the presentation *p*.
         py::arg("p"),
         // TODO(0) adding only-document-once here means that the other
         // overloads of init are suppressed also :(
-        // :only-document-once:
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, knd: congruence_kind, p: PresentationStrings) -> {0}:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}, knd: congruence_kind, p: PresentationStrings) -> {name}:
+{only_document_once}
 
-Re-initialize a :any:`{0}` instance.
+Re-initialize a :any:`{name}` instance.
 
-This function re-initializes a :any:`{0}` instance as if it
+This function re-initializes a :any:`{name}` instance as if it
 had been newly constructed from *knd* and *p*.
 
-{1}
+{detail}
 
 :param knd: the kind (onesided or twosided) of the congruence.
 :type knd: :any:`congruence_kind`
@@ -239,16 +252,14 @@ had been newly constructed from *knd* and *p*.
 :type p: PresentationStrings
 
 :returns:  ``self``.
-:rtype: {0}
+:rtype: {name}
 
 :raises LibsemigroupsError: if *p* is not valid.
 
-{2}
+{raises}
 )pbdoc",
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
-            .c_str());
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -281,18 +292,18 @@ had been newly constructed from *knd* and *p*.
     thing.def(
         "copy",
         [](Thing const& self) { return Thing(self); },
-        fmt::format(R"pbdoc(
-:sig=(self: {0}) -> {0}:
+        make_doc(R"pbdoc(
+:sig=(self: {name}) -> {name}:
+{only_document_once}
 
-Copy a :any:`{0}` object.
+Copy a :any:`{name}` object.
 
-{1}
+{detail}
 
 :returns: A copy.
-:rtype: {0})pbdoc",
-                    name,
-                    extra_doc.detail)
-            .c_str());
+:rtype: {name})pbdoc",
+                 name,
+                 extra_doc));
 
     thing.def("__copy__", [](Thing const& self) { return Thing(self); });
   }
@@ -324,9 +335,9 @@ Copy a :any:`{0}` object.
     thing.def(
         "_number_of_classes",
         [](Thing& self) { return self.number_of_classes(); },
-        fmt::format(R"pbdoc(
+        make_doc(R"pbdoc(
 :sig=(self: {name}) -> int | PositiveInfinity:
-{onlydoconce}
+{only_document_once}
 
 Compute the number of classes in the congruence. This function computes the
 number of classes in the congruence represented by a :any:`{name}` instance.
@@ -335,18 +346,15 @@ number of classes in the congruence represented by a :any:`{name}` instance.
 
 :returns:
    The number of congruence classes of a :any:`{name}` instance if this number
-is finite, or :any:`POSITIVE_INFINITY` in some cases if this number is not
+   is finite, or :any:`POSITIVE_INFINITY` in some cases if this number is not
    finite.
 :rtype:
    int | PositiveInfinity
 
 {raises}
 )pbdoc",
-                    "name"_a        = name,
-                    "detail"_a      = extra_doc.detail,
-                    "raises"_a      = extra_doc.raises,
-                    "onlydoconce"_a = extra_doc.only_document_once)
-            .c_str());
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -373,17 +381,17 @@ is finite, or :any:`POSITIVE_INFINITY` in some cases if this number is not
         },
         py::arg("u"),
         py::arg("v"),
-        fmt::format(
+        make_doc(
             R"pbdoc(
-:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> {0}:
-:only-document-once:
+:sig=(self: {name}, u: List[int] | str, v: List[int] | str) -> {name}:
+{only_document_once}
 
 Add a generating pair.
 
 This function adds a generating pair to the congruence represented by a
-:any:`{0}` instance.
+:any:`{name}` instance.
 
-{1}
+{detail}
 
 :param u: the first item in the pair.
 :type u: List[int] | str
@@ -392,21 +400,19 @@ This function adds a generating pair to the congruence represented by a
 :type v: List[int] | str
 
 :returns: ``self``.
-:rtype: {0}
+:rtype: {name}
 
 :raises LibsemigroupsError:
   if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and
-:any:`PresentationStrings.validate_word` raises.
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
 
 :raises LibsemigroupsError:  if :any:`Runner.started` returns ``True``.
 
-{2}
+{raises}
 )pbdoc",
             name,
-            extra_doc.detail,
-            extra_doc.raises)
-            .c_str());
+            extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -443,14 +449,14 @@ This function adds a generating pair to the congruence represented by a
         },
         py::arg("u"),
         py::arg("v"),
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> tril:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}, u: List[int] | str, v: List[int] | str) -> tril:
+{only_document_once}
 
 Check whether a pair of words is already known to belong to the congruence.
 
 This function checks whether or not the words *u* and *v* are already known to
-be contained in the congruence represented by a :py:class:`{0}` instance.
+be contained in the congruence represented by a :py:class:`{name}` instance.
 This function performs no enumeration, so it is possible for the words to be
 contained in the congruence, but that this is not currently known.
 
@@ -472,11 +478,10 @@ contained in the congruence, but that this is not currently known.
   to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
   raises.
 
-{1}
+{raises}
 )pbdoc",
-                    name,
-                    extra_doc.raises)
-            .c_str());
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -513,14 +518,14 @@ contained in the congruence, but that this is not currently known.
         },
         py::arg("u"),
         py::arg("v"),
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, u: List[int] | str, v: List[int] | str) -> bool:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}, u: List[int] | str, v: List[int] | str) -> bool:
+{only_document_once}
 
 Check containment of a pair of words.
 
 This function checks whether or not the words *u* and *v* are contained in the
-congruence represented by a :py:class:`{0}` instance.
+congruence represented by a :py:class:`{name}` instance.
 
 :param u: the first word.
 :type u: List[int] | str
@@ -533,14 +538,13 @@ congruence represented by a :py:class:`{0}` instance.
 
 :raises LibsemigroupsError:
   if any of the values in *u* or *v* is out of range, i.e. they do not belong
-  to ``presentation().alphabet()`` and
-:any:`PresentationStrings.validate_word` raises.
+  to ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
+  raises.
 
-{1}
+{raises}
 )pbdoc",
-                    name,
-                    extra_doc.raises)
-            .c_str());
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -574,16 +578,16 @@ congruence represented by a :py:class:`{0}` instance.
           return congruence_interface::reduce_no_run(self, w);
         },
         py::arg("w"),
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, w: List[int] | str) -> List[int] | str:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}, w: List[int] | str) -> List[int] | str:
+{only_document_once}
 
 Reduce a word.
 
 If :any:`Runner.finished` returns ``True``, then this function returns a
 normal form for the input word *w*.
 
-{1}
+{detail}
 
 :param w: the input word.
 :type w: List[int] | str
@@ -596,11 +600,9 @@ normal form for the input word *w*.
   ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
   raises.
 
-{2})pbdoc",
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
-            .c_str());
+{raises})pbdoc",
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -634,17 +636,17 @@ normal form for the input word *w*.
           return congruence_interface::reduce(self, w);
         },
         py::arg("w"),
-        fmt::format(R"pbdoc(
-:sig=(self: {0}, w: List[int] | str) -> List[int] | str:
-:only-document-once:
+        make_doc(R"pbdoc(
+:sig=(self: {name}, w: List[int] | str) -> List[int] | str:
+{only_document_once}
 
 Reduce a word.
 
-This function triggers a full enumeration of an :py:class:`{0}` object and
+This function triggers a full enumeration of an :py:class:`{name}` object and
 then reduces the word *w*. As such the returned word is a normal form for the
 input word.
 
-{1}
+{detail}
 
 :param w: the input word.
 :type w: List[int] | str
@@ -657,12 +659,10 @@ input word.
   ``presentation().alphabet()`` and :any:`PresentationStrings.validate_word`
   raises.
 
-{2}
+{raises}
 )pbdoc",
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
-            .c_str());
+                 name,
+                 extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -691,10 +691,10 @@ input word.
                             doc                           extra_doc) {
     thing.def("generating_pairs",
               &Thing::generating_pairs,
-              fmt::format(
+              make_doc(
                   R"pbdoc(
 :sig=(self : {name}) -> List[List[int] | str]:
-{onlydoconce}
+{only_document_once}
 
 Get the generating pairs of the congruence.
 
@@ -709,9 +709,8 @@ function returns the :any:`list` of these native word types.
 :rtype:
    List[List[int] | str]
   )pbdoc",
-                  "name"_a        = name,
-                  "onlydoconce"_a = extra_doc.only_document_once)
-                  .c_str());
+                  name,
+                  extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -747,21 +746,21 @@ function returns the :any:`list` of these native word types.
         py::arg("ci"),
         py::arg("words"),
         // TODO(1) use doc.var instead of using ci here
-        fmt::format(
+        make_doc(
             R"pbdoc(
-:sig=(ci: {0}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
-:only-document-once:
+:sig=(ci: {name}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
+{only_document_once}
 
 Find the non-trivial classes in the partition of a list of words.
 
 This function returns the classes with size at least :math:`2` in the
-partition of the words in the list *words* induced by the :any:`{0}`
+partition of the words in the list *words* induced by the :any:`{name}`
 instance *ci*.
 
-{1}
+{detail}
 
-:param ci: the :any:`{0}` instance.
-:type ci: {0}
+:param ci: the :any:`{name}` instance.
+:type ci: {name}
 
 :param words: the input list of words.
 :type words: List[List[int] | str]
@@ -769,11 +768,9 @@ instance *ci*.
 :returns: The partition of the input list.
 :rtype: List[List[List[int]] | List[str]]
 
-{2})pbdoc",
+{raises})pbdoc",
             name,
-            extra_doc.detail,
-            extra_doc.raises)
-            .c_str());
+            extra_doc));
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -792,10 +789,13 @@ instance *ci*.
   ////////////////////////////////////////////////////////////////////////
 
   template <typename Thing>
-  void def_partition(py::module& m, std::string_view name, doc extra_doc) {
+  void def_partition(py::module&      m,
+                     std::string_view class_name,
+                     std::string_view func_prefix,
+                     doc              extra_doc) {
     using Word = typename Thing::native_word_type;
 
-    std::string func_name = add_prefix(name, "_partition");
+    std::string func_name = fmt::format("{}_partition", func_prefix);
     m.def(
         func_name.c_str(),
         [](Thing& ci, std::vector<Word> const& words) {
@@ -804,20 +804,20 @@ instance *ci*.
         },
         py::arg(extra_doc.var.data()),
         py::arg("words"),
-        fmt::format(R"pbdoc(
-:sig=({0}: {1}, words: List[List[int] | str]) -> List[List[List[int]] |
-List[str]]: :only-document-once:
+        make_doc(R"pbdoc(
+:sig=({var}: {name}, words: List[List[int] | str]) -> List[List[List[int]] | List[str]]:
+{only_document_once}
 
 Partition a list of words.
 
 This function returns the classes in the partition of the words in the input
-list *words* induced by the :any:`{1}` instance *{0}*. This function
-triggers a full enumeration of *{0}*.
+list *words* induced by the :any:`{name}` instance *{var}*. This function
+triggers a full enumeration of *{var}*.
 
-{2}
+{detail}
 
-:param {0}: the :any:`{1}` instance.
-:type {0}: {1}
+:param {var}: the :any:`{name}` instance.
+:type {var}: {name}
 
 :param words: the input list of words.
 :type words: List[List[int] | str]
@@ -825,20 +825,19 @@ triggers a full enumeration of *{0}*.
 :returns: The partitioned list of words.
 :rtype: List[List[List[int]] | List[str]]
 
-{3}
+{raises}
 )pbdoc",
-                    extra_doc.var,
-                    name,
-                    extra_doc.detail,
-                    extra_doc.raises)
-            .c_str());
+                 class_name,
+                 extra_doc));
   }
 
   template void def_partition<ToddCoxeter<word_type>>(py::module&,
                                                       std::string_view,
+                                                      std::string_view,
                                                       doc);
 
   template void def_partition<ToddCoxeter<std::string>>(py::module&,
+                                                        std::string_view,
                                                         std::string_view,
                                                         doc);
 
@@ -883,9 +882,7 @@ class of :any:`CongruenceInterface`. See :any:`congruence_kind` for details.
    congruence_kind
 )pbdoc");
 
-    thing.def("internal_"
-              "generating_"
-              "pairs",
+    thing.def("internal_generating_pairs",
               &CongruenceInterface::internal_generating_pairs,
               R"pbdoc(
 :sig=(self: CongruenceInterface) -> List[List[int]]:

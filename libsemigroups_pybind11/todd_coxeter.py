@@ -15,7 +15,6 @@ from _libsemigroups_pybind11 import (
     PositiveInfinity,
     PresentationStrings as _PresentationStrings,
     PresentationWords as _PresentationWords,
-    ToddCoxeterBase,
     ToddCoxeterString as _ToddCoxeterString,
     ToddCoxeterWord as _ToddCoxeterWord,
     Undefined,
@@ -27,6 +26,7 @@ from _libsemigroups_pybind11 import (
     todd_coxeter_normal_forms as normal_forms,
     todd_coxeter_partition as partition,
     todd_coxeter_redundant_rule as redundant_rule,
+    todd_coxeter_is_non_trivial as is_non_trivial,
 )
 
 from .detail.decorators import (
@@ -88,7 +88,7 @@ for _ToddCoxeter in [_ToddCoxeterWord, _ToddCoxeterString]:
         _ToddCoxeter._number_of_classes
     )
     _ToddCoxeter.number_of_classes.__doc__ = "\n".join(
-        _ToddCoxeter._current_index_of.__doc__.split("\n")[1:]
+        _ToddCoxeter._number_of_classes.__doc__.split("\n")[1:]
     )
 
     _ToddCoxeter.current_index_of = _may_return_undefined(

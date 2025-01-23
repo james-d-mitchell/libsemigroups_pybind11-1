@@ -32,11 +32,10 @@ namespace libsemigroups {
   // declared below.
   struct doc {
     std::string_view detail             = "";
+    std::string_view only_document_once = "";
     std::string_view raises             = "";
     std::string_view var                = "";
-    std::string_view only_document_once = "";
-    // TODO(1) add argument names
-    // TODO(1) add argument example
+    std::string_view example            = "";
   };
 
   ////////////////////////////////////////////////////////////////////////
@@ -113,7 +112,10 @@ namespace libsemigroups {
                                doc              extra_doc = {});
 
   template <typename Thing>
-  void def_partition(py::module& m, std::string_view name, doc extra_doc = {});
+  void def_partition(py::module&      m,
+                     std::string_view class_name,
+                     std::string_view func_prefix,
+                     doc              extra_doc = {});
 
   // TODO(1) add normal_forms here, not currently done because Kambites can only
   // output List[int]
