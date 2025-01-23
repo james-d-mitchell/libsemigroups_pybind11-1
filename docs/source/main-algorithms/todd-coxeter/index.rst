@@ -18,8 +18,7 @@ congruence; see :cite:`Coleman2022aa` for more details.
 
 Similar to other places in ``libsemigroups`` it is possible to create a
 :any:`ToddCoxeterWord` object from a presentation consisting of strings or
-lists of integers. Functionality that does not depend on the type of words in
-the presentation is in the :any:`ToddCoxeterBase` class, which :any:`ToddCoxeterWord` inherits from. 
+lists of integers. 
 
 .. toctree::
    :maxdepth: 1

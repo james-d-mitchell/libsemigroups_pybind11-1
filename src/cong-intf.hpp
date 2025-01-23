@@ -32,7 +32,7 @@ namespace libsemigroups {
   // declared below.
   struct doc {
     std::string_view detail             = "";
-    std::string_view only_document_once = "";
+    std::string_view only_document_once = "";  // TODO(0) replace with bool
     std::string_view raises             = "";
     std::string_view var                = "";
     std::string_view example            = "";
@@ -106,6 +106,7 @@ namespace libsemigroups {
   // Helpers
   ////////////////////////////////////////////////////////////////////////
 
+  // TODO(0) update like def_partition
   template <typename Thing>
   void def_non_trivial_classes(py::module&      m,
                                std::string_view name,

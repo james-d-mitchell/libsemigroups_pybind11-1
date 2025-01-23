@@ -859,7 +859,7 @@ data that are common to all its derived classes. These classes are:
 *  :any:`Congruence`
 *  :any:`Kambites`
 *  :py:class:`KnuthBendixRewriteTrie`
-*  :any:`ToddCoxeter`
+*  :any:`ToddCoxeterWord`
 )pbdoc");
 
     thing.def(

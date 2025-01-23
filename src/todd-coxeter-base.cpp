@@ -191,7 +191,7 @@ definitions in the stack exceeds the value :any:`ToddCoxeterWord.def_max`.
     def_currently_contains(thing, "ToddCoxeterBase");
     def_contains(thing, "ToddCoxeterBase");
     def_reduce_no_run(thing, "ToddCoxeterBase", doc{.detail = R"pbdoc(
-If the  :any:`ToddCoxeterBase` instance is not :any:`Runner.finished`,
+If the  :any:`ToddCoxeterWord` instance is not :any:`Runner.finished`,
 then it might be that equivalent input words produce different output
 words. This function triggers no congruence enumeration.)pbdoc"sv});
     def_reduce(thing, "ToddCoxeterBase");
@@ -213,11 +213,11 @@ words. This function triggers no congruence enumeration.)pbdoc"sv});
 :sig=(self: ToddCoxeterBase, knd: congruence_kind, tc: ToddCoxeterBase) -> None:
 :only-document-once:
 
-Construct from :any:`congruence_kind` and :any:`ToddCoxeterBase`.
+Construct from :any:`congruence_kind` and :any:`ToddCoxeterWord`.
 
-This function constructs a :any:`ToddCoxeterBase` instance representing a
-congruence of kind *knd* over the :any:`ToddCoxeterBase` instance *tc*. The
-:any:`ToddCoxeterBase` instance constructed in this way represents a quotient of
+This function constructs a :any:`ToddCoxeterWord` instance representing a
+congruence of kind *knd* over the :any:`ToddCoxeterWord` instance *tc*. The
+:any:`ToddCoxeterWord` instance constructed in this way represents a quotient of
 the word graph represented by *tc*.
 
 :param knd: the kind (onesided, or twosided) of the congruence.
@@ -241,12 +241,12 @@ the word graph represented by *tc*.
 
 Construct from :any:`congruence_kind` and :any:`WordGraph`.
 
-This function constructs a :any:`ToddCoxeterBase` instance representing a
+This function constructs a :any:`ToddCoxeterWord` instance representing a
 congruence of kind *knd* over the :any:`WordGraph` *wg*. The
-:any:`ToddCoxeterBase` instance constructed in this way represents a
+:any:`ToddCoxeterWord` instance constructed in this way represents a
 quotient of the word graph *wg*. If *wg* happens to be the left
 or right Cayley graph of a semigroup or monoid, then the
-:any:`ToddCoxeterBase` instance will represent a quotient of that
+:any:`ToddCoxeterWord` instance will represent a quotient of that
 semigroup.
 
 :param knd: the kind (onesided or twosided) of the congruence.
@@ -269,7 +269,7 @@ semigroup.
 
 Re-initialize a ToddCoxeterBase instance.
 
-This function puts a :any:`ToddCoxeterBase` instance back into the state
+This function puts a :any:`ToddCoxeterWord` instance back into the state
 that it would have been in if it had just been newly constructed from
 *knd* and *tc*.
 
@@ -302,7 +302,7 @@ that it would have been in if it had just been newly constructed from
 
 Re-initialize a ToddCoxeterBase instance.
 
-This function puts a :any:`ToddCoxeterBase` instance back into the state
+This function puts a :any:`ToddCoxeterWord` instance back into the state
 that it would have been in if it had just been newly constructed from
 *knd* and *wg*.
 
@@ -347,7 +347,7 @@ Set the maximum number of definitions in the stack.
 This setting specifies the maximum number of definitions that can be in the
 stack at any given time. What happens if there are the maximum number of
 definitions in the stack and a new definition is generated is governed by
-:any:`ToddCoxeterBase.def_policy`.
+:any:`ToddCoxeterWord.def_policy`.
 
 The default value of this setting is ``2000``.
 
@@ -795,8 +795,8 @@ function for a full description of this setting.
 Set the threshold that will trigger a lookahead.
 
 If the number of active nodes exceeds the value set by this function, then a
-lookahead of style :any:`ToddCoxeterBase.lookahead_style` and extent
-:any:`ToddCoxeterBase.lookahead_extent` will be triggered. The default value is 5
+lookahead of style :any:`ToddCoxeterWord.lookahead_style` and extent
+:any:`ToddCoxeterWord.lookahead_extent` will be triggered. The default value is 5
 million.
 
 :param val: value indicating the initial threshold.
@@ -907,7 +907,7 @@ result in many nodes being killed).
 :sig=(tc: ToddCoxeterWord) -> ToddCoxeterBase.options.lookahead_style:
 
 Get the current value of the lookahead style. This function returns the current
-value of the lookahead style. See :any:`ToddCoxeterBase.lookahead_style`
+value of the lookahead style. See :any:`ToddCoxeterWord.lookahead_style`
 for a full description of this setting.
 
 :returns:
@@ -965,7 +965,7 @@ Specify the minimum number of classes that may permit any enumeration early
 stop.
 
 This function can be used to set a lower bound for the number of classes of the
-congruence represented by a :any:`ToddCoxeterBase` instance. If the number of
+congruence represented by a :any:`ToddCoxeterWord` instance. If the number of
 active nodes becomes at least the value of the argument, and the word graph is
 complete (:any:`word_graph.is_complete` returns ``True``), then the
 enumeration is terminated. When the given bound is equal to the number of
@@ -1078,7 +1078,7 @@ this setting.
 
 Set whether or not to perform an HLT-style push of the defining relations at the identity.
 
-If a :any:`ToddCoxeterBase` instance is defined over a finitely presented semigroup
+If a :any:`ToddCoxeterWord` instance is defined over a finitely presented semigroup
 or monoid and the Felsch strategy is being used, it can be useful to follow all
 the paths from the identity labelled by the underlying relations. This setting
 specifies whether or not to do this.The default value of this setting is
@@ -1130,7 +1130,7 @@ In some sense, the purpose of the
 Todd-Coxeter algorithm is to produce a :any:`WordGraph` of the action of
 a set of generators on the classes of a congruence. This function can be
 used to obtain a reference to that :any:`WordGraph` as it currently
-exists within a :any:`ToddCoxeterBase` instance. This function does not
+exists within a :any:`ToddCoxeterWord` instance. This function does not
 trigger any enumeration.The :any:`WordGraph` returned by this function
 may be in a rather complicated state. No guarantees are given: about the
 values of the active nodes (i.e. they may be any non-negative integers
@@ -1181,14 +1181,16 @@ standardized with respect to the order ``val`` ; and ``False`` if not.
 :returns: Whether or not the current word graph is standardized with respect to a given order.
 :rtype: bool
 )pbdoc");
-    // TODO(0) internal_generating_pairs
+
+    // internal_generating_pairs are in CongruenceInterface
+
     thing.def("internal_presentation",
               &ToddCoxeterBase::internal_presentation,
               R"pbdoc(
 Get the presentation used to define a ToddCoxeterBase instance (if any). If
-a :any:`ToddCoxeterBase` instance is constructed or initialised using a
+a :any:`ToddCoxeterWord` instance is constructed or initialised using a
 presentation, then this presentation is returned by this function.
-If the :any:`ToddCoxeterBase` instance was constructed or
+If the :any:`ToddCoxeterWord` instance was constructed or
 initialised from a :any:`WordGraph`, then this presentation will be
 empty.
 
@@ -1283,12 +1285,12 @@ contains the empty word; or the number of classes plus one if
 :any:`presentation` does not contain the empty word. The returned
 :any:`WordGraph` is also short-lex standardized. The returned :any:`WordGraph`
 will usually be complete and compatible with the relations of the
-:any:`presentation` and with the :any:`ToddCoxeterBase.generating_pairs`. The
+:any:`presentation` and with the :any:`ToddCoxeterWord.generating_pairs`. The
 :any:`WordGraph` may not be complete or compatible for some values of the
 settings. For example, if the setting :any:`lower_bound` is used but is not the
 same as the number of classes in the congruence, then the :any:`WordGraph`
 returned by this function may not be compatible with the relations of
-:any:`presentation` or :any:`ToddCoxeterBase.generating_pairs`.
+:any:`presentation` or :any:`ToddCoxeterWord.generating_pairs`.
 
 :returns:
    The underlying :any:`WordGraph`.
@@ -1307,8 +1309,8 @@ returned by this function may not be compatible with the relations of
 Perform a lookahead.
 
 This function can be used to explicitly perform a lookahead. The style and
-extent of this lookahead are controlled by the settings :any:`ToddCoxeterBase.lookahead_style`
-and :any:`ToddCoxeterBase.lookahead_extent`. If the argument *stop_early* is ``True``, then
+extent of this lookahead are controlled by the settings :any:`ToddCoxeterWord.lookahead_style`
+and :any:`ToddCoxeterWord.lookahead_extent`. If the argument *stop_early* is ``True``, then
 the settings :any:`lookahead_stop_early_interval` and
 :any:`lookahead_stop_early_ratio` are used to determine whether or not the
 lookahead should be aborted early. If *stop_early* is ``False``, then these

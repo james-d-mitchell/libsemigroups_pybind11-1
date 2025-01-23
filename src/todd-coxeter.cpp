@@ -54,13 +54,14 @@ execution of (any version of) the Todd-Coxeter algorithm.
 
    >>> from libsemigroups_pybind11 import (presentation, Presentation, ToddCoxeter,
    ... congruence_kind, word_graph, Order, todd_coxeter)
+   >>> tc = ToddCoxeter(Word=str)
+   >>> options = tc.options
    >>> p = Presentation("ab")
    >>> p.contains_empty_word(True)
    <monoid presentation with 2 letters, 0 rules, and length 0>
    >>> presentation.add_rule(p, "aa", "")
    >>> presentation.add_rule(p, "a", "b")
-   >>> tc = ToddCoxeter(congruence_kind.onesided, p)
-   >>> tc.strategy(ToddCoxeter.options.strategy.felsch)
+   >>> tc.init(congruence_kind.onesided, p).strategy(options.strategy.felsch)
    <ToddCoxeter over <monoid presentation with 2 letters, 2 rules, and length 4> with 1/1 active/nodes>
    >>> tc.number_of_classes()
    2
@@ -68,7 +69,6 @@ execution of (any version of) the Todd-Coxeter algorithm.
    True
    >>> tc.index_of("aaaa")
    0
-   >>> options = ToddCoxeter.options
    >>> p = Presentation("abcd")
    >>> presentation.add_rule(p, "aa", "a");
    >>> presentation.add_rule(p, "ba", "b");
@@ -91,12 +91,12 @@ execution of (any version of) the Todd-Coxeter algorithm.
    <ToddCoxeter over <semigroup presentation with 4 letters, 12 rules, and length 79> with 10753/2097153 active/nodes>
    >>> tc.word_graph()
    <WordGraph with 10753 nodes, 43012 edges, & out-degree 4>
-   >>> it = todd_coxeter.normal_forms(tc, Word=str)
+   >>> it = todd_coxeter.normal_forms(tc)
    >>> [next(it) for _ in range(10)]
    ['a', 'b', 'c', 'd', 'bc', 'bd', 'cb', 'db', 'bcb', 'bdb']
    >>> tc.standardize(Order.lex)
    True
-   >>> it = todd_coxeter.normal_forms(tc, Word=str)
+   >>> it = todd_coxeter.normal_forms(tc)
    >>> [next(it) for _ in range(10)]
    ['a', 'ab', 'abc', 'abcb', 'abcbc', 'abcbcb', 'abcbcbc', 'abcbcbcb', 'abcbcbcbc', 'abcbcbcbcb']
 )pbdoc");
@@ -386,10 +386,28 @@ node corresponding to index *i* back to the root of that tree.
           m, "todd_coxeter", doc{.raises = raises, .var = "tc"});
 
       // TODO(0) move this to cong-intf.*pp
-      m.def("todd_coxeter_normal_forms", [](ToddCoxeter_& tc) {
-        auto nf = todd_coxeter::normal_forms(tc);
-        return py::make_iterator(rx::begin(nf), rx::end(nf));
-      });
+      m.def(
+          "todd_coxeter_normal_forms",
+          [](ToddCoxeter_& tc) {
+            auto nf = todd_coxeter::normal_forms(tc);
+            return py::make_iterator(rx::begin(nf), rx::end(nf));
+          },
+          py::arg("tc"),
+          R"pbdoc(
+Returns an iterator yielding normal forms.
+
+This function returns an iterator yielding normal forms of the classes of
+the congruence represented by an instance of :any:`ToddCoxeterWord`. The order of
+the classes, and the normal forms, that are returned are controlled by
+:any:`ToddCoxeterWord.standardize`. This function triggers a full enumeration of
+``tc``.
+
+:param tc: the :any:`ToddCoxeterWord` instance.
+:type tc: ToddCoxeterWord
+
+:returns: An iterator yielding normal forms.
+:rtype: Iterator[str | List[int]]
+)pbdoc");
 
       ////////////////////////////////////////////////////////////////////////
       // Helper functions - specific to ToddCoxeter

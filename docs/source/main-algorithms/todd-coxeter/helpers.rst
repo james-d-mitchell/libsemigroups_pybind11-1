@@ -8,7 +8,7 @@ Todd-Coxeter helper functions
 ==============================
 
 This page contains the documentation for various helper functions for
-manipulating :any:`ToddCoxeterWordWord` objects.
+manipulating :any:`ToddCoxeterWord` objects.
 
 Contents
 --------

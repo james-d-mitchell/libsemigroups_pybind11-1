@@ -102,24 +102,25 @@ monoid defined by the :any:`PresentationStrings` object *p* is obviously infinit
 :sig=(p: ToddCoxeter) -> bool:
 
 Function for checking if the quotient of a finitely presented semigroup or
-monoid defined by a :any:`ToddCoxeter` object is obviously infinite or not.
+monoid defined by a :any:`ToddCoxeterWord` object is obviously infinite or not.
 
 This function returns ``True`` if the quotient of the finitely presented
-semigroup or monoid defined by the :any:`ToddCoxeter` object *tc* is obviously
+semigroup or monoid defined by the :any:`ToddCoxeterWord` object *tc* is obviously
 infinite; ``False`` is returned if it is not.
 
-:param tc: the ToddCoxeter instance.
-:type tc: ToddCoxeter
+:param tc: the :any:`ToddCoxeterWord` instance.
+:type tc: :any:`ToddCoxeterWord`
 
 :returns:
-    Whether or not the quotient defined by a :any:`ToddCoxeter` instance is
+    Whether or not the quotient defined by a :any:`ToddCoxeterWord` instance is
     obviously infinite.
 
 .. note::
     If this function returns ``False``, it is still possible that the quotient
-    defined by the ToddCoxeter object *tc* is infinite.
+    defined by the :any:`ToddCoxeterWord` object *tc* is infinite.
 )pbdoc");
 
+    // TODO(0)uncomment or delete
     //     m.def(
     //         "is_obviously_infinite",
     //         [](Congruence& c) { return is_obviously_infinite(c); },
